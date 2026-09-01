@@ -1,0 +1,2920 @@
+[
+  {
+    "id": "401-unauthorized",
+    "section": "Calling",
+    "title": "401 Unauthorized",
+    "status": [
+      "401 Unauthorized"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A SIP request was rejected because authentication was missing, invalid, or expired.",
+    "causes": [
+      "SIP trunk or connection credentials are incorrect or out of date",
+      "Digest authentication challenge/response did not complete correctly"
+    ],
+    "actions": [
+      "Open the affected call in Calls → Call History and review the SIP Ladder to see which side issued the 401.",
+      "Verify the SIP connection's authentication settings under Voice Channels → SIP Connections.",
+      "Confirm the credential configured in Live Hub matches what the receiving system expects."
+    ],
+    "escalate": "Contact AudioCodes if the SIP Ladder shows Live Hub sent correct credentials and the far end still rejected the request, or if you cannot determine which side issued the 401.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Calling and called number",
+      "SIP Ladder excerpt"
+    ],
+    "related": "403 Forbidden, 407 Proxy Authentication Required"
+  },
+  {
+    "id": "403-forbidden",
+    "section": "Calling",
+    "title": "403 Forbidden",
+    "status": [
+      "403 Forbidden"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A SIP request was understood but rejected as forbidden. This is a protocol result, not a definitive diagnosis — it can be returned by Live Hub, Microsoft Teams, a carrier, a SIP trunk, or a remote SBC depending on configured policy.",
+    "causes": [
+      "The source IP, trunk, or number is not on the receiving system's allow-list",
+      "A policy or routing restriction is blocking the request",
+      "The receiving system's own access control rejected it"
+    ],
+    "actions": [
+      "Review the SIP Ladder in Calls → Call History to identify which side returned the 403.",
+      "Check the relevant routing rule under Routing → Routing Rules for reject conditions.",
+      "If the far end is a carrier or SIP trunk, confirm the source is authorized on their side."
+    ],
+    "escalate": "Contact AudioCodes if the SIP Ladder confirms Live Hub sent a valid request and the far end still returned 403, or if you cannot determine which side generated the response.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Calling and called number",
+      "SIP Ladder excerpt"
+    ],
+    "related": "401 Unauthorized, SIP Provider Rejected Call"
+  },
+  {
+    "id": "407-proxy-authentication-required",
+    "section": "Calling",
+    "title": "407 Proxy Authentication Required",
+    "status": [
+      "407 Proxy Authentication Required"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Carrier / PSTN",
+    "actionability": "Sometimes self-service",
+    "meaning": "The SIP proxy (commonly a carrier trunk) is requesting authentication before it will process the request.",
+    "causes": [
+      "Proxy authentication credentials are incorrect or outdated",
+      "The authentication challenge/response cycle did not complete correctly"
+    ],
+    "actions": [
+      "Review the SIP Ladder for the affected call to see the 407 challenge and whether a response followed.",
+      "Verify the trunk's authentication configuration under Voice Channels → SIP Connections."
+    ],
+    "escalate": "Contact AudioCodes if credentials appear correct and the challenge is still failing.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "SIP Ladder excerpt"
+    ],
+    "related": "401 Unauthorized"
+  },
+  {
+    "id": "404-not-found",
+    "section": "Calling",
+    "title": "404 Not Found",
+    "status": [
+      "404 Not Found"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The destination address could not be resolved to a valid endpoint.",
+    "causes": [
+      "The dialed number isn't provisioned or is mistyped",
+      "No routing rule matches this destination",
+      "The number was recently ported or reassigned"
+    ],
+    "actions": [
+      "Open Routing → Routing Rules and confirm a rule exists that matches the called number.",
+      "Confirm the destination number is correctly assigned under Voice Channels.",
+      "Check for recent number porting or reassignment."
+    ],
+    "escalate": "Contact AudioCodes if a matching routing rule and correctly assigned number both exist and the call still returns 404.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number"
+    ],
+    "related": "No Matching Route"
+  },
+  {
+    "id": "408-request-timeout",
+    "section": "Calling",
+    "title": "408 Request Timeout",
+    "status": [
+      "408 Request Timeout"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Carrier / PSTN",
+    "actionability": "Sometimes self-service",
+    "meaning": "The destination did not respond to the call request within the time SIP allows, so Live Hub treated the attempt as failed.",
+    "causes": [
+      "Network issue between Live Hub and the destination",
+      "The SIP trunk or destination system was unreachable",
+      "Carrier-side congestion or outage"
+    ],
+    "actions": [
+      "Check Alarms and Alarm History for related connectivity warnings.",
+      "Retry the call and note whether the timeout is consistent or intermittent.",
+      "Review the SIP Ladder to confirm no response was received."
+    ],
+    "escalate": "Contact AudioCodes if the timeout is consistent, affects multiple destinations, or coincides with an active alarm.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number",
+      "Whether other destinations are also affected"
+    ],
+    "related": "503 Service Unavailable"
+  },
+  {
+    "id": "480-temporarily-unavailable",
+    "section": "Calling",
+    "title": "480 Temporarily Unavailable",
+    "status": [
+      "480 Temporarily Unavailable",
+      "480 Temporarily not available",
+      "480 Temporarily Not Available"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Usually self-service",
+    "meaning": "The destination is currently unreachable or not accepting calls. This commonly reflects the destination's own state rather than a Live Hub condition.",
+    "causes": [
+      "The destination endpoint is registered but not currently responding",
+      "Do-not-disturb or similar state is active on the destination"
+    ],
+    "actions": [
+      "Confirm with the destination party whether their endpoint was available at the time.",
+      "Retry the call after a short interval."
+    ],
+    "escalate": "Contact AudioCodes only if this occurs consistently for a destination that should be reliably reachable.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number"
+    ],
+    "related": "No Answer"
+  },
+  {
+    "id": "481-call-transaction-does-not-exist",
+    "section": "Calling",
+    "title": "481 Call/Transaction Does Not Exist",
+    "status": [
+      "481 Call/Transaction Does Not Exist"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Live Hub",
+    "actionability": "Sometimes self-service",
+    "meaning": "A request — often related to a transfer or call update — referenced a call session that the receiving side no longer recognized.",
+    "causes": [
+      "The call had already ended on one side when the request was sent",
+      "A transfer or re-invite was processed after the original session ended (a timing/race condition)"
+    ],
+    "actions": [
+      "Review the SIP Ladder and Call Details for the affected call to see the sequence of events around the failure.",
+      "Check whether a transfer or hold/resume action was in progress at the time."
+    ],
+    "escalate": "Contact AudioCodes with the SIP Ladder if the sequence of events doesn't explain the 481.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Description of any transfer/hold action involved"
+    ],
+    "related": "482 Loop Detected"
+  },
+  {
+    "id": "482-loop-detected",
+    "section": "Calling",
+    "title": "482 Loop Detected",
+    "status": [
+      "482 Loop Detected"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call request was routed back to a point it had already passed through, forming a loop.",
+    "causes": [
+      "A routing rule or forwarding configuration is pointing back to itself or an earlier hop",
+      "Two routing rules or trunks each point back to the other, so the call bounces between them until Live Hub detects the loop",
+      "A carrier-side forwarding setting redirects the call back toward Live Hub instead of on to a different destination"
+    ],
+    "actions": [
+      "Review Routing → Routing Rules for any rule whose destination could point back toward its own origin.",
+      "If the destination is a customer PBX, check its call-forwarding configuration."
+    ],
+    "escalate": "Contact AudioCodes if routing rules and forwarding configuration both look correct and the loop persists.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Routing rule name if known"
+    ],
+    "related": "404 Not Found"
+  },
+  {
+    "id": "484-address-incomplete",
+    "section": "Calling",
+    "title": "484 Address Incomplete",
+    "status": [
+      "484 Address Incomplete"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The dialed number is incomplete or doesn't match the expected format for the routing rule handling it.",
+    "causes": [
+      "A digit or prefix is missing in the dialed number",
+      "The routing rule's number-matching criteria don't align with the number format actually being sent"
+    ],
+    "actions": [
+      "Compare the actual dialed number against the calling/called-number criteria in the matched routing rule.",
+      "Confirm the expected number format (with/without country code) for this route."
+    ],
+    "escalate": "Contact AudioCodes if the number format matches the routing rule's criteria and the call still fails with 484.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Exact number dialed"
+    ],
+    "related": ""
+  },
+  {
+    "id": "487-request-terminated",
+    "section": "Calling",
+    "title": "487 Request Terminated",
+    "status": [
+      "487 Request Terminated"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call attempt was cancelled before it completed — most often because the caller hung up before the destination answered.",
+    "causes": [
+      "Caller-initiated cancellation before answer",
+      "A no-answer timer on the caller’s own device or softphone expired and cancelled the attempt",
+      "An upstream system (dialer, contact center, or auto-attendant) cancelled the call based on its own logic before the destination answered"
+    ],
+    "actions": [
+      "Check Call Details for alert duration — a short alert duration followed by 487 is typically expected caller-cancel behavior."
+    ],
+    "escalate": "Contact AudioCodes only if 487 is occurring at an unusually high rate relative to total call volume, which may indicate a different underlying issue.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone"
+    ],
+    "related": ""
+  },
+  {
+    "id": "488-not-acceptable-here",
+    "section": "Calling",
+    "title": "488 Not Acceptable Here",
+    "status": [
+      "488 Not Acceptable Here"
+    ],
+    "statusVerified": false,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The far end could not accept the call as offered — commonly a codec or secure-media mismatch.",
+    "causes": [
+      "No common audio codec between the two sides",
+      "A secure media (SRTP) mismatch on a call that requires encryption"
+    ],
+    "actions": [
+      "Review the SIP Ladder to inspect the SDP offer and answer for the affected call.",
+      "Confirm the codec and secure-media settings configured for the relevant voice channel."
+    ],
+    "escalate": "Contact AudioCodes with the SIP Ladder if the SDP offer and answer don't reveal an obvious mismatch.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "SIP Ladder excerpt",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Codec/Secure Media Mismatch"
+  },
+  {
+    "id": "503-service-unavailable",
+    "section": "Calling",
+    "title": "503 Service Unavailable",
+    "status": [
+      "503 Service Unavailable"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Carrier / PSTN",
+    "actionability": "Sometimes self-service",
+    "meaning": "The target system — often a carrier or SIP trunk — is currently unable to accept the call.",
+    "causes": [
+      "Carrier-side outage or maintenance",
+      "SBC or trunk overload on the receiving side"
+    ],
+    "actions": [
+      "Check Alarms and Alarm History for related warnings around the time of the call.",
+      "Retry after a short interval and note whether the failure is consistent."
+    ],
+    "escalate": "Contact AudioCodes if 503 responses are sustained, affect multiple destinations, or correlate with an active alarm.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number",
+      "Whether other destinations are also affected"
+    ],
+    "related": "408 Request Timeout"
+  },
+  {
+    "id": "603-decline",
+    "section": "Calling",
+    "title": "603 Decline",
+    "status": [
+      "603 Decline",
+      "Call rejected"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Carrier / PSTN",
+    "actionability": "Sometimes self-service",
+    "meaning": "The call was actively rejected by the far end, rather than simply timing out or being unreachable.",
+    "causes": [
+      "Carrier or destination-side reputation/spam filtering",
+      "Explicit policy rejection on the receiving side"
+    ],
+    "actions": [
+      "Check whether this happens consistently for a specific origination number, which may point to number reputation.",
+      "Review Routing → Routing Rules to confirm the call isn't being intentionally rejected by a Live Hub rule."
+    ],
+    "escalate": "Contact AudioCodes if the call isn't rejected by your own routing configuration and the decline is unexpected or affects multiple destinations.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Calling and called number"
+    ],
+    "related": ""
+  },
+  {
+    "id": "no-answer",
+    "section": "Calling",
+    "title": "No Answer",
+    "status": [
+      "Dialout: no answer",
+      "No Answer"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The destination rang but nobody (or nothing) answered before the call attempt timed out or the caller gave up.",
+    "causes": [
+      "The destination device was ringing but not picked up",
+      "The destination was offline or unreachable",
+      "A forwarding loop caused the call to time out before reaching a live endpoint"
+    ],
+    "actions": [
+      "Confirm with the destination party whether their device was reachable at the time.",
+      "If forwarding is configured on the destination, review it for loops or misconfiguration."
+    ],
+    "escalate": "Contact AudioCodes only if this occurs for a destination confirmed to be online and available.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "480 Temporarily Unavailable"
+  },
+  {
+    "id": "busy",
+    "section": "Calling",
+    "title": "Busy",
+    "status": [
+      "User busy"
+    ],
+    "statusVerified": true,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The destination endpoint rejected the call because it was already engaged on another call.",
+    "causes": [
+      "The line is genuinely in use",
+      "A call-waiting or simultaneous-call limit on the destination device was reached, even without the person actively using the line",
+      "The destination is a hunt group or queue where every member is currently occupied"
+    ],
+    "actions": [
+      "If this is unexpected, confirm with the destination whether their line was actually busy at the time."
+    ],
+    "escalate": "Contact AudioCodes only if a line reports busy while confirmed to be idle.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Called number"
+    ],
+    "related": ""
+  },
+  {
+    "id": "insufficient-funds-trial-restriction",
+    "section": "Calling",
+    "title": "Insufficient Funds / Trial Restriction",
+    "status": [
+      "Credit ended"
+    ],
+    "statusVerified": true,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A trial account with zero or negative credit becomes inactive. While inactive, bots and SIP connections cannot handle calls, and some Live Hub resources cannot be managed until the balance becomes positive again.",
+    "causes": [
+      "The account is on a trial plan and its credit has reached zero or gone negative",
+      "A paid account's prepaid balance has been depleted"
+    ],
+    "actions": [
+      "Check the account's plan and current balance/credit status.",
+      "If on trial, review what credit remains and what triggers activation."
+    ],
+    "escalate": "Contact AudioCodes if the balance appears positive/active but calling and resource management are still blocked.",
+    "evidence": [
+      "Account name",
+      "Timestamp",
+      "Description of the affected functionality"
+    ],
+    "related": "Account Inactive — Broad Service Failure"
+  },
+  {
+    "id": "call-limit-maximum-call-duration-reached",
+    "section": "Calling",
+    "title": "Call Limit / Maximum Call Duration Reached",
+    "status": [
+      "Max duration timer expired",
+      "Call duration timeout expired",
+      "Local, Max call duration expired",
+      "call duration timeout expired"
+    ],
+    "statusVerified": true,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call was ended automatically after reaching a configured maximum-duration limit. This limit can be set at the account level or on an individual voice entity, and the lower applicable value applies.",
+    "causes": [
+      "A maximum call duration is configured on the account or on the specific phone number, SIP connection, Teams connection, or AI Agent voice path handling the call",
+      "This is intentional cost-control or compliance behavior rather than a fault — it guarantees no single call runs indefinitely",
+      "A shorter limit configured lower in the hierarchy (for example, on a specific number) can override a longer account-level default"
+    ],
+    "actions": [
+      "Check for a maximum call duration setting on the relevant voice entity and at the account level.",
+      "Confirm the call's actual duration matches the configured limit."
+    ],
+    "escalate": "Contact AudioCodes if the call ended before reaching any configured maximum-duration value.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Actual call duration observed"
+    ],
+    "related": ""
+  },
+  {
+    "id": "no-matching-route-call-rejected-by-routing-rule",
+    "section": "Calling",
+    "title": "No Matching Route / Call Rejected By Routing Rule",
+    "status": [
+      "No route",
+      "Call rejected"
+    ],
+    "statusVerified": true,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call could not be delivered because no routing rule matched it, or a matched rule was configured to reject the call.",
+    "causes": [
+      "No routing rule's origin/call criteria matches this call",
+      "A matching rule exists but is intentionally configured to reject calls meeting that criteria"
+    ],
+    "actions": [
+      "Open Routing → Routing Rules and review origin, calling/called-number criteria, region, and destination for the expected rule.",
+      "Confirm whether any rule is configured to reject this type of call intentionally."
+    ],
+    "escalate": "Contact AudioCodes if a rule appears correctly configured to accept and route this call, and it's still failing.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Expected routing rule name",
+      "Calling and called number"
+    ],
+    "related": "Region Mismatch"
+  },
+  {
+    "id": "region-mismatch",
+    "section": "Calling",
+    "title": "Region Mismatch",
+    "status": [
+      "Region Mismatch"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "Live Hub voice entities participating in the same call must be in compatible regions. Traffic can only be routed between Live Hub entities located in the same region.",
+    "causes": [
+      "The phone number, SIP connection, Teams connection, or bot/AI Agent connection involved in the call are configured in different regions",
+      "A number, connection, or agent was recently provisioned in a different region than the rest of the call path — often after a configuration change or a resource created in the wrong region by mistake"
+    ],
+    "actions": [
+      "Check the configured region of the phone number, SIP connection, Teams connection, and bot/AI Agent connection involved in the call.",
+      "Confirm the routing rule's destination region is compatible with the origin."
+    ],
+    "escalate": "Contact AudioCodes if all relevant entities appear to be in the same region and the call still fails to route.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Names/regions of the voice entities involved"
+    ],
+    "related": "No Matching Route / Call Rejected By Routing Rule"
+  },
+  {
+    "id": "alternate-route-routing-group-failover",
+    "section": "Calling",
+    "title": "Alternate Route / Routing Group Failover",
+    "status": [
+      "Alternate Route / Routing Group Failover"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "A routing group can send a call to an alternate destination when the primary destination doesn't respond. This can result in more than one call record for what the customer experienced as a single call attempt.",
+    "causes": [
+      "The primary destination in a routing group failed to answer or was unavailable, triggering failover to the next-priority destination",
+      "This is frequently intentional resiliency design working as configured — the routing group falls back to the next destination specifically so calls aren’t lost when the first choice doesn’t answer"
+    ],
+    "actions": [
+      "Search for related call records — records sharing the same SID can represent the original attempt and the failover.",
+      "Confirm the routing group's configured priorities match the observed behavior."
+    ],
+    "escalate": "Contact AudioCodes if the failover behavior doesn't match the configured routing group priorities.",
+    "evidence": [
+      "Call ID or SID",
+      "Timestamp and time zone",
+      "Routing group name if known"
+    ],
+    "related": "No Matching Route / Call Rejected By Routing Rule"
+  },
+  {
+    "id": "call-connects-but-audio-is-bad-or-missing-one-way-audio-no-audio-choppy-audio",
+    "section": "Calling",
+    "title": "Call Connects But Audio Is Bad or Missing (One-Way Audio / No Audio / Choppy Audio)",
+    "status": [
+      "RTP connection broken",
+      "Rtp conn broken",
+      "RTP Timeout",
+      "No incoming media for 15000 ms"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The call signals as connected, but one or both sides hear silence, only one direction has audio, or the audio is choppy/distorted. This is a media-path problem, separate from the signaling issues covered by the SIP response codes above.",
+    "causes": [
+      "The audio path (RTP) between the two sides never established, even though call setup succeeded",
+      "A firewall, NAT, or network device is blocking media in one direction",
+      "The two sides could not agree on a common audio format (codec) or encryption setting",
+      "Network congestion, packet loss, or jitter on either leg of the call",
+      "For WebRTC/Teams calls, no usable media path could be found between endpoints (ICE negotiation)"
+    ],
+    "actions": [
+      "Open the call in Calls → Call History and check whether it shows as connected despite the audio problem.",
+      "Review the SIP Ladder to confirm signaling completed normally (a normal ladder alongside bad audio points to a media-path, not a signaling, issue).",
+      "Check whether the problem affects one specific call, one specific route/carrier, or all calls — this narrows down where the media path is breaking.",
+      "Retry the call and note whether the same result happens consistently."
+    ],
+    "escalate": "Contact AudioCodes if signaling completed normally, the problem is not isolated to one destination or network path, and it continues on retry.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Calling and called number",
+      "Which direction had no/bad audio",
+      "Call recording, if one was captured for this call"
+    ],
+    "related": "488 Not Acceptable Here, No Answer"
+  },
+  {
+    "id": "420-bad-extension",
+    "section": "Calling",
+    "title": "420 Bad Extension",
+    "status": [
+      "420 Bad Extension"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The far end sent or expected a call-setup detail (a SIP extension/feature) that the other side does not support.",
+    "causes": [
+      "A feature or header used in call setup isn’t supported by the receiving system",
+      "A mismatch between what Live Hub, a SIP trunk, or a carrier each expect during call setup"
+    ],
+    "actions": [
+      "Open the call in Call History and review the SIP Ladder to see which side sent the unsupported extension.",
+      "If this is isolated to one trunk or carrier, check whether anything changed recently in that connection’s configuration."
+    ],
+    "escalate": "Contact AudioCodes if the SIP Ladder doesn’t make clear which side introduced the unsupported extension, or the issue affects more than one call.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "SIP Ladder excerpt"
+    ],
+    "related": "481 Call/Transaction Does Not Exist, Protocol Error, Unspecified"
+  },
+  {
+    "id": "403-remote-is-disconnected",
+    "section": "Calling",
+    "title": "403 Remote Is Disconnected",
+    "status": [
+      "403 Remote Is Disconnected",
+      "403 Relayed Response: Remote Is Disconnected",
+      "403 Remote Is Disconnected (last Code: 408)"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The remote endpoint disconnected unexpectedly during the call, sometimes following a timeout on that leg. This is a hangup condition distinct from a policy-based 403 Forbidden.",
+    "causes": [
+      "The far end dropped the connection without a clean call teardown",
+      "A prior timeout condition (shown as \"last Code: 408\") led to the disconnect",
+      "A network interruption on the remote side ended the session abruptly"
+    ],
+    "actions": [
+      "Check the SIP Ladder for the sequence of events immediately before the disconnect.",
+      "If a \"(last Code: 408)\" is shown, treat the 408 as the underlying trigger and check that entry too.",
+      "Confirm whether this is isolated to one destination/carrier or happening broadly."
+    ],
+    "escalate": "Contact AudioCodes if this is happening across multiple destinations or carriers, or the SIP Ladder doesn’t explain the disconnect.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "SIP Ladder excerpt",
+      "Call recording, if one was captured for this call"
+    ],
+    "related": "408 Request Timeout, Call Connects But Audio Is Bad or Missing"
+  },
+  {
+    "id": "unallocated-unassigned-number",
+    "section": "Calling",
+    "title": "Unallocated (Unassigned) Number",
+    "status": [
+      "Unallocated (unassigned) number"
+    ],
+    "statusVerified": true,
+    "type": "Protocol Result",
+    "investigate": "Carrier / Network",
+    "actionability": "Sometimes self-service",
+    "meaning": "The dialed number doesn’t exist or hasn’t been assigned to anyone on the receiving network — this is a carrier-level result, not a Live Hub routing failure.",
+    "causes": [
+      "The number was mistyped or is genuinely not in service",
+      "A number was ported or deactivated recently and the destination network hasn’t updated"
+    ],
+    "actions": [
+      "Confirm the dialed number is correct, including country/area code.",
+      "If this is a known, previously-working number, check whether it was recently ported or deactivated."
+    ],
+    "escalate": "Contact AudioCodes if the number is confirmed correct and in service, but calls still fail with this result.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Dialed number"
+    ],
+    "related": "404 Not Found, No Matching Route / Call Rejected By Routing Rule"
+  },
+  {
+    "id": "answering-machine-detected",
+    "section": "Calling",
+    "title": "Answering Machine Detected",
+    "status": [
+      "Answering Machine"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The call reached a voicemail system or automated answering service rather than a live person.",
+    "causes": [
+      "Answering machine detection identified voicemail/greeting audio patterns on the call",
+      "A legitimate live answer with a short or scripted-sounding greeting can occasionally be misclassified as a machine"
+    ],
+    "actions": [
+      "If this result is unexpected, confirm answering machine detection is configured the way you intend for this routing rule/flow.",
+      "Listen back to the call recording, if available, to confirm the detection was accurate."
+    ],
+    "escalate": "Contact AudioCodes if answering machine detection is consistently misclassifying live answers as machines (or vice versa).",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Call recording, if one was captured for this call"
+    ],
+    "related": "No Answer, User Did Not Respond"
+  },
+  {
+    "id": "protocol-error-unspecified",
+    "section": "Calling",
+    "title": "Protocol Error, Unspecified",
+    "status": [
+      "Protocol error, unspecified"
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Support investigation usually required",
+    "meaning": "A call-signaling problem occurred that doesn’t map to one of the named, specific protocol results in this guide.",
+    "causes": [
+      "An edge case or unusual signaling sequence occurred that isn’t covered by a standard named result",
+      "This is a catch-all the platform uses when the signaling problem doesn’t match a defined, named result — the raw SIP Ladder is usually needed to pin down the specific case"
+    ],
+    "actions": [
+      "Open the SIP Ladder for the call and look for anything unusual immediately before the failure.",
+      "Check whether the issue is reproducible or a one-off."
+    ],
+    "escalate": "Contact AudioCodes with the SIP Ladder — this result usually needs the raw signaling trace to diagnose further.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "SIP Ladder excerpt"
+    ],
+    "related": "Unknown Error (Unspecified Platform Failure)"
+  },
+  {
+    "id": "call-reached-wrong-destination",
+    "section": "Routing & Call Delivery",
+    "title": "Call Reached Wrong Destination",
+    "status": [
+      "Call Reached Wrong Destination"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call was delivered somewhere other than the expected destination.",
+    "causes": [
+      "A different routing rule than expected matched the call (based on origin, calling/called number, or region)",
+      "Rule priority/order caused an earlier rule to match first"
+    ],
+    "actions": [
+      "Open Routing → Routing Rules and check origin, calling/called-number criteria, and destination for every rule that could plausibly match this call.",
+      "Confirm which rule actually matched using the call record in Call History."
+    ],
+    "escalate": "Contact AudioCodes if the routing rules appear correctly configured and the call still reaches the wrong destination.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Expected destination vs. actual destination"
+    ],
+    "related": "No Matching Route / Call Rejected By Routing Rule"
+  },
+  {
+    "id": "expected-service-not-applied-recording-translation-assist-bot",
+    "section": "Routing & Call Delivery",
+    "title": "Expected Service Not Applied (Recording / Translation / Assist Bot)",
+    "status": [
+      "Expected Service Not Applied (Recording / Translation / Assist Bot)"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A call did not receive an additional service — such as recording, external recording, voice translation, Assist bot, or number customization — that was expected.",
+    "causes": [
+      "The matched routing rule doesn't have the relevant service enabled",
+      "A different rule than expected matched the call"
+    ],
+    "actions": [
+      "Open Routing → Routing Rules, identify the rule that matched this call, and confirm the relevant service is enabled on it."
+    ],
+    "escalate": "Contact AudioCodes if the correct rule is matched and the service is enabled, but it still didn't apply.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Which service was expected"
+    ],
+    "related": "Call Reached Wrong Destination"
+  },
+  {
+    "id": "teams-connection-not-active",
+    "section": "Microsoft Teams",
+    "title": "Teams Connection Not Active",
+    "status": [
+      "Teams Connection Not Active"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Microsoft Teams",
+    "actionability": "Usually self-service",
+    "meaning": "The Teams connection is not in an Active state. A new connection can briefly show as Creating before becoming Active — this is expected and not an error on its own.",
+    "causes": [
+      "The connection is still being provisioned (Creating)",
+      "Tenant authentication or configuration is incomplete"
+    ],
+    "actions": [
+      "Check the Teams connection status. If it shows Creating, allow time for provisioning to complete before treating it as a failure.",
+      "If it remains in a non-Active state for an extended period, review tenant authentication and configuration."
+    ],
+    "escalate": "Contact AudioCodes if the connection remains non-Active well beyond the expected provisioning time.",
+    "evidence": [
+      "Teams tenant/connection name",
+      "Timestamp",
+      "Current connection status shown"
+    ],
+    "related": "Teams Call Fails to Connect"
+  },
+  {
+    "id": "teams-call-fails-to-connect",
+    "section": "Microsoft Teams",
+    "title": "Teams Call Fails to Connect",
+    "status": [
+      "Teams Call Fails to Connect"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A call involving a Teams participant fails to connect. Teams calls can be inspected using the same Call History and SIP Ladder tools as other calls — start there rather than assuming the issue is on Microsoft's side.",
+    "causes": [
+      "Teams tenant not connected or not authenticated",
+      "Teams connection not in Active state",
+      "Missing Microsoft license for the user/resource",
+      "Phone number not correctly assigned",
+      "Live Hub routing rule missing or misconfigured",
+      "Region mismatch between the Teams connection and the other voice entity"
+    ],
+    "actions": [
+      "Locate the call in Calls → Call History and review the SIP Ladder to see which side returned a failure.",
+      "Verify: tenant connected and authenticated → Teams connection Active → user/resource provisioned correctly → phone number assigned → required Microsoft licenses present → Teams voice policies/routes configured → Live Hub routing rule exists → regions match."
+    ],
+    "escalate": "Contact AudioCodes if Call History and the SIP Ladder don't clearly explain the failure after working through the checks above.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Affected Teams user or resource account",
+      "Number involved",
+      "SIP Ladder excerpt"
+    ],
+    "related": "Teams Connection Not Active, Region Mismatch, User Missing Required Microsoft License"
+  },
+  {
+    "id": "user-missing-required-microsoft-license",
+    "section": "Microsoft Teams",
+    "title": "User Missing Required Microsoft License",
+    "status": [
+      "User Missing Required Microsoft License"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Microsoft Teams",
+    "actionability": "Usually self-service",
+    "meaning": "Teams calling requires eligible Microsoft 365 licensing for the affected user or resource account.",
+    "causes": [
+      "The user or resource account doesn't have the required Microsoft license assigned",
+      "A license was recently removed, reassigned, or expired in the Microsoft 365 admin center, even if nothing changed on the Live Hub side",
+      "Enterprise Voice is enabled in Teams, but the calling plan or Direct Routing license needed alongside it is missing"
+    ],
+    "actions": [
+      "Check license assignment for the affected user/resource account in your Microsoft 365 admin center."
+    ],
+    "escalate": "Contact AudioCodes if the required license is confirmed assigned and the issue continues.",
+    "evidence": [
+      "Affected user or resource account",
+      "Timestamp"
+    ],
+    "related": "Teams Call Fails to Connect"
+  },
+  {
+    "id": "teams-number-not-assigned-correctly",
+    "section": "Microsoft Teams",
+    "title": "Teams Number Not Assigned Correctly",
+    "status": [
+      "Teams Number Not Assigned Correctly"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Microsoft Teams",
+    "actionability": "Usually self-service",
+    "meaning": "A phone number intended for a Teams user or resource account isn't correctly assigned.",
+    "causes": [
+      "Number assignment wasn't completed in Teams admin or Live Hub",
+      "Assignment doesn't match the connection actually being used"
+    ],
+    "actions": [
+      "Verify the number's assignment in both Live Hub and the Teams admin center."
+    ],
+    "escalate": "Contact AudioCodes if the number appears correctly assigned in both places and still isn't working.",
+    "evidence": [
+      "Affected number",
+      "Affected user or resource account",
+      "Timestamp"
+    ],
+    "related": "Teams Call Fails to Connect"
+  },
+  {
+    "id": "agent-does-not-respond",
+    "section": "AI Agents & Conversations",
+    "title": "Agent Does Not Respond",
+    "status": [
+      "Bot Err: no bot input for 20000ms",
+      "Bot Err: Max retries exceeded",
+      "Bot Err: Max retries (2) exceeded.",
+      "Bot Err: Error: 11 OUT_OF_RANGE: More than 120"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The caller reached the AI Agent, but the agent did not produce a response.",
+    "causes": [
+      "The call never actually reached the agent (telephony/routing layer)",
+      "Speech wasn't recognized (STT layer)",
+      "The model/LLM didn't produce a response in time",
+      "A tool call was invoked and never returned",
+      "The provider or model was unavailable"
+    ],
+    "actions": [
+      "Confirm the call reached the agent in Calls → Call History.",
+      "Check AI Agent logs for the conversation.",
+      "Review the separate STT, Bot, and TTS latency figures in Call History to identify which layer was slow or unresponsive — do not assume the delay was the LLM without checking.",
+      "If a tool was involved, check whether it was called and whether it returned."
+    ],
+    "escalate": "Contact AudioCodes with the identified failing layer (telephony, STT, LLM, or tool) if the checks above don't resolve it.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Flow name if applicable",
+      "Timestamp",
+      "Model/provider",
+      "AI Agent logs",
+      "Latency figures if available"
+    ],
+    "related": "Speech Not Recognized, Tool Call Failed or Timed Out, AI Provider/Model Unavailable, Conversation Ended at Maximum Turns"
+  },
+  {
+    "id": "conversation-ended-at-maximum-turns",
+    "section": "AI Agents & Conversations",
+    "title": "Conversation Ended at Maximum Turns",
+    "status": [
+      "Conversation Ended at Maximum Turns"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "AI Agents have a configurable Max Turns setting limiting the number of user/agent interactions. Once reached, the conversation can close — this is expected configured behavior, not a platform failure.",
+    "causes": [
+      "The configured Max Turns value was reached during a longer-than-expected conversation",
+      "This is a deliberate guardrail against runaway or looping conversations, not a platform failure — it caps how long a single conversation can run"
+    ],
+    "actions": [
+      "Open the agent's configuration and check the Max Turns setting.",
+      "Confirm the number of turns in the conversation log against this value."
+    ],
+    "escalate": "Contact AudioCodes if the conversation ended well before the configured Max Turns value was reached.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Configured Max Turns value",
+      "Actual turn count observed"
+    ],
+    "related": "Agent Does Not Respond"
+  },
+  {
+    "id": "empty-or-invalid-llm-response",
+    "section": "AI Agents & Conversations",
+    "title": "Empty or Invalid LLM Response",
+    "status": [
+      "Empty or Invalid LLM Response"
+    ],
+    "statusVerified": false,
+    "type": "Error",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "The configured language model returned an empty or invalid response for a turn in the conversation.",
+    "causes": [
+      "Transient issue with the model provider",
+      "Prompt or configuration produced an unexpected response format"
+    ],
+    "actions": [
+      "Check AI Agent logs for the specific conversation turn to confirm this occurred.",
+      "Note whether it's a one-off or repeatable with similar input."
+    ],
+    "escalate": "Contact AudioCodes with the conversation log if this is repeatable or affecting multiple conversations.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Model/provider",
+      "Timestamp",
+      "AI Agent logs",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "AI Provider/Model Unavailable"
+  },
+  {
+    "id": "ai-provider-model-unavailable",
+    "section": "AI Agents & Conversations",
+    "title": "AI Provider/Model Unavailable",
+    "status": [
+      "Bot Err: Service not available"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "The underlying AI model or provider configured for the agent was unavailable when needed.",
+    "causes": [
+      "Provider-side outage or degradation",
+      "Configured model is deprecated, restricted, or misconfigured"
+    ],
+    "actions": [
+      "Check AI Agent logs for the conversation to confirm the model/provider involved.",
+      "Confirm the configured model is currently valid and available for the account."
+    ],
+    "escalate": "Contact AudioCodes if the configured model/provider appears correct and valid, and the unavailability persists.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Model/provider",
+      "Timestamp",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Empty or Invalid LLM Response, AI Rate or Quota Limit Reached"
+  },
+  {
+    "id": "ai-rate-or-quota-limit-reached",
+    "section": "AI Agents & Conversations",
+    "title": "AI Rate or Quota Limit Reached",
+    "status": [
+      "AI Rate or Quota Limit Reached"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "A rate or quota limit on the AI provider/model has been reached.",
+    "causes": [
+      "Request volume to the model/provider exceeded the configured or provider-side limit",
+      "A burst of concurrent conversations pushed request volume above the provider’s per-minute or per-day allowance",
+      "The configured AI provider account may be on a lower usage tier than current call volume requires"
+    ],
+    "actions": [
+      "Check AI Agent logs around the affected time for rate/quota-related messages.",
+      "Review recent conversation volume for the affected agent."
+    ],
+    "escalate": "Contact AudioCodes to review the applicable limit and discuss increasing it if usage is expected to continue at this level.",
+    "evidence": [
+      "Agent name",
+      "Model/provider",
+      "Timestamp",
+      "Approximate conversation volume at the time",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "AI Provider/Model Unavailable"
+  },
+  {
+    "id": "agent-conversation-session-expired",
+    "section": "AI Agents & Conversations",
+    "title": "Agent/Conversation Session Expired",
+    "status": [
+      "Agent/Conversation Session Expired"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The AI Agent conversation session ended due to inactivity or reaching its maximum allowed duration. This is distinct from a user's sign-in session expiring in the Live Hub portal.",
+    "causes": [
+      "The conversation was inactive for longer than the session timeout allows",
+      "The conversation reached its maximum configured duration"
+    ],
+    "actions": [
+      "Check the conversation log to confirm how long the session was inactive before ending."
+    ],
+    "escalate": "Contact AudioCodes if the session ended despite active, ongoing conversation.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Timestamp"
+    ],
+    "related": "User Authentication Session Expired, WhatsApp Conversation Window Closed"
+  },
+  {
+    "id": "bot-agent-failed-to-start",
+    "section": "AI Agents & Conversations",
+    "title": "Bot/Agent Failed To Start",
+    "status": [
+      "Bot Err: Error starting bot",
+      "Bot Err: Error starting bot: getaddrinfo ENOTFOUND",
+      "Bot Err: Error starting bot: Request failed with..."
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Bot / AI Platform",
+    "actionability": "Sometimes self-service",
+    "meaning": "The AI agent/bot failed to initialize for this conversation before it could begin responding.",
+    "causes": [
+      "The bot platform or endpoint the agent connects to was unreachable (e.g. a DNS/network lookup failure)",
+      "A request made during startup failed or was rejected"
+    ],
+    "actions": [
+      "Confirm nothing changed recently in the agent/bot’s configuration or its connection details.",
+      "Check whether this is affecting one specific agent/flow or all of them."
+    ],
+    "escalate": "Contact AudioCodes if the agent’s configuration hasn’t changed and it consistently fails to start.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Timestamp and time zone",
+      "Agent/flow name"
+    ],
+    "related": "AI Provider/Model Unavailable, Agent Does Not Respond"
+  },
+  {
+    "id": "bot-platform-communication-failed-error-posting-activity",
+    "section": "AI Agents & Conversations",
+    "title": "Bot Platform Communication Failed (Error Posting Activity)",
+    "status": [
+      "Bot Err: Error posting activity: timeout of 100",
+      "Bot Err: Error posting activity: timeout of 150",
+      "Bot Err: sendStream cannot complete since 'user..."
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Bot / AI Platform",
+    "actionability": "Sometimes self-service",
+    "meaning": "Live Hub could not successfully send an update (such as the caller’s input) to the bot platform mid-conversation.",
+    "causes": [
+      "The bot platform didn’t respond within the expected time window while Live Hub was sending it an update",
+      "A streaming connection to the bot platform was interrupted mid-conversation"
+    ],
+    "actions": [
+      "Check whether this is happening across many conversations or isolated to one agent/flow.",
+      "Confirm nothing changed recently in the bot platform connection or endpoint."
+    ],
+    "escalate": "Contact AudioCodes if this is recurring across multiple conversations rather than a one-off.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Timestamp and time zone",
+      "Agent/flow name"
+    ],
+    "related": "Bot/Agent Failed To Start, Agent Does Not Respond"
+  },
+  {
+    "id": "speech-not-recognized",
+    "section": "Speech & Telephony",
+    "title": "Speech Not Recognized",
+    "status": [
+      "Speech Not Recognized"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "The AI Agent did not correctly recognize what the caller said.",
+    "causes": [
+      "Speech-to-text configuration (language, provider) doesn't match what the caller is speaking",
+      "Audio quality or background noise affected recognition",
+      "STT latency or a service issue on the speech provider side"
+    ],
+    "actions": [
+      "Open the agent's Speech and Telephony configuration and confirm the configured language matches the caller's language.",
+      "Review the STT latency figure for the affected call in Call History.",
+      "Listen to the call recording, if available, to assess audio quality."
+    ],
+    "escalate": "Contact AudioCodes if language and audio quality both look correct and recognition still fails consistently.",
+    "evidence": [
+      "Call ID",
+      "Agent name",
+      "Timestamp",
+      "Configured STT language/provider",
+      "STT latency if available",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Agent Does Not Respond, Incorrect Speech Recognition"
+  },
+  {
+    "id": "incorrect-speech-recognition",
+    "section": "Speech & Telephony",
+    "title": "Incorrect Speech Recognition",
+    "status": [
+      "Incorrect Speech Recognition"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "The agent recognized speech, but transcribed it incorrectly, leading to an unexpected response.",
+    "causes": [
+      "Accent, background noise, or audio quality affecting STT accuracy",
+      "Domain-specific vocabulary not well recognized by the configured STT service"
+    ],
+    "actions": [
+      "Review the conversation log/transcript to see exactly what was recognized versus what was said.",
+      "Check the configured STT language and provider under Speech and Telephony."
+    ],
+    "escalate": "Contact AudioCodes with specific examples if misrecognition is frequent and affecting normal, clear speech.",
+    "evidence": [
+      "Call ID",
+      "Agent name",
+      "Timestamp",
+      "Example of what was said vs. what was recognized",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Speech Not Recognized"
+  },
+  {
+    "id": "agent-cannot-be-interrupted-barge-in",
+    "section": "Speech & Telephony",
+    "title": "Agent Cannot Be Interrupted (Barge-In)",
+    "status": [
+      "Agent Cannot Be Interrupted (Barge-In)"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The caller is unable to interrupt the agent while it's speaking.",
+    "causes": [
+      "Barge-in is disabled in the agent's Speech and Telephony configuration",
+      "Barge-in can also be unsupported by the specific speech/telephony configuration in use for that agent, separate from whether the setting is toggled on"
+    ],
+    "actions": [
+      "Open the agent's Speech and Telephony settings and confirm whether barge-in is enabled."
+    ],
+    "escalate": "Contact AudioCodes if barge-in is enabled in configuration but interruption still doesn't work.",
+    "evidence": [
+      "Call ID",
+      "Agent name",
+      "Timestamp",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": ""
+  },
+  {
+    "id": "dtmf-not-detected",
+    "section": "Speech & Telephony",
+    "title": "DTMF Not Detected",
+    "status": [
+      "DTMF Not Detected"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "Touch-tone (DTMF) input from the caller was not detected or acted on by the agent.",
+    "causes": [
+      "DTMF handling isn't configured or enabled for this agent/Flow",
+      "The Flow or prompt doesn't define expected behavior for DTMF input",
+      "A telephony-layer issue prevented DTMF tones from reaching the agent"
+    ],
+    "actions": [
+      "Check the agent's Speech and Telephony and Flow configuration for DTMF handling.",
+      "Confirm DTMF was actually sent — review the call recording or logs if available."
+    ],
+    "escalate": "Contact AudioCodes if DTMF handling is configured correctly and tones are confirmed sent, but still not detected.",
+    "evidence": [
+      "Call ID",
+      "Agent name",
+      "Timestamp",
+      "Digits expected to be sent",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "No User Input Event"
+  },
+  {
+    "id": "no-user-input-event",
+    "section": "Speech & Telephony",
+    "title": "No User Input Event",
+    "status": [
+      "User Did Not Respond",
+      "No user responding",
+      "User inactive for 20 seconds",
+      "User inactive for 30 seconds",
+      "User inactive for 60 seconds",
+      "User inactive for 62 seconds",
+      "User inactive for 120 seconds",
+      "User inactive for 300 seconds"
+    ],
+    "statusVerified": true,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "AI Agents generate a synthetic event (such as NO-USER-INPUT-1, with incrementing numbers for repeated occurrences) when the caller is silent during a voice conversation. This is expected platform behavior, not an error — how it's handled depends on the agent's prompt or Flow configuration.",
+    "causes": [
+      "The caller was silent and this event fired as designed",
+      "The prompt or Flow doesn't handle this event the way you expect (e.g. it should repeat a prompt, transfer, or end the call)"
+    ],
+    "actions": [
+      "Review the agent's prompt or Flow to see how NO-USER-INPUT events are configured to be handled.",
+      "Check the conversation log to see how many NO-USER-INPUT events occurred and what happened after."
+    ],
+    "escalate": "Contact AudioCodes if the configured handling doesn't match observed behavior.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Flow name if applicable",
+      "Timestamp",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "DTMF Not Detected, Agent Does Not Respond"
+  },
+  {
+    "id": "call-ends-after-fixed-duration-ai-agent",
+    "section": "Speech & Telephony",
+    "title": "Call Ends After Fixed Duration (AI Agent)",
+    "status": [
+      "Call Ends After Fixed Duration (AI Agent)"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call with the AI Agent ends consistently after a set amount of time. This commonly reflects a configured maximum call duration on the agent's Speech and Telephony settings, the voice entity, or the account.",
+    "causes": [
+      "Maximum call duration is configured on the agent, the relevant voice channel, or the account, and the lower applicable value is being enforced",
+      "If no limit was intentionally set for this agent, check whether a default account-level maximum is being inherited instead"
+    ],
+    "actions": [
+      "Check the agent's Speech and Telephony configuration for a maximum call duration setting.",
+      "Also check the relevant voice entity and account-level limits."
+    ],
+    "escalate": "Contact AudioCodes if no configured maximum duration explains the observed cutoff point.",
+    "evidence": [
+      "Call ID",
+      "Agent name",
+      "Timestamp",
+      "Observed call duration",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Call Limit / Maximum Call Duration Reached"
+  },
+  {
+    "id": "speech-to-text-service-connection-failed-stt-err",
+    "section": "Speech & Telephony",
+    "title": "Speech-to-Text Service Connection Failed (STT Err)",
+    "status": [
+      "STT Err: Websocket error: WebSocket was closed",
+      "STT Err: Unable to contact server. StatusCode:"
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Speech / AI Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "The connection to the Speech-to-Text service was lost or couldn’t be established, so the caller’s speech couldn’t be transcribed for this part of the call.",
+    "causes": [
+      "The STT provider’s connection was interrupted or closed unexpectedly",
+      "The STT service was unreachable or returned an error status when Live Hub tried to connect"
+    ],
+    "actions": [
+      "Check whether this is isolated to one call or affecting speech recognition broadly.",
+      "If it’s widespread and recent, check whether it lines up with a known STT provider incident."
+    ],
+    "escalate": "Contact AudioCodes if this is affecting multiple calls or agents rather than a single occurrence.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Timestamp and time zone",
+      "Call recording, if one was captured for this call"
+    ],
+    "related": "Speech Not Recognized, Text-to-Speech Request Failed (TTS Err)"
+  },
+  {
+    "id": "text-to-speech-request-failed-tts-err",
+    "section": "Speech & Telephony",
+    "title": "Text-to-Speech Request Failed (TTS Err)",
+    "status": [
+      "TTS Err: 400 Bad Request. Req body: <speak ..."
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Speech / AI Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "A request to convert the agent’s response text into spoken audio was rejected as malformed or invalid, so the caller may have heard nothing or a fallback message instead.",
+    "causes": [
+      "The text sent to the Text-to-Speech service contained something it couldn’t process (for example, invalid formatting in the spoken-text markup)",
+      "Special characters, unsupported spoken-text markup, or an unexpectedly long response can each trigger this on the Text-to-Speech provider’s side"
+    ],
+    "actions": [
+      "If this is tied to a specific agent response or prompt, check that response for unusual characters or formatting.",
+      "Check whether this is a one-off or consistently tied to the same prompt/response."
+    ],
+    "escalate": "Contact AudioCodes if this is consistently tied to a specific prompt or happening across many calls.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Timestamp and time zone",
+      "Agent/flow name and the response involved, if known"
+    ],
+    "related": "Speech-to-Text Service Connection Failed (STT Err)"
+  },
+  {
+    "id": "tool-call-failed-or-timed-out",
+    "section": "AI Agent Tools & External Actions",
+    "title": "Tool Call Failed or Timed Out",
+    "status": [
+      "Tool Call Failed or Timed Out"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Third-Party Integration",
+    "actionability": "Sometimes self-service",
+    "meaning": "The agent attempted to use a tool to perform an external action, and the tool call failed or didn't return in time.",
+    "causes": [
+      "The tool's target endpoint was unavailable",
+      "The request timed out",
+      "Authentication to the target endpoint failed",
+      "The endpoint returned an error"
+    ],
+    "actions": [
+      "Review AI Agent logs for the conversation to see the tool call, its parameters, and the returned status/error.",
+      "Confirm the target endpoint is reachable and functioning independently of Live Hub.",
+      "Check the tool's configured authentication is current."
+    ],
+    "escalate": "Contact AudioCodes with the sanitized request/response details if the target endpoint is confirmed healthy and the tool call still fails from Live Hub.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Tool name",
+      "Timestamp",
+      "Sanitized request/response (no credentials)",
+      "AI Agent logs"
+    ],
+    "related": "Agent Does Not Respond, Audio Playback Failed"
+  },
+  {
+    "id": "wrong-tool-selected-or-invalid-parameters",
+    "section": "AI Agent Tools & External Actions",
+    "title": "Wrong Tool Selected or Invalid Parameters",
+    "status": [
+      "Wrong Tool Selected or Invalid Parameters"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The agent invoked a tool, but selected the wrong one or generated parameters that didn't match what was expected.",
+    "causes": [
+      "The prompt/instructions don't clearly guide the model on when and how to use the tool",
+      "The tool's parameter definitions are ambiguous or incomplete"
+    ],
+    "actions": [
+      "Review AI Agent logs to see which tool was called and with what parameters.",
+      "Review the agent's prompt/instructions and the tool's parameter definitions for clarity."
+    ],
+    "escalate": "Contact AudioCodes if the tool and parameter configuration look correct and the model still consistently selects the wrong tool.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Tool name",
+      "AI Agent logs"
+    ],
+    "related": "Tool Call Failed or Timed Out"
+  },
+  {
+    "id": "audio-playback-failed-play-url-failed",
+    "section": "AI Agent Tools & External Actions",
+    "title": "Audio Playback Failed (PLAY-URL-FAILED)",
+    "status": [
+      "Audio Playback Failed (PLAY-URL-FAILED)"
+    ],
+    "statusVerified": false,
+    "type": "Error",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The agent's audio playback tool failed to play a prerecorded audio file. Live Hub documents an exact failure indicator, PLAY-URL-FAILED, which includes the specific reason for the failure.",
+    "causes": [
+      "The audio URL was unreachable",
+      "The file format isn't supported",
+      "The tool configuration is incorrect"
+    ],
+    "actions": [
+      "Check AI Agent logs for the PLAY-URL-FAILED message and the specific reason included with it.",
+      "Confirm the audio URL is reachable and the file format is supported.",
+      "Review the tool's configuration for the affected agent."
+    ],
+    "escalate": "Contact AudioCodes with the exact PLAY-URL-FAILED reason if the URL and format both check out.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Audio URL",
+      "Exact PLAY-URL-FAILED reason from logs",
+      "Timestamp",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "Tool Call Failed or Timed Out"
+  },
+  {
+    "id": "call-transfer-failed",
+    "section": "AI Agent Tools & External Actions",
+    "title": "Call Transfer Failed",
+    "status": [
+      "Transfer failed: REFER request failed",
+      "Transfer failed: 403 Forbidden"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "The agent attempted to transfer the call and the transfer did not complete successfully.",
+    "causes": [
+      "The transfer target isn't correctly configured",
+      "The transfer target didn't answer",
+      "A call-control action returned an error"
+    ],
+    "actions": [
+      "Review AI Agent logs and the SIP Ladder for the transfer attempt.",
+      "Confirm the intended transfer target is correctly configured and reachable."
+    ],
+    "escalate": "Contact AudioCodes with the logs and SIP Ladder if the transfer target is correctly configured and reachable but the transfer still fails.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Intended transfer target",
+      "Timestamp",
+      "AI Agent logs"
+    ],
+    "related": "Tool Call Failed or Timed Out"
+  },
+  {
+    "id": "agent-gives-incorrect-answer-from-document",
+    "section": "AI Agent Documents & Knowledge",
+    "title": "Agent Gives Incorrect Answer From Document",
+    "status": [
+      "Agent Gives Incorrect Answer From Document"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The agent answered a question using an attached document, but the answer was wrong or didn't reflect the document's actual content. This is usually a retrieval or content issue, not a platform failure — Live Hub converts source content to Markdown and splits it into chunks, so retrieval quality depends on that processing and configuration.",
+    "causes": [
+      "The document isn't attached to the agent that needs it",
+      "The relevant information wasn't captured well during chunking",
+      "The wrong retrieval mode is selected for this use case",
+      "The question falls outside what the document actually covers"
+    ],
+    "actions": [
+      "Confirm the document is attached to the correct agent under AI Agents → Documents.",
+      "Open AI Agents → Documents → [Document] → Info to inspect the document's status and generated chunks.",
+      "Test the same question directly and compare the agent's answer to the source content.",
+      "Review the configured retrieval mode for the document."
+    ],
+    "escalate": "Contact AudioCodes with the document name, the question asked, and the expected vs. actual answer if the document, chunks, and retrieval mode all appear correct.",
+    "evidence": [
+      "Agent name",
+      "Document name",
+      "Source type",
+      "Retrieval mode",
+      "Example question",
+      "Expected answer from source",
+      "Actual agent answer",
+      "Relevant chunk/status info"
+    ],
+    "related": "Document Not Accessible or Cannot Be Retrieved"
+  },
+  {
+    "id": "document-not-accessible-or-cannot-be-retrieved",
+    "section": "AI Agent Documents & Knowledge",
+    "title": "Document Not Accessible or Cannot Be Retrieved",
+    "status": [
+      "Document Not Accessible or Cannot Be Retrieved"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A document the agent relies on could not be downloaded, parsed, or made available to the agent.",
+    "causes": [
+      "The source URL is inaccessible",
+      "The document failed to parse correctly",
+      "The document isn't fully processed yet"
+    ],
+    "actions": [
+      "Open AI Agents → Documents → [Document] → Info and check its current status.",
+      "If the source is a URL, confirm it's currently reachable.",
+      "Review generated chunks, where available, to see whether processing completed."
+    ],
+    "escalate": "Contact AudioCodes if the document status shows a processing failure that persists after re-checking the source.",
+    "evidence": [
+      "Agent name",
+      "Document name",
+      "Source type/URL",
+      "Current document status"
+    ],
+    "related": "Agent Gives Incorrect Answer From Document"
+  },
+  {
+    "id": "flow-takes-unexpected-path",
+    "section": "AI Agent Flows & Multi-Agent",
+    "title": "Flow Takes Unexpected Path",
+    "status": [
+      "Flow Takes Unexpected Path"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A Flow — a deterministic sequence of nodes and transitions — moved to a different node than expected. This is generally a configuration matter (a condition, transition, or extracted variable behaving differently than intended) rather than a platform execution failure.",
+    "causes": [
+      "A transition condition evaluated differently than expected",
+      "Variable extraction produced an unexpected value",
+      "A fallback path was triggered",
+      "A no-user-input event drove the conversation down an unintended path"
+    ],
+    "actions": [
+      "Review the Flow's node and transition configuration for the path in question.",
+      "Check the conversation log to see which conditions and variable values were evaluated at each transition.",
+      "If testing, use the Flow's test/preview capability to trace the path step by step."
+    ],
+    "escalate": "Contact AudioCodes with the conversation log and expected vs. actual path if the Flow logic appears correctly configured and the path is still wrong.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Flow name",
+      "Expected path vs. actual path",
+      "Relevant variable values"
+    ],
+    "related": "No User Input Event, Maximum Transitions Reached"
+  },
+  {
+    "id": "maximum-transitions-reached",
+    "section": "AI Agent Flows & Multi-Agent",
+    "title": "Maximum Transitions Reached",
+    "status": [
+      "Maximum Transitions Reached"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The Flow reached its configured limit on transitions or turns and ended or moved to a fallback path as designed.",
+    "causes": [
+      "The conversation genuinely required more turns than the configured maximum allows",
+      "A Flow design issue — such as a transition condition that’s never satisfied — can also cause turns to accumulate without the Flow ever reaching its intended end node"
+    ],
+    "actions": [
+      "Check the Flow's configured maximum-transition/turn setting against the observed conversation length."
+    ],
+    "escalate": "Contact AudioCodes if the Flow ended well before the configured maximum was reached.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Flow name",
+      "Configured maximum",
+      "Observed turn count"
+    ],
+    "related": "Conversation Ended at Maximum Turns, Flow Takes Unexpected Path"
+  },
+  {
+    "id": "sub-agent-not-reached-wrong-agent-responds",
+    "section": "AI Agent Flows & Multi-Agent",
+    "title": "Sub-Agent Not Reached / Wrong Agent Responds",
+    "status": [
+      "Sub-Agent Not Reached / Wrong Agent Responds"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "In a multi-agent setup, control did not transfer to the expected sub-agent, or a different agent than expected responded.",
+    "causes": [
+      "The sub-agent isn't correctly configured or assigned",
+      "Orchestration/prompt logic didn't hand off control as intended",
+      "A model/provider-specific limitation affected multi-agent handoff"
+    ],
+    "actions": [
+      "Identify the main agent and the expected sub-agent for this scenario.",
+      "Inspect conversation logs around the point where handoff should have occurred.",
+      "Confirm the sub-agent is correctly configured and assigned."
+    ],
+    "escalate": "Contact AudioCodes with the conversation log if configuration looks correct and handoff still isn't happening as expected.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Main agent name",
+      "Expected sub-agent name",
+      "Timestamp",
+      "AI Agent logs"
+    ],
+    "related": "Flow Takes Unexpected Path"
+  },
+  {
+    "id": "whatsapp-number-not-connected",
+    "section": "WhatsApp",
+    "title": "WhatsApp Number Not Connected",
+    "status": [
+      "WhatsApp Number Not Connected"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The WhatsApp Business number isn't showing as connected in Live Hub.",
+    "causes": [
+      "The Meta/WhatsApp authorization flow wasn't completed",
+      "The connection was disconnected or revoked on the Meta side"
+    ],
+    "actions": [
+      "Check the number's connection status under Voice Channels → WhatsApp Numbers.",
+      "If not connected, complete the WhatsApp/Meta authorization flow again."
+    ],
+    "escalate": "Contact AudioCodes if the authorization flow completes successfully but the number still doesn't show as connected.",
+    "evidence": [
+      "WhatsApp number",
+      "Timestamp",
+      "Connection status shown"
+    ],
+    "related": ""
+  },
+  {
+    "id": "whatsapp-message-failed",
+    "section": "WhatsApp",
+    "title": "WhatsApp Message Failed",
+    "status": [
+      "WhatsApp Message Failed"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Meta / WhatsApp",
+    "actionability": "Sometimes self-service",
+    "meaning": "A WhatsApp message could not be delivered to the recipient, and WhatsApp returned a delivery failure rather than a delivered/read receipt.",
+    "causes": [
+      "The customer service window with this recipient has closed and the message isn't an approved template",
+      "A template message was used but hasn't been approved",
+      "A Meta-side policy or account restriction is in effect",
+      "General delivery failure on Meta's side"
+    ],
+    "actions": [
+      "Check whether the 24-hour conversation window with this recipient is open or closed.",
+      "If sending a template, confirm it's approved.",
+      "Check the WhatsApp Business Account status for any restriction."
+    ],
+    "escalate": "Contact AudioCodes if the conversation window is open, the template (if used) is approved, and there's no account restriction, yet the message still fails.",
+    "evidence": [
+      "WhatsApp number",
+      "Recipient (where appropriate)",
+      "Timestamp",
+      "Template name if applicable",
+      "Message/error detail shown"
+    ],
+    "related": "WhatsApp Conversation Window Closed, WhatsApp Template Not Approved"
+  },
+  {
+    "id": "whatsapp-conversation-window-closed",
+    "section": "WhatsApp",
+    "title": "WhatsApp Conversation Window Closed",
+    "status": [
+      "WhatsApp Conversation Window Closed"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Meta / WhatsApp",
+    "actionability": "Usually self-service",
+    "meaning": "WhatsApp's customer service window closes after a period without a customer reply. Once closed, only approved template messages can be sent until the customer messages again.",
+    "causes": [
+      "More time has passed since the customer's last message than the WhatsApp-defined window allows",
+      "The window only resets from a genuine customer-initiated message — an agent or automated reply does not reopen it"
+    ],
+    "actions": [
+      "Check the timestamp of the customer's last inbound message to confirm whether the window should be open or closed.",
+      "If you need to reach the customer, use an approved template message."
+    ],
+    "escalate": "Contact AudioCodes if the window appears closed despite a recent customer reply.",
+    "evidence": [
+      "WhatsApp number",
+      "Recipient",
+      "Timestamp of last customer message"
+    ],
+    "related": "WhatsApp Message Failed"
+  },
+  {
+    "id": "whatsapp-template-not-approved",
+    "section": "WhatsApp",
+    "title": "WhatsApp Template Not Approved",
+    "status": [
+      "WhatsApp Template Not Approved"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Meta / WhatsApp",
+    "actionability": "Usually self-service",
+    "meaning": "A message template hasn't completed Meta's approval process yet, so it can't be used to start a conversation outside the customer service window.",
+    "causes": [
+      "The template is still pending review",
+      "The template was rejected during review"
+    ],
+    "actions": [
+      "Check the template's status in your WhatsApp template management."
+    ],
+    "escalate": "Contact AudioCodes if the template shows approved but still can't be used to send messages.",
+    "evidence": [
+      "Template name",
+      "Current template status"
+    ],
+    "related": "WhatsApp Message Failed"
+  },
+  {
+    "id": "whatsapp-business-account-restricted",
+    "section": "WhatsApp",
+    "title": "WhatsApp Business Account Restricted",
+    "status": [
+      "WhatsApp Business Account Restricted"
+    ],
+    "statusVerified": false,
+    "type": "Warning",
+    "investigate": "Meta / WhatsApp",
+    "actionability": "Sometimes self-service",
+    "meaning": "Meta has placed a restriction on the WhatsApp Business Account, which can affect the ability to send messages.",
+    "causes": [
+      "A Meta-side policy or quality restriction has been applied to the business account",
+      "Restrictions are commonly triggered by a drop in message quality rating, a spike in blocks/reports from recipients, or a policy violation flagged by Meta’s automated review"
+    ],
+    "actions": [
+      "Check the WhatsApp Business Account status and any notifications from Meta about the restriction."
+    ],
+    "escalate": "Contact AudioCodes for help understanding the restriction — resolving it typically requires coordination with Meta.",
+    "evidence": [
+      "WhatsApp number",
+      "Business account name",
+      "Any restriction message/notice received"
+    ],
+    "related": "WhatsApp Message Failed"
+  },
+  {
+    "id": "expected-recording-is-missing",
+    "section": "Recording & Transcription",
+    "title": "Expected Recording Is Missing",
+    "status": [
+      "Expected Recording Is Missing"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A recording that was expected for a call cannot be found. This isn't automatically a processing failure — recording depends on routing configuration, retention settings, and access permissions, and any of these can explain a missing recording.",
+    "causes": [
+      "The routing rule that matched the call didn't have recording enabled",
+      "The call wasn't actually established",
+      "The recording has been removed under the account's retention policy",
+      "External recording was used instead of Live Hub recording",
+      "The viewing user doesn't have permission to access it"
+    ],
+    "actions": [
+      "Confirm which routing rule matched the call, and whether recording (Live Hub or external) was enabled on it.",
+      "Confirm the call was actually established (not just attempted).",
+      "Check whether the recording may have been removed under retention/lifecycle settings.",
+      "Confirm the current user has permission to view recordings for this call.",
+      "Check the recording area within Calls → Call History for this call."
+    ],
+    "escalate": "Contact AudioCodes with the Call ID if the matched routing rule had recording enabled, retention hasn't expired, and permissions are correct, yet the recording still doesn't appear.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Routing rule/service expected",
+      "Current status shown in Call History"
+    ],
+    "related": "Recording Retention Expired, Recording Still Processing"
+  },
+  {
+    "id": "recording-still-processing",
+    "section": "Recording & Transcription",
+    "title": "Recording Still Processing",
+    "status": [
+      "Recording Still Processing"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The call recording exists but hasn't finished processing yet, so it isn't viewable immediately.",
+    "causes": [
+      "Normal processing delay after call completion",
+      "Longer calls, or higher account-wide recording volume at the same time, can extend how long processing takes"
+    ],
+    "actions": [
+      "Wait a short period and check Call History again for the recording."
+    ],
+    "escalate": "Contact AudioCodes if the recording remains in a processing state for an extended period.",
+    "evidence": [
+      "Call ID",
+      "Timestamp",
+      "How long the recording has shown as processing"
+    ],
+    "related": "Expected Recording Is Missing"
+  },
+  {
+    "id": "recording-retention-expired",
+    "section": "Recording & Transcription",
+    "title": "Recording Retention Expired",
+    "status": [
+      "Recording Retention Expired"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "Live Hub can automatically remove outdated recordings and transcripts according to the account's retention configuration. An old recording no longer being available may reflect this lifecycle behavior rather than a fault.",
+    "causes": [
+      "The recording's age exceeded the configured retention period",
+      "Retention is usually set account-wide, so if the removal timing is unexpected, the configured period may not match what was assumed when the account was set up"
+    ],
+    "actions": [
+      "Check the account's configured retention period against the age of the recording you're looking for."
+    ],
+    "escalate": "Contact AudioCodes if the recording should still be within the retention window but isn't available.",
+    "evidence": [
+      "Call ID",
+      "Approximate date of the call",
+      "Configured retention period if known"
+    ],
+    "related": "Expected Recording Is Missing"
+  },
+  {
+    "id": "transcript-not-available",
+    "section": "Recording & Transcription",
+    "title": "Transcript Not Available",
+    "status": [
+      "Transcript Not Available"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "A transcript expected for a call or recording cannot be found.",
+    "causes": [
+      "Transcription wasn't enabled for this call",
+      "The transcript is still being generated",
+      "The underlying recording is missing or was removed under retention"
+    ],
+    "actions": [
+      "Confirm transcription was enabled for this call via the matched routing rule or agent configuration.",
+      "Check whether the transcript may still be generating.",
+      "Confirm the underlying recording exists and hasn't been removed under retention."
+    ],
+    "escalate": "Contact AudioCodes with the Call ID if transcription was enabled, sufficient time has passed, and the recording exists, but the transcript is still missing.",
+    "evidence": [
+      "Call ID",
+      "Timestamp",
+      "Whether transcription was enabled for this call"
+    ],
+    "related": "Expected Recording Is Missing, Recording Retention Expired"
+  },
+  {
+    "id": "cannot-sign-in-authentication-failure",
+    "section": "Users, Authentication & Permissions",
+    "title": "Cannot Sign In (Authentication Failure)",
+    "status": [
+      "Cannot Sign In (Authentication Failure)"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A user cannot sign in to Live Hub. This is a question of authentication — confirming who the user is — which is distinct from authorization (what they're allowed to do) once signed in.",
+    "causes": [
+      "Incorrect username/password for local authentication",
+      "Microsoft/Entra ID authentication issue for organizations using Microsoft sign-in",
+      "MFA step not completed successfully",
+      "The account is disabled"
+    ],
+    "actions": [
+      "Confirm which sign-in method applies (local Live Hub credentials vs. Microsoft/Entra ID).",
+      "For local sign-in, confirm the username and attempt a password reset if needed.",
+      "For Microsoft sign-in, confirm the user can authenticate normally with Microsoft outside of Live Hub.",
+      "Confirm MFA, if enabled, is completing successfully."
+    ],
+    "escalate": "Contact AudioCodes if credentials and MFA are confirmed correct and sign-in still fails, or if the account may be disabled.",
+    "evidence": [
+      "Affected username/email",
+      "Sign-in method used (local or Microsoft)",
+      "Exact error message shown",
+      "Timestamp"
+    ],
+    "related": "Insufficient Permissions For Action"
+  },
+  {
+    "id": "insufficient-permissions-for-action",
+    "section": "Users, Authentication & Permissions",
+    "title": "Insufficient Permissions For Action",
+    "status": [
+      "Insufficient Permissions For Action"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A signed-in user cannot perform an action or see a menu/resource they expect to. Access to Live Hub resources is controlled through IAM, user groups, and policies — a missing menu or blocked action is typically a permissions matter, not a platform failure.",
+    "causes": [
+      "The user's assigned user group/policy doesn't grant access to this resource or action",
+      "The user isn't a member of the account where the resource exists"
+    ],
+    "actions": [
+      "Check the user's assigned user group(s) and policies under account IAM settings.",
+      "Confirm the user is a member of the correct account (especially in parent/subaccount setups)."
+    ],
+    "escalate": "Contact AudioCodes if the user's assigned permissions should cover this action and it's still blocked.",
+    "evidence": [
+      "Affected username",
+      "Action/resource attempted",
+      "Assigned user group/role if known",
+      "Timestamp"
+    ],
+    "related": "Cannot Sign In (Authentication Failure)"
+  },
+  {
+    "id": "user-authentication-session-expired",
+    "section": "Users, Authentication & Permissions",
+    "title": "User Authentication Session Expired",
+    "status": [
+      "User Authentication Session Expired"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The user's Live Hub portal sign-in session has expired and they need to sign in again. This is separate from an AI Agent conversation session expiring.",
+    "causes": [
+      "Normal session timeout after a period of inactivity or elapsed time",
+      "Signing in from a new device or browser, or an administrator-forced sign-out policy, can also end a session earlier than the normal inactivity timeout"
+    ],
+    "actions": [
+      "Sign in again to start a new session."
+    ],
+    "escalate": "Contact AudioCodes if sessions are expiring much faster than expected during active use.",
+    "evidence": [
+      "Affected username",
+      "Approximate session duration observed"
+    ],
+    "related": "Agent/Conversation Session Expired"
+  },
+  {
+    "id": "api-client-access-denied",
+    "section": "Users, Authentication & Permissions",
+    "title": "API Client Access Denied",
+    "status": [
+      "API Client Access Denied"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "An API Client (a non-human, programmatic user) was denied access to an endpoint or action.",
+    "causes": [
+      "The API Client's assigned user group/permissions don't cover this endpoint or action",
+      "The client secret in use is outdated or was rotated"
+    ],
+    "actions": [
+      "Check the API Client's assigned user group/permissions.",
+      "Confirm the client secret configured in the calling system is current — do not send the secret itself anywhere, including to AudioCodes Support."
+    ],
+    "escalate": "Contact AudioCodes with the API Client name/ID, the endpoint or action attempted, and the HTTP status/error returned if permissions appear correct.",
+    "evidence": [
+      "API Client name/ID (not the secret)",
+      "Endpoint/action attempted",
+      "HTTP status/error returned",
+      "Timestamp"
+    ],
+    "related": "Insufficient Permissions For Action"
+  },
+  {
+    "id": "post-call-analysis-webhook-failed",
+    "section": "Integrations & Webhooks",
+    "title": "Post-Call Analysis Webhook Failed",
+    "status": [
+      "Post-Call Analysis Webhook Failed"
+    ],
+    "statusVerified": false,
+    "type": "Error",
+    "investigate": "Third-Party Integration",
+    "actionability": "Sometimes self-service",
+    "meaning": "A post-call analysis result (such as a summary or structured extraction) failed to deliver to your configured webhook endpoint. Live Hub records a response_status and response_text for each delivery attempt — an HTTP 2xx status means successful transmission, an HTTP 4xx/5xx means the receiving endpoint returned an error, and a status of 700 specifically indicates the delivery attempt timed out.",
+    "causes": [
+      "The receiving endpoint returned an error (4xx/5xx)",
+      "The receiving endpoint didn't respond in time (status 700)",
+      "The endpoint URL or authentication configured is incorrect"
+    ],
+    "actions": [
+      "Check the recorded response_status and response_text for the delivery attempt.",
+      "If 4xx/5xx, review your endpoint's own logs for why it rejected the request.",
+      "If status 700, confirm your endpoint responds quickly enough and is reachable."
+    ],
+    "escalate": "Contact AudioCodes if response_status/response_text don't clearly explain the failure, or if you need help confirming what Live Hub actually sent.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name",
+      "Timestamp",
+      "Recorded response_status and response_text",
+      "Endpoint URL (without embedded credentials)"
+    ],
+    "related": ""
+  },
+  {
+    "id": "third-party-tool-api-failed",
+    "section": "Integrations & Webhooks",
+    "title": "Third-Party Tool/API Failed",
+    "status": [
+      "Third-Party Tool/API Failed"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Third-Party Integration",
+    "actionability": "Sometimes self-service",
+    "meaning": "A call from Live Hub to a connected third-party service (a CRM, ticketing system, or other external API) did not complete successfully.",
+    "causes": [
+      "The third-party service is unavailable",
+      "Authentication to the third-party service failed",
+      "The request sent didn't match what the service expects"
+    ],
+    "actions": [
+      "Test the third-party endpoint independently of Live Hub, if possible, to confirm it's healthy.",
+      "Confirm authentication/credentials configured for the integration are current."
+    ],
+    "escalate": "Contact AudioCodes with the sanitized request/response if the third-party endpoint is confirmed healthy and the failure persists from Live Hub.",
+    "evidence": [
+      "Integration/tool name",
+      "Timestamp",
+      "HTTP status if exposed",
+      "Sanitized request/response (no credentials)"
+    ],
+    "related": "Post-Call Analysis Webhook Failed, Tool Call Failed or Timed Out"
+  },
+  {
+    "id": "account-inactive-broad-service-failure",
+    "section": "Billing, Account State & Licensing",
+    "title": "Account Inactive — Broad Service Failure",
+    "status": [
+      "Account Inactive — Broad Service Failure"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "Many unrelated functions are failing at once. Before assuming a technical outage, check account balance and state — a trial account with zero or negative credit becomes inactive, and an inactive account cannot handle calls through bots or SIP connections and blocks management of certain resources.",
+    "causes": [
+      "The account's prepaid balance is depleted",
+      "A trial account has reached zero or negative credit"
+    ],
+    "actions": [
+      "Check the account's plan, balance, and active/inactive status.",
+      "Check Alarms and Alarm History for related warnings (e.g. low-funds thresholds).",
+      "Once balance/state is ruled out, determine whether the failure affects all calls, one provider, one region, Teams only, one AI provider, one agent, or one routing rule — narrowing the scope before assuming a platform-wide issue."
+    ],
+    "escalate": "Contact AudioCodes if the account is active with sufficient balance and the broad failure continues.",
+    "evidence": [
+      "Account name",
+      "Timestamp",
+      "Scope of affected functionality (all calls / specific provider / specific region / etc.)"
+    ],
+    "related": "Insufficient Funds / Trial Restriction"
+  },
+  {
+    "id": "feature-not-available-on-current-plan",
+    "section": "Billing, Account State & Licensing",
+    "title": "Feature Not Available on Current Plan",
+    "status": [
+      "Feature Not Available on Current Plan"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A feature being used isn't included in the account's current plan or entitlement.",
+    "causes": [
+      "The plan doesn't include this feature",
+      "The feature requires a specific add-on or tier"
+    ],
+    "actions": [
+      "Review the account's current plan and entitlements."
+    ],
+    "escalate": "Contact AudioCodes to discuss adding this feature to your plan.",
+    "evidence": [
+      "Account name",
+      "Feature in question"
+    ],
+    "related": "Insufficient Funds / Trial Restriction"
+  },
+  {
+    "id": "concurrent-call-limit-reached",
+    "section": "Capacity & Limits",
+    "title": "Concurrent Call Limit Reached",
+    "status": [
+      "Max traffic limits exceeded"
+    ],
+    "statusVerified": true,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Sometimes self-service",
+    "meaning": "New calls are being rejected because the account or a specific voice entity has reached its configured maximum concurrent-call limit.",
+    "causes": [
+      "Call volume has genuinely exceeded the configured concurrency limit",
+      "A stuck call that never properly released can occupy a concurrency slot without an active conversation actually happening"
+    ],
+    "actions": [
+      "Check Alarms and Alarm History for a maximum-concurrent-calls threshold alert.",
+      "Review which account/entity the limit applies to."
+    ],
+    "escalate": "Contact AudioCodes to review the current limit and discuss an increase if this volume is expected to continue.",
+    "evidence": [
+      "Account/entity name",
+      "Timestamp",
+      "Approximate call volume at the time"
+    ],
+    "related": "CPS Limit Reached"
+  },
+  {
+    "id": "cps-limit-reached",
+    "section": "Capacity & Limits",
+    "title": "CPS Limit Reached",
+    "status": [
+      "CPS Limit Reached"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Sometimes self-service",
+    "meaning": "Calls are failing specifically during bursts because the configured Calls Per Second (CPS) threshold has been exceeded.",
+    "causes": [
+      "A traffic burst exceeded the configured CPS limit for the account or entity",
+      "A dialer, bulk campaign, or retry storm — many calls retried in a short window right after a failure — is a common trigger even when total daily volume is normal"
+    ],
+    "actions": [
+      "Check Alarms and Alarm History for a CPS-related threshold alert.",
+      "Review the timing of the failures against known traffic spikes."
+    ],
+    "escalate": "Contact AudioCodes to review the current CPS limit and discuss an increase if bursts like this are expected.",
+    "evidence": [
+      "Account/entity name",
+      "Timestamp of the burst",
+      "Approximate CPS observed if known"
+    ],
+    "related": "Concurrent Call Limit Reached"
+  },
+  {
+    "id": "rejected-calls-due-to-limit-exceeded",
+    "section": "Capacity & Limits",
+    "title": "Rejected Calls Due to Limit Exceeded",
+    "status": [
+      "Rejected Calls Due to Limit Exceeded"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "Customer Configuration",
+    "actionability": "Sometimes self-service",
+    "meaning": "Calls are being explicitly rejected because a configured limit was exceeded. Live Hub supports alarm thresholds specifically for calls rejected due to limits being exceeded.",
+    "causes": [
+      "Concurrent call, CPS, or another configured limit was exceeded",
+      "This is a summary/alarm-level indicator rather than one specific mechanism — check Concurrent Call Limit Reached and CPS Limit Reached individually for which one actually applies"
+    ],
+    "actions": [
+      "Check Alarms and Alarm History for a rejected-calls-due-to-limit-exceeded alert around the affected time."
+    ],
+    "escalate": "Contact AudioCodes to review which specific limit is being hit and discuss adjusting it.",
+    "evidence": [
+      "Account/entity name",
+      "Timestamp",
+      "Alarm details if available"
+    ],
+    "related": "Concurrent Call Limit Reached, CPS Limit Reached"
+  },
+  {
+    "id": "ai-rate-or-quota-limit-reached-capacity",
+    "section": "Capacity & Limits",
+    "title": "AI Rate or Quota Limit Reached (Capacity)",
+    "status": [
+      "AI Rate or Quota Limit Reached (Capacity)"
+    ],
+    "statusVerified": false,
+    "type": "Limit / Entitlement",
+    "investigate": "AI / Speech Provider",
+    "actionability": "Sometimes self-service",
+    "meaning": "See AI Agents & Conversations → AI Rate or Quota Limit Reached. Listed here for discoverability under capacity/limit topics.",
+    "causes": [
+      "Request volume to the configured AI model/provider exceeded the applicable limit",
+      "The account may be using a shared AI provider quota across multiple agents, so unrelated agents can contribute to hitting the same limit"
+    ],
+    "actions": [
+      "Review AI Agent logs around the affected time for rate/quota-related messages."
+    ],
+    "escalate": "Contact AudioCodes to review the applicable limit and discuss increasing it.",
+    "evidence": [
+      "Agent name",
+      "Model/provider",
+      "Timestamp",
+      "Call recording, if one was captured for this call/conversation"
+    ],
+    "related": "AI Rate or Quota Limit Reached"
+  },
+  {
+    "id": "phone-number-provisioning-failed",
+    "section": "Account & Provisioning",
+    "title": "Phone Number Provisioning Failed",
+    "status": [
+      "Phone Number Provisioning Failed"
+    ],
+    "statusVerified": false,
+    "type": "Error",
+    "investigate": "Live Hub",
+    "actionability": "Sometimes self-service",
+    "meaning": "A new phone number failed to be provisioned onto the account.",
+    "causes": [
+      "The number is already in use elsewhere",
+      "A required configuration step wasn't completed"
+    ],
+    "actions": [
+      "Confirm the number isn't already assigned elsewhere in the account.",
+      "Retry the provisioning steps and confirm each required field is completed."
+    ],
+    "escalate": "Contact AudioCodes if provisioning continues to fail after confirming the number is available and all required fields are complete.",
+    "evidence": [
+      "Number being provisioned",
+      "Timestamp",
+      "Exact error shown if any"
+    ],
+    "related": ""
+  },
+  {
+    "id": "resource-already-exists",
+    "section": "Account & Provisioning",
+    "title": "Resource Already Exists",
+    "status": [
+      "Resource Already Exists"
+    ],
+    "statusVerified": false,
+    "type": "Configuration Condition",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "A resource (such as a routing rule, agent, or connection) could not be created because one with the same name/identifier already exists.",
+    "causes": [
+      "A resource with this name already exists in the account",
+      "This commonly happens when a resource was actually created successfully on a previous attempt that appeared to fail, and the retry reused the same name"
+    ],
+    "actions": [
+      "Search for an existing resource with the same name before creating a new one, and rename if needed."
+    ],
+    "escalate": "Contact AudioCodes if no visibly conflicting resource exists and creation still fails with this message.",
+    "evidence": [
+      "Resource type and intended name",
+      "Timestamp"
+    ],
+    "related": ""
+  },
+  {
+    "id": "sip-connection-not-reachable",
+    "section": "Platform & Connectivity",
+    "title": "SIP Connection Not Reachable",
+    "status": [
+      "SIP Connection Not Reachable"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A configured SIP connection cannot be reached, affecting calls that depend on it.",
+    "causes": [
+      "The remote SBC or SIP trunk endpoint is down or unreachable",
+      "A firewall or network path issue is blocking connectivity",
+      "The connection's configuration (address, port, credentials) is incorrect"
+    ],
+    "actions": [
+      "Check the SIP connection's configuration under Voice Channels → SIP Connections.",
+      "Check Alarms and Alarm History for related connectivity alerts.",
+      "Confirm with your network/carrier that the remote endpoint is reachable."
+    ],
+    "escalate": "Contact AudioCodes if the configuration is confirmed correct and the remote endpoint is confirmed reachable, yet Live Hub still can't connect.",
+    "evidence": [
+      "SIP connection name",
+      "Timestamp",
+      "Alarm details if available"
+    ],
+    "related": "503 Service Unavailable, 408 Request Timeout"
+  },
+  {
+    "id": "tls-certificate-issue",
+    "section": "Platform & Connectivity",
+    "title": "TLS/Certificate Issue",
+    "status": [
+      "TLS/Certificate Issue"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Sometimes self-service",
+    "meaning": "A secure connection (TLS) failed to establish, commonly due to a certificate problem.",
+    "causes": [
+      "An expired or soon-to-expire certificate on either side",
+      "A certificate not trusted by the receiving party",
+      "A hostname/FQDN mismatch"
+    ],
+    "actions": [
+      "Check the relevant certificate's expiry date and issuing authority.",
+      "Confirm the hostname/FQDN in the certificate matches the configuration in use."
+    ],
+    "escalate": "Contact AudioCodes if the certificate is valid, trusted, and matches, and the TLS failure persists.",
+    "evidence": [
+      "Affected connection name",
+      "Timestamp",
+      "Certificate expiry date if known"
+    ],
+    "related": "SIP Connection Not Reachable"
+  },
+  {
+    "id": "unknown-error-unspecified-platform-failure",
+    "section": "Platform & Connectivity",
+    "title": "Unknown Error (Unspecified Platform Failure)",
+    "status": [
+      "Unknown error",
+      "Uknown error"
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Live Hub",
+    "actionability": "Support investigation usually required",
+    "meaning": "An unexpected platform-level error occurred and Live Hub could not identify a more specific cause.",
+    "causes": [
+      "An edge case occurred that isn’t mapped to a specific, named error",
+      "This is a deliberate catch-all rather than a specific diagnosis — it exists so a call or action doesn’t fail completely silently, even when the platform can’t further classify what happened"
+    ],
+    "actions": [
+      "Note the exact time and any pattern (same call type, same route, same integration) around when it occurs.",
+      "Check Alarms and Alarm History for anything related at the same time."
+    ],
+    "escalate": "Contact AudioCodes — this result doesn’t point to a specific self-service fix, so Support will need to investigate the underlying cause.",
+    "evidence": [
+      "Call ID or conversation identifier",
+      "Timestamp and time zone",
+      "What you observed vs. what you expected"
+    ],
+    "related": "Protocol Error, Unspecified"
+  },
+  {
+    "id": "temporary-failure-transient-system-error",
+    "section": "Platform & Connectivity",
+    "title": "Temporary Failure (Transient System Error)",
+    "status": [
+      "Temporary failure"
+    ],
+    "statusVerified": true,
+    "type": "Warning",
+    "investigate": "Multiple Possible Sources",
+    "actionability": "Usually self-service",
+    "meaning": "A short-lived network, carrier, or service issue affected the call or action. Live Hub is explicitly flagging this as transient rather than a persistent failure.",
+    "causes": [
+      "A brief network hiccup, carrier-side blip, or momentary service unavailability occurred",
+      "Live Hub distinguishes this from a hard failure specifically because a retry is expected to succeed — if it doesn’t clear on retry, the underlying issue is no longer transient"
+    ],
+    "actions": [
+      "Retry the call or action — transient failures typically resolve on their own.",
+      "If it keeps recurring for the same destination or integration, that’s no longer \"temporary\" and is worth a closer look."
+    ],
+    "escalate": "Contact AudioCodes if this result keeps recurring rather than clearing on retry.",
+    "evidence": [
+      "Call ID or conversation identifier",
+      "Timestamp and time zone",
+      "How often it’s recurring"
+    ],
+    "related": "Unknown Error (Unspecified Platform Failure)"
+  },
+  {
+    "id": "idle-endpoint-session-inactivity-timeout",
+    "section": "Platform & Connectivity",
+    "title": "Idle Endpoint / Session Inactivity Timeout",
+    "status": [
+      "Idle Endpoint"
+    ],
+    "statusVerified": true,
+    "type": "Symptom",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The endpoint on the call or session stopped responding or generating activity, and Live Hub ended it as idle.",
+    "causes": [
+      "The far end stopped sending expected signaling or media activity",
+      "A device, app, or integration on one side hung or lost its connection without a clean disconnect"
+    ],
+    "actions": [
+      "Check whether this is isolated to one endpoint, device, or integration.",
+      "If it’s a recurring device or app, confirm it isn’t losing network connectivity mid-session."
+    ],
+    "escalate": "Contact AudioCodes if idle-endpoint results are happening across multiple sessions or endpoints without a clear device-side cause.",
+    "evidence": [
+      "Call ID or conversation identifier",
+      "Timestamp and time zone"
+    ],
+    "related": "403 Remote Is Disconnected"
+  },
+  {
+    "id": "system-recovery-after-timeout",
+    "section": "Platform & Connectivity",
+    "title": "System Recovery After Timeout",
+    "status": [
+      "Recovery on timer expiry"
+    ],
+    "statusVerified": true,
+    "type": "Warning",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "A timeout occurred on the call or session, and Live Hub’s recovery process activated to bring it to a clean end state.",
+    "causes": [
+      "A component or step in the call flow didn’t complete within its expected time window, triggering recovery handling",
+      "Seeing this result is itself evidence the recovery mechanism worked as intended — the concerning signal is how often it fires, not that it fired once"
+    ],
+    "actions": [
+      "Check what the call/session was doing right before this point (which flow step, tool call, or media wait) to see what actually timed out."
+    ],
+    "escalate": "Contact AudioCodes if this is affecting a specific flow or integration repeatedly.",
+    "evidence": [
+      "Call ID or conversation identifier",
+      "Timestamp and time zone",
+      "Flow or step where it occurred, if known"
+    ],
+    "related": "Internal Call-Leg Timeout (Low-Level)"
+  },
+  {
+    "id": "internal-call-leg-timeout-low-level",
+    "section": "Platform & Connectivity",
+    "title": "Internal Call-Leg Timeout (Low-Level)",
+    "status": [
+      "Subsystem Id: ICALLLEG Cause Code: Timeout"
+    ],
+    "statusVerified": true,
+    "type": "Warning",
+    "investigate": "Live Hub",
+    "actionability": "Support investigation usually required",
+    "meaning": "An internal Live Hub call-processing component timed out while handling this call leg. This is a low-level, engineering-style result rather than a customer-configurable one.",
+    "causes": [
+      "An internal processing step for this call leg didn’t complete in time",
+      "Because this sits below customer-configurable settings, a recurring pattern is more informative than a single occurrence"
+    ],
+    "actions": [
+      "Note the exact time and any pattern in what type of call this affects."
+    ],
+    "escalate": "Contact AudioCodes with the Call ID — this result generally requires backend investigation rather than self-service checks.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone"
+    ],
+    "related": "System Recovery After Timeout"
+  },
+  {
+    "id": "interworking-issue-unspecified",
+    "section": "Platform & Connectivity",
+    "title": "Interworking Issue, Unspecified",
+    "status": [
+      "Interworking unspecified"
+    ],
+    "statusVerified": true,
+    "type": "Error",
+    "investigate": "Carrier / Network",
+    "actionability": "Support investigation usually required",
+    "meaning": "A compatibility issue occurred between Live Hub and an interconnected carrier or system, without a more specific cause identified.",
+    "causes": [
+      "Two interconnected systems (for example, Live Hub and a carrier network) disagreed on how to handle some part of the call",
+      "This can also surface after a carrier or upstream provider makes an unannounced change to their own signaling behavior"
+    ],
+    "actions": [
+      "Check whether this is isolated to one carrier route or destination."
+    ],
+    "escalate": "Contact AudioCodes with the Call ID and destination — interworking issues usually need coordination with the carrier or upstream system.",
+    "evidence": [
+      "Call ID",
+      "Timestamp and time zone",
+      "Destination/carrier route involved"
+    ],
+    "related": "Protocol Error, Unspecified"
+  },
+  {
+    "id": "active-alarm-on-account",
+    "section": "Alarms & Monitoring",
+    "title": "Active Alarm on Account",
+    "status": [
+      "Active Alarm on Account"
+    ],
+    "statusVerified": false,
+    "type": "Warning",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "Live Hub is showing an active alarm on the account. Alarms are early-warning indicators with their own severity levels — Critical, Major, Minor, Warning, or Cleared — used for account-wide monitoring.",
+    "causes": [
+      "A monitored threshold (failed calls, poor-quality calls, concurrency, CPS, rejected calls, remaining funds, etc.) has been crossed",
+      "The alarm may reflect a leading indicator — for example, approaching a limit — rather than an outage already in progress; the alarm’s own severity and description say which"
+    ],
+    "actions": [
+      "Open the Alarms view to see the alarm's time, severity, type, description, and region.",
+      "Match the alarm type to the relevant section of this guide (for example, a funds alarm relates to Billing, Account State & Licensing; a CPS alarm relates to Capacity & Limits)."
+    ],
+    "escalate": "Contact AudioCodes if the alarm's described condition doesn't match what you're observing, or if a Critical/Major alarm doesn't clear after the underlying condition is resolved.",
+    "evidence": [
+      "Alarm time, severity, type, and description",
+      "Affected region"
+    ],
+    "related": "Concurrent Call Limit Reached, CPS Limit Reached, Insufficient Funds / Trial Restriction"
+  },
+  {
+    "id": "intermittent-issue-with-no-currently-active-alarm",
+    "section": "Alarms & Monitoring",
+    "title": "Intermittent Issue With No Currently Active Alarm",
+    "status": [
+      "Intermittent Issue With No Currently Active Alarm"
+    ],
+    "statusVerified": false,
+    "type": "Symptom",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "You experienced a problem, but no alarm is currently active. The absence of a currently active alarm doesn't prove no problem occurred — check Alarm History rather than only the live Alarms view.",
+    "causes": [
+      "The condition was transient and has since cleared",
+      "The issue occurred outside the window you're currently viewing"
+    ],
+    "actions": [
+      "Open Alarm History and search around the specific time the issue was reported, rather than only checking current/active alarms."
+    ],
+    "escalate": "Contact AudioCodes with the specific time of the reported issue if Alarm History shows nothing relevant.",
+    "evidence": [
+      "Timestamp and time zone of the reported issue",
+      "Description of what was observed"
+    ],
+    "related": "Active Alarm on Account"
+  },
+  {
+    "id": "caller-cancelled-before-answer",
+    "section": "Not Errors / Expected Events",
+    "title": "Caller Cancelled Before Answer",
+    "status": [
+      "Cancel",
+      "ORIGINATOR_CANCEL"
+    ],
+    "statusVerified": true,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The caller ended the call attempt before the destination answered.",
+    "causes": [
+      "The caller hung up, pressed end call, or their calling app cancelled the attempt before the destination picked up"
+    ],
+    "actions": [
+      "No action needed for normal, occasional occurrences."
+    ],
+    "escalate": "Contact AudioCodes only if this is happening at an unusually high rate relative to total call volume.",
+    "evidence": [
+      "Call ID",
+      "Timestamp"
+    ],
+    "related": "487 Request Terminated"
+  },
+  {
+    "id": "destination-busy-or-declined",
+    "section": "Not Errors / Expected Events",
+    "title": "Destination Busy or Declined",
+    "status": [
+      "Destination Busy or Declined"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The destination was legitimately busy or actively declined the call.",
+    "causes": [
+      "The destination device signaled it was already in use, or the person/system actively rejected the incoming call"
+    ],
+    "actions": [
+      "Investigate only if all calls to a destination return busy/declined unexpectedly, multiple destinations are affected, or the result conflicts with the destination's known state."
+    ],
+    "escalate": "Contact AudioCodes if busy/decline results conflict with a destination confirmed to be available.",
+    "evidence": [
+      "Call ID",
+      "Timestamp",
+      "Called number"
+    ],
+    "related": "Busy"
+  },
+  {
+    "id": "call-completed-and-ended-normally",
+    "section": "Not Errors / Expected Events",
+    "title": "Call Completed and Ended Normally",
+    "status": [
+      "Bye",
+      "Bye received from remote",
+      "User ends call",
+      "User Triggered",
+      "Normal call clear",
+      "Normal End Of Call",
+      "Normal, unspecified",
+      "Call ended successfully",
+      "Completion status",
+      "OK"
+    ],
+    "statusVerified": true,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call connected and both parties disconnected normally when finished.",
+    "causes": [
+      "Either party ended the call after the conversation concluded, using a standard call-teardown signal"
+    ],
+    "actions": [
+      "No action needed — this is expected, normal behavior."
+    ],
+    "escalate": "No escalation needed.",
+    "evidence": [
+      "—"
+    ],
+    "related": ""
+  },
+  {
+    "id": "conversation-completed-as-designed",
+    "section": "Not Errors / Expected Events",
+    "title": "Conversation Completed as Designed",
+    "status": [
+      "Conversation Completed as Designed"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The AI Agent conversation reached its intended conclusion and ended.",
+    "causes": [
+      "The AI Agent’s flow or logic reached its defined end state — for example, the caller’s request was resolved or handed off as intended"
+    ],
+    "actions": [
+      "No action needed — this is expected, normal behavior."
+    ],
+    "escalate": "No escalation needed.",
+    "evidence": [
+      "—"
+    ],
+    "related": ""
+  },
+  {
+    "id": "maximum-call-duration-reached-expected",
+    "section": "Not Errors / Expected Events",
+    "title": "Maximum Call Duration Reached (Expected)",
+    "status": [
+      "Maximum Call Duration Reached (Expected)"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The call ended because it reached a configured maximum-duration limit — this is designed behavior, not a failure.",
+    "causes": [
+      "A configured maximum-duration limit — account-level or on the specific voice entity — was reached, and the call ended automatically as designed"
+    ],
+    "actions": [
+      "Confirm against the configured maximum duration if you want to verify the exact limit in effect."
+    ],
+    "escalate": "Contact AudioCodes if the call ended before any configured maximum duration was reached.",
+    "evidence": [
+      "Call ID",
+      "Observed duration"
+    ],
+    "related": "Call Limit / Maximum Call Duration Reached"
+  },
+  {
+    "id": "old-recording-or-transcript-no-longer-available-retention",
+    "section": "Not Errors / Expected Events",
+    "title": "Old Recording or Transcript No Longer Available (Retention)",
+    "status": [
+      "Old Recording or Transcript No Longer Available (Retention)"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The recording or transcript was removed automatically because it exceeded the account's configured retention period.",
+    "causes": [
+      "The recording or transcript’s age passed the account’s configured retention period, and it was removed automatically"
+    ],
+    "actions": [
+      "Check the configured retention period against the age of the item you're looking for."
+    ],
+    "escalate": "Contact AudioCodes if the item should still be within the retention window.",
+    "evidence": [
+      "Call ID",
+      "Approximate date of the call",
+      "Configured retention period if known"
+    ],
+    "related": "Recording Retention Expired"
+  },
+  {
+    "id": "no-user-input-handled-normally",
+    "section": "Not Errors / Expected Events",
+    "title": "No-User-Input Handled Normally",
+    "status": [
+      "No-User-Input Handled Normally"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "The caller was silent, and the AI Agent handled it using its configured no-user-input behavior (such as repeating a prompt, transferring, or ending the call).",
+    "causes": [
+      "The caller didn’t speak or provide input within the expected window, and the agent’s configured no-input handling — a reprompt, fallback message, or graceful call end — took over as designed"
+    ],
+    "actions": [
+      "Review the prompt/Flow configuration if you want to confirm the exact configured behavior."
+    ],
+    "escalate": "Contact AudioCodes if the observed handling doesn't match what's configured.",
+    "evidence": [
+      "Call ID / conversation identifier",
+      "Agent name"
+    ],
+    "related": "No User Input Event"
+  },
+  {
+    "id": "user-signed-out",
+    "section": "Not Errors / Expected Events",
+    "title": "User Signed Out",
+    "status": [
+      "User Signed Out"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Customer Configuration",
+    "actionability": "Usually self-service",
+    "meaning": "The user signed out of Live Hub, either manually or because their session ended.",
+    "causes": [
+      "The user clicked sign out, or their session ended due to an inactivity timeout or an administrator-forced sign-out"
+    ],
+    "actions": [
+      "Sign in again to continue."
+    ],
+    "escalate": "Contact AudioCodes if sign-outs are happening much more frequently than expected during active use.",
+    "evidence": [
+      "Username",
+      "Approximate frequency if recurring"
+    ],
+    "related": "User Authentication Session Expired"
+  },
+  {
+    "id": "teams-connection-shows-creating",
+    "section": "Not Errors / Expected Events",
+    "title": "Teams Connection Shows 'Creating'",
+    "status": [
+      "Teams Connection Shows 'Creating'"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Microsoft Teams",
+    "actionability": "Usually self-service",
+    "meaning": "A newly created Teams connection can briefly show a Creating status before becoming Active. This is expected provisioning behavior.",
+    "causes": [
+      "The connection was created recently and Microsoft Teams hasn’t finished provisioning it yet — this is a normal, temporary state"
+    ],
+    "actions": [
+      "Allow a reasonable amount of time for provisioning before treating this as a problem."
+    ],
+    "escalate": "Contact AudioCodes if the connection remains in Creating status well beyond the expected provisioning time.",
+    "evidence": [
+      "Teams connection name",
+      "How long it has shown Creating"
+    ],
+    "related": "Teams Connection Not Active"
+  },
+  {
+    "id": "alternate-routing-multiple-call-records-for-one-attempt",
+    "section": "Not Errors / Expected Events",
+    "title": "Alternate Routing / Multiple Call Records for One Attempt",
+    "status": [
+      "Alternate Routing / Multiple Call Records for One Attempt"
+    ],
+    "statusVerified": false,
+    "type": "Expected Event",
+    "investigate": "Live Hub",
+    "actionability": "Usually self-service",
+    "meaning": "You see more than one call record for what felt like a single call attempt. This can happen when a routing group fails over to an alternate destination, or a transfer occurred.",
+    "causes": [
+      "A routing group’s failover logic tried more than one destination for the same call attempt, and each attempt was logged as its own call record"
+    ],
+    "actions": [
+      "Search for related call records sharing the same SID to see the full sequence."
+    ],
+    "escalate": "Contact AudioCodes if the sequence of records doesn't match the configured routing group priorities or expected transfer behavior.",
+    "evidence": [
+      "Call ID or SID",
+      "Timestamp"
+    ],
+    "related": "Alternate Route / Routing Group Failover"
+  }
+]
