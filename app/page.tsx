@@ -57,20 +57,25 @@ type Track = {
   icon: typeof Bot;
   color: string;
   steps: string[];
+  phases: string[];
 };
+
+const OFFICIAL_VIDEO_PLAYLIST =
+  "https://www.youtube.com/playlist?list=PLWI2eO0GVBO-nwUsm1csXntGlLwj6XxjB";
 
 const tracks: Track[] = [
   {
     id: "voice-agent",
-    eyebrow: "Recommended first build",
-    title: "Build Your First AI Agent",
+    eyebrow: "Recommended for every new user",
+    title: "Make Your First Live Hub Call",
     description:
-      "Create one focused agent, test it in chat and by voice, then connect a real number.",
+      "Build one small AI Agent, give it voice, connect a number, route the call, and prove the result end to end.",
     time: "34 min",
     level: "Start here",
     icon: Bot,
     color: "cyan",
     steps: lessonsByTrack["voice-agent"].map((lesson) => lesson.title),
+    phases: ["BUILD", "PROVE LOGIC", "ADD VOICE", "PROVE VOICE", "ADD CHANNEL", "ROUTE + OBSERVE"],
   },
   {
     id: "sip-trunk",
@@ -83,6 +88,7 @@ const tracks: Track[] = [
     icon: Radio,
     color: "blue",
     steps: lessonsByTrack["sip-trunk"].map((lesson) => lesson.title),
+    phases: ["CHOOSE TYPE", "PREPARE", "CONNECT", "MATCH NUMBERS", "TEST + PROVE"],
   },
   {
     id: "routing",
@@ -95,6 +101,7 @@ const tracks: Track[] = [
     icon: Route,
     color: "green",
     steps: lessonsByTrack.routing.map((lesson) => lesson.title),
+    phases: ["UNDERSTAND", "CREATE", "TEST", "ADD ONE OPTION"],
   },
   {
     id: "operate",
@@ -107,6 +114,7 @@ const tracks: Track[] = [
     icon: Activity,
     color: "violet",
     steps: lessonsByTrack.operate.map((lesson) => lesson.title),
+    phases: ["DASHBOARD", "EVIDENCE", "BILLING", "ACCESS"],
   },
   {
     id: "diagnose",
@@ -119,6 +127,7 @@ const tracks: Track[] = [
     icon: AlertTriangle,
     color: "amber",
     steps: lessonsByTrack.diagnose.map((lesson) => lesson.title),
+    phases: ["CAPTURE", "READ RESULT", "FIND LAYER", "RETEST", "ESCALATE"],
   },
 ];
 
@@ -129,13 +138,6 @@ const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
   { id: "library", label: "Doc library", icon: LibraryBig },
   { id: "glossary", label: "Voice glossary", icon: Code2 },
-];
-
-const quickGoals = [
-  { label: "Build an AI agent", icon: Bot, track: "voice-agent" },
-  { label: "Connect SIP or a contact center", icon: Radio, track: "sip-trunk" },
-  { label: "Create a routing rule", icon: Route, track: "routing" },
-  { label: "Monitor calls and usage", icon: Activity, track: "operate" },
 ];
 
 type DocItem = {
@@ -168,6 +170,7 @@ type TroubleshootingIssue = {
 const troubleshootingIssues = troubleshootingData as TroubleshootingIssue[];
 
 const docs: DocItem[] = [
+  { title: "Official Live Hub video playlist", description: "Watch the AudioCodes walkthrough that matches your current lesson. Use the Academy for the ordered steps and the playlist for visual confirmation.", category: "Watch", time: "Video", level: "Official", icon: Play, url: OFFICIAL_VIDEO_PLAYLIST },
   { title: "Start with Live Hub", description: "Sign in, learn the product model, and choose the shortest path to a first call.", category: "Get started", time: "5 min", level: "Start", icon: Sparkles, url: TECH_DOCS.home },
   { title: "Tour the dashboard", description: "Learn the navigation, account selector, usage, Help Center, wizard, and monitoring cards.", category: "Get started", time: "6 min", level: "Tour", icon: ListChecks, url: TECH_DOCS.dashboard },
   { title: "Quick setup wizard", description: "Use Live Hub's guided configuration when you need help creating a common first call path.", category: "Get started", time: "6 min", level: "Wizard", icon: ListChecks, url: TECH_DOCS.quickSetupWizard },
@@ -244,8 +247,11 @@ export default function Home() {
     });
   };
 
-  const totalSteps = tracks.reduce((total, track) => total + track.steps.length, 0);
-  const progress = Math.round((completed.length / totalSteps) * 100);
+  const launchSteps = tracks[0].steps.length;
+  const launchCompleted = tracks[0].steps.filter((_, index) =>
+    completed.includes(`voice-agent:${index}`)
+  ).length;
+  const progress = Math.round((launchCompleted / launchSteps) * 100);
 
   const selectedIndex = useMemo(
     () => tracks.findIndex((track) => track.id === selectedTrack.id),
@@ -313,11 +319,11 @@ export default function Home() {
 
         <div className="sidebar-progress-card">
           <div className="progress-card-head">
-            <span>Your launch path</span>
+            <span>Your first call</span>
             <strong>{progress}%</strong>
           </div>
           <Progress value={progress} aria-label="Academy progress" />
-          <p>{completed.length ? `${completed.length} of ${totalSteps} steps complete.` : "Choose a journey to begin."}</p>
+          <p>{launchCompleted ? `${launchCompleted} of ${launchSteps} launch steps complete.` : "Start one guided path. Ignore the rest for now."}</p>
         </div>
 
         <Button asChild variant="ghost" className="sidebar-help">
@@ -402,27 +408,27 @@ function HomeView({
           </p>
           <div className="academy-location">
             <span><BookOpen /></span>
-            <div><strong>You are in the Live Hub Academy.</strong><p>Start with one outcome. The Academy shows only the settings you need now and keeps advanced options for later.</p></div>
+            <div><strong>You are in the Live Hub Academy.</strong><p>Your first goal is simple: make one real call reach one working AI Agent. We will explain every connection on the way.</p></div>
           </div>
           <div className="hero-actions">
-            <Button size="lg" className="primary-cta" onClick={goToOrientation}>
-              <ListChecks /> I&apos;m new — show me around
+            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>
+              <PhoneCall /> Start my first call
             </Button>
-            <Button size="lg" variant="outline" className="secondary-cta" onClick={goToJourneys}>
-              I know my task <ArrowRight />
+            <Button size="lg" variant="outline" className="secondary-cta" onClick={goToOrientation}>
+              <Play /> Take the 3-minute tour
             </Button>
           </div>
           <div className="trust-row">
-            <span><Check /> One outcome at a time</span>
-            <span><Clock3 /> Short guided missions</span>
-            <span><ShieldCheck /> Official TechDocs when needed</span>
+            <span><Check /> One ordered path</span>
+            <span><Clock3 /> About 34 minutes</span>
+            <span><ShieldCheck /> Tested before advanced options</span>
           </div>
         </div>
 
-        <div className="voice-console" aria-label="Live Hub voice flow overview">
+        <div className="voice-console" aria-label="Your first Live Hub call path">
           <div className="console-topline">
-            <span className="live-dot" /> LIVE FLOW
-            <span className="console-id">CALL_001</span>
+            <span className="live-dot" /> YOUR FIRST FINISH LINE
+            <span className="console-id">6 STEPS</span>
           </div>
           <div className="waveform" aria-hidden="true">
             {[19, 35, 56, 31, 72, 44, 86, 52, 28, 61, 93, 46, 66, 36, 76, 50, 26, 58, 39, 70, 30, 48].map((height, index) => (
@@ -430,82 +436,49 @@ function HomeView({
             ))}
           </div>
           <div className="flow-map">
-            <FlowNode icon={Bot} label="AI agent" sublabel="Understands" active />
+            <FlowNode icon={PhoneCall} label="Phone number" sublabel="Call enters" active />
             <div className="flow-connector"><span /></div>
-            <FlowNode icon={Sparkles} label="Live Hub" sublabel="Orchestrates" active />
+            <FlowNode icon={Route} label="Routing rule" sublabel="Live Hub decides" active />
             <div className="flow-connector"><span /></div>
-            <FlowNode icon={PhoneCall} label="Voice" sublabel="Connects" active />
+            <FlowNode icon={Bot} label="AI Agent" sublabel="Conversation starts" active />
           </div>
           <div className="console-result">
             <span><Check /></span>
             <div>
-              <strong>Ready for a real conversation</strong>
-              <small>One platform · any AI · any voice channel</small>
+              <strong>A real caller reaches the correct agent</strong>
+              <small>Then Calls + AI Logs prove what happened</small>
             </div>
+          </div>
+          <div className="first-call-phases" aria-label="First call phases">
+            {['Build', 'Voice', 'Number', 'Route', 'Call', 'Observe'].map((phase, index) => (
+              <span key={phase}><small>{index + 1}</small>{phase}</span>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="start-choice-section">
         <div className="section-heading compact">
-          <div><span className="section-kicker">CHOOSE WHERE YOU ARE</span><h2>One question. Three clear ways in.</h2></div>
-          <p>You do not need to understand the whole platform before you start.</p>
+          <div><span className="section-kicker">ALREADY STARTED?</span><h2>Use a different door only if you need it.</h2></div>
+          <p>New users should stay on the first-call path above.</p>
         </div>
-        <div className="start-choice-grid">
-          <Button variant="ghost" className="start-choice-card recommended" onClick={goToOrientation}>
-            <span className="choice-number">01</span><ListChecks />
-            <span><small>FIRST TIME HERE</small><strong>Show me the Live Hub basics</strong><em>Dashboard, account, menu, wizard, and the complete call model.</em></span>
-            <ArrowRight />
-          </Button>
+        <div className="start-choice-grid two-choice-grid">
           <Button variant="ghost" className="start-choice-card" onClick={goToJourneys}>
-            <span className="choice-number">02</span><Route />
-            <span><small>I HAVE A TASK</small><strong>Take me to the guided missions</strong><em>Build an agent, connect SIP, route a call, or operate the service.</em></span>
+            <span className="choice-number">01</span><Route />
+            <span><small>I KNOW WHAT I NEED</small><strong>Open focused task guides</strong><em>Connect SIP, create routing, operate the service, or return to the first-call path.</em></span>
             <ArrowRight />
           </Button>
           <Button variant="ghost" className="start-choice-card" onClick={goToTroubleshooting}>
-            <span className="choice-number">03</span><AlertTriangle />
+            <span className="choice-number">02</span><AlertTriangle />
             <span><small>SOMETHING FAILED</small><strong>Help me diagnose one call</strong><em>Start with the exact result, inspect the right layer, and change one thing.</em></span>
             <ArrowRight />
           </Button>
         </div>
-      </section>
-
-      <section className="goal-section">
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">CORE TASKS</span>
-            <h2>What do you need to do now?</h2>
-          </div>
-          <p>Everything else stays out of the way until the basic call works.</p>
+        <div className="official-video-strip">
+          <Play />
+          <div><strong>Prefer to watch?</strong><span>The official AudioCodes playlist is available, but the Academy keeps each video beside the lesson where it belongs.</span></div>
+          <Button asChild variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer">Open video playlist <ExternalLink /></a></Button>
         </div>
-        <div className="goal-grid">
-          {quickGoals.map((goal) => {
-            const Icon = goal.icon;
-            return (
-              <Button key={goal.track} variant="ghost" className="goal-card" onClick={() => goToTrack(goal.track)}>
-                <span className="goal-icon"><Icon /></span>
-                <span>{goal.label}</span>
-                <ArrowRight />
-              </Button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="core-path-section">
-        <div className="section-heading compact">
-          <div>
-            <span className="section-kicker">THE LIVE HUB CORE PATH</span>
-            <h2>Every successful setup follows three jobs.</h2>
-          </div>
-          <Button variant="ghost" className="view-all" onClick={goToJourneys}>Open all missions <ArrowRight /></Button>
-        </div>
-        <div className="core-path-grid">
-          <article><span>01</span><div><strong>Build or connect</strong><p>Create an AI agent, connect an existing bot, buy a number, or add a SIP trunk.</p></div></article>
-          <article><span>02</span><div><strong>Route the call</strong><p>Choose one origin, one destination, and the smallest exact matching rule.</p></div></article>
-          <article><span>03</span><div><strong>Prove and operate</strong><p>Make a test call, inspect Call History, then monitor usage, alarms, and evidence.</p></div></article>
-        </div>
-        <p className="advanced-later"><Lightbulb /> Add transfers, recordings, translation, Agent Assist, campaigns, headers, and custom APIs only after this core path works.</p>
       </section>
     </div>
   );
@@ -522,40 +495,50 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
     { number: 7, title: "Support assistant", detail: "Ask a product question from the screen you are already working on." },
   ];
 
-  const destinations = [
-    ["Build native AI behavior", "AI Agents"],
-    ["Connect an existing external bot", "Bot connections"],
-    ["Add a phone number or SIP trunk", "Voice channels"],
-    ["Decide where a call goes", "Routing"],
-    ["Prove what happened", "Calls and AI Agents → Logs"],
-    ["Manage billing, users, or API clients", "Profile and IAM"],
-  ];
-
   return (
     <div className="page orientation-page">
       <section className="orientation-hero">
         <div>
-          <span className="section-kicker">START HERE · 6 MINUTES</span>
-          <h1>Know where you are<br /><span>before you build.</span></h1>
-          <p>This is the real Live Hub dashboard. Learn the seven landmarks, then use the decision map below whenever you are unsure which option belongs to your task.</p>
+          <span className="section-kicker">QUICK ORIENTATION · 3 MINUTES</span>
+          <h1>Learn one model.<br /><span>Ignore the menu for now.</span></h1>
+          <p>A working Live Hub service is a chain. Something enters, Live Hub routes it, something handles it, and the logs prove the result. You do not need to learn every product area first.</p>
           <div className="hero-actions">
-            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}><Play /> Start the first build</Button>
+            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}><PhoneCall /> Start my first call</Button>
             <Button asChild size="lg" variant="outline" className="secondary-cta">
               <a href={TECH_DOCS.dashboard} target="_blank" rel="noreferrer">Open dashboard TechDocs <ExternalLink /></a>
             </Button>
           </div>
         </div>
-        <div className="orientation-rule">
-          <span>THE RULE THAT PREVENTS MOST CONFUSION</span>
-          <strong>Choose the account first.<br />Choose the product area second.</strong>
-          <p>Then make one change, run one test, and inspect one result.</p>
+        <figure className="orientation-video">
+          <div className="visual-label"><Play /> OFFICIAL 3-MINUTE PLATFORM TOUR</div>
+          <div className="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/45XIL7YHhYo?rel=0" title="Live Hub Platform General Review" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div>
+          <figcaption>Watch once, then follow the Academy&apos;s ordered first-call path.</figcaption>
+        </figure>
+      </section>
+
+      <section className="orientation-model">
+        <div className="section-heading compact">
+          <div><span className="section-kicker">THE ONLY MODEL TO REMEMBER</span><h2>Build → Connect → Route → Test → Observe</h2></div>
+          <p>Every lesson tells you which part of this chain you are changing.</p>
         </div>
+        <div className="learning-loop">
+          {[
+            ["01", "Build", "Create one agent or connect one bot"],
+            ["02", "Connect", "Give it speech and a voice channel"],
+            ["03", "Route", "Send one origin to one destination"],
+            ["04", "Test", "Make the smallest real call"],
+            ["05", "Observe", "Use Calls and AI Logs as proof"],
+          ].map(([number, title, detail]) => (
+            <article key={number}><span>{number}</span><div><strong>{title}</strong><p>{detail}</p></div></article>
+          ))}
+        </div>
+        <p className="advanced-later"><Lightbulb /> Transfers, recordings, translation, Agent Assist, campaigns, headers, and APIs come after this chain works.</p>
       </section>
 
       <section className="portal-tour">
         <div className="portal-tour-head">
-          <div><span className="section-kicker">YOUR LIVE HUB MAP</span><h2>Seven landmarks on the real screen</h2></div>
-          <p>The Academy markers sit on top of your dashboard screenshot; nothing in the product has been redrawn.</p>
+          <div><span className="section-kicker">WHEN YOU OPEN LIVE HUB</span><h2>Seven landmarks—nothing more.</h2></div>
+          <p>Use this map only when a lesson tells you to open a specific area.</p>
         </div>
         <div className="portal-shot">
           <img src="live-hub-dashboard.png" alt="Live Hub dashboard with navigation, account, usage, Help Center, wizard, and support assistant" />
@@ -571,42 +554,9 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
         </div>
       </section>
 
-      <section className="where-to-go">
-        <div className="section-heading compact">
-          <div><span className="section-kicker">STOP GUESSING BETWEEN OPTIONS</span><h2>Choose the screen by the question.</h2></div>
-          <p>The same call can touch several areas. Start with the layer you are changing or proving.</p>
-        </div>
-        <div className="destination-grid">
-          {destinations.map(([question, destination], index) => (
-            <article key={question}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <p>{question}</p>
-              <div><ArrowRight /><strong>{destination}</strong></div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="mental-model">
-        <div className="mental-model-copy">
-          <span className="section-kicker">THE COMPLETE CALL MODEL</span>
-          <h2>Every working setup follows three jobs.</h2>
-          <p>Build or connect one thing, route one call, then prove the result before adding options.</p>
-        </div>
-        <div className="mental-model-flow">
-          {[
-            ["01", "Build or connect", "Create the agent, bot, number, or SIP connection"],
-            ["02", "Route", "Match one origin and send it to one destination"],
-            ["03", "Prove", "Call History shows voice; AI Logs explains behavior"],
-          ].map(([number, title, detail]) => (
-            <article key={number}><span>{number}</span><h3>{title}</h3><p>{detail}</p></article>
-          ))}
-        </div>
-      </section>
-
       <section className="orientation-next">
-        <div><span>READY?</span><h2>Build the smallest complete call next.</h2><p>Agent → browser voice test → number → route → Calls + AI Logs.</p></div>
-        <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>Launch the guided mission <ArrowRight /></Button>
+        <div><span>YOUR NEXT ACTION</span><h2>Build the smallest complete call.</h2><p>Agent → voice → number → route → real call → evidence.</p></div>
+        <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>Start step 1 <ArrowRight /></Button>
       </section>
     </div>
   );
@@ -619,28 +569,6 @@ function FlowNode({ icon: Icon, label, sublabel, active }: { icon: typeof Bot; l
       <strong>{label}</strong>
       <small>{sublabel}</small>
     </div>
-  );
-}
-
-function TrackCard({ track, index, onSelect }: { track: Track; index: number; onSelect: () => void }) {
-  const Icon = track.icon;
-  return (
-    <article className={`track-card ${track.color}`}>
-      <div className="track-card-top">
-        <span className="track-number">0{index + 1}</span>
-        <span className="track-icon"><Icon /></span>
-      </div>
-      <span className="track-eyebrow">{track.eyebrow}</span>
-      <h3>{track.title}</h3>
-      <p>{track.description}</p>
-      <div className="track-meta">
-        <span><Clock3 /> {track.time}</span>
-        <span>{track.level}</span>
-      </div>
-      <Button variant="ghost" className="track-start" onClick={onSelect}>
-        Start journey <ArrowRight />
-      </Button>
-    </article>
   );
 }
 
@@ -683,11 +611,11 @@ function JourneysView({
     <div className="page journeys-page">
       <div className="journey-header">
         <div>
-          <span className="section-kicker">FIVE FOCUSED MISSIONS</span>
-          <h1>Choose only what you need now.</h1>
-          <p>Start with one outcome. Advanced settings appear inside the mission only when they are relevant.</p>
+          <span className="section-kicker">ONE RECOMMENDED START</span>
+          <h1>First make a call. Then go deeper.</h1>
+          <p>If you are new, choose the first mission and complete it in order. The other missions solve specific tasks after your first end-to-end call works.</p>
         </div>
-        <div className="journey-count"><strong>{tracks.length}</strong><span>guided<br />missions</span></div>
+        <div className="journey-count"><strong>1</strong><span>recommended<br />starting path</span></div>
       </div>
 
       <div className="journey-workspace">
@@ -695,21 +623,24 @@ function JourneysView({
           {tracks.map((track, index) => {
             const TrackIcon = track.icon;
             return (
-              <Button
-                key={track.id}
-                variant="ghost"
-                role="tab"
-                aria-selected={selected.id === track.id}
-                className={selected.id === track.id ? "journey-tab active" : "journey-tab"}
-                onClick={() => selectTrack(track)}
-              >
-                <span className={`journey-tab-icon ${track.color}`}><TrackIcon /></span>
-                <span className="journey-tab-copy">
-                  <small>0{index + 1} · {track.time}</small>
-                  <strong>{track.title}</strong>
-                </span>
-                <ChevronRight />
-              </Button>
+              <div key={track.id} className={index === 0 ? "journey-choice recommended-path" : "journey-choice"}>
+                {index === 0 && <span className="journey-group-label">START HERE</span>}
+                {index === 1 && <span className="journey-group-label secondary">AFTER YOUR FIRST CALL</span>}
+                <Button
+                  variant="ghost"
+                  role="tab"
+                  aria-selected={selected.id === track.id}
+                  className={selected.id === track.id ? "journey-tab active" : "journey-tab"}
+                  onClick={() => selectTrack(track)}
+                >
+                  <span className={`journey-tab-icon ${track.color}`}><TrackIcon /></span>
+                  <span className="journey-tab-copy">
+                    <small>{index === 0 ? "RECOMMENDED" : `TASK 0${index}`} · {track.time}</small>
+                    <strong>{track.title}</strong>
+                  </span>
+                  <ChevronRight />
+                </Button>
+              </div>
             );
           })}
         </div>
@@ -728,7 +659,7 @@ function JourneysView({
             <span><Zap /> {selected.level}</span>
             <span><Check /> Clear success check</span>
           </div>
-          <div className="mission-guardrail"><Lightbulb /><span><strong>Stay focused:</strong> finish this mission&apos;s success checks before adding another channel or optional service.</span></div>
+          <div className="mission-guardrail"><Lightbulb /><span><strong>{selected.id === "voice-agent" ? "Follow this in order:" : "Keep the scope small:"}</strong> {selected.id === "voice-agent" ? "each lesson produces the prerequisite for the next one. Do not skip from agent creation straight to routing." : "finish this mission’s success checks before adding another channel or optional service."}</span></div>
           <div className="mission-steps">
             {selected.steps.map((step, index) => {
               const stepKey = `${selected.id}:${index}`;
@@ -744,7 +675,7 @@ function JourneysView({
                 <span className="step-index">{done ? <Check /> : index + 1}</span>
                 <div>
                   <small>{done ? "LESSON COMPLETE" : `OPEN LESSON ${index + 1}`}</small>
-                  <strong>{step}</strong>
+                  <strong><em>{selected.phases[index]}</em>{step}</strong>
                 </div>
                 <ChevronRight />
               </Button>
@@ -760,7 +691,7 @@ function JourneysView({
               className="primary-cta"
               onClick={() => setActiveLessonIndex(firstIncomplete)}
             >
-              {missionComplete ? "Continue mission" : "Begin mission"} <ArrowRight />
+              {missionComplete ? "Continue mission" : selected.id === "voice-agent" ? "Start step 1" : "Begin mission"} <ArrowRight />
             </Button>
           </div>
         </section>
@@ -958,36 +889,10 @@ function LessonWorkspace({
             </section>
           )}
 
-          {(lesson.image || lesson.videoId) && (
-            <section className="lesson-media-grid">
-              {lesson.image && (
-                <figure className="lesson-visual">
-                  <div className="visual-label"><span /> OFFICIAL LIVE HUB SCREEN</div>
-                  <img src={lesson.image} alt={lesson.imageAlt ?? "Live Hub screen for this lesson"} loading="lazy" />
-                  <figcaption>Use the labels in the lesson; the portal may evolve slightly between releases.</figcaption>
-                </figure>
-              )}
-              {lesson.videoId && (
-                <figure className="lesson-video">
-                  <div className="visual-label"><Play /> WATCH THE GUIDE</div>
-                  <div className="video-frame">
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${lesson.videoId}?rel=0`}
-                      title={lesson.videoTitle ?? lesson.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  </div>
-                  <figcaption>{lesson.videoTitle}</figcaption>
-                </figure>
-              )}
-            </section>
-          )}
-
           <section className="lesson-section actions-section">
             <div className="lesson-section-title">
               <Play />
-              <div><span>02</span><h2>Do this in Live Hub</h2></div>
+              <div><span>02 · YOUR TASK NOW</span><h2>Do this in Live Hub</h2></div>
             </div>
             <div className="action-list">
               {lesson.actions.map((action, index) => (
@@ -1006,6 +911,35 @@ function LessonWorkspace({
             )}
           </section>
 
+          {(lesson.image || lesson.videoId) && (
+            <details className="lesson-support-details">
+              <summary><Play /><span><strong>Need a visual?</strong><small>Open the official screen or video for this exact lesson.</small></span><ChevronRight /></summary>
+              <section className="lesson-media-grid">
+                {lesson.image && (
+                  <figure className="lesson-visual">
+                    <div className="visual-label"><span /> OFFICIAL LIVE HUB SCREEN</div>
+                    <img src={lesson.image} alt={lesson.imageAlt ?? "Live Hub screen for this lesson"} loading="lazy" />
+                    <figcaption>Use the labels in the lesson; the portal may evolve slightly between releases.</figcaption>
+                  </figure>
+                )}
+                {lesson.videoId && (
+                  <figure className="lesson-video">
+                    <div className="visual-label"><Play /> WATCH THE GUIDE</div>
+                    <div className="video-frame">
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${lesson.videoId}?rel=0`}
+                        title={lesson.videoTitle ?? lesson.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                    <figcaption>{lesson.videoTitle}</figcaption>
+                  </figure>
+                )}
+              </section>
+            </details>
+          )}
+
           <section className="lesson-section success-section">
             <div className="lesson-section-title">
               <CircleCheckBig />
@@ -1016,11 +950,8 @@ function LessonWorkspace({
             </div>
           </section>
 
-          <section className="lesson-section troubleshooting-section">
-            <div className="lesson-section-title">
-              <AlertTriangle />
-              <div><span>04</span><h2>If it doesn’t work</h2></div>
-            </div>
+          <details className="lesson-troubleshooting-details">
+            <summary><AlertTriangle /><span><strong>If it doesn’t work</strong><small>Open only after you have tried the steps once.</small></span><ChevronRight /></summary>
             <div className="troubleshooting-list">
               {lesson.troubleshooting.map((item) => (
                 <div className="troubleshooting-item" key={item.problem}>
@@ -1029,7 +960,7 @@ function LessonWorkspace({
                 </div>
               ))}
             </div>
-          </section>
+          </details>
 
           <footer className="lesson-footer-actions">
             <div>
@@ -1287,7 +1218,7 @@ function TroubleshootingView({ goToDiagnosis }: { goToDiagnosis: () => void }) {
 }
 
 function LibraryView() {
-  const categories = ["All", "Get started", "Concepts", "Build", "Connect", "Route", "Operate", "Develop", "Support"];
+  const categories = ["All", "Watch", "Get started", "Concepts", "Build", "Connect", "Route", "Operate", "Develop", "Support"];
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [bookmarked, setBookmarked] = useState<string[]>([]);

@@ -6,7 +6,7 @@ const TECHDOCS_BASE = "https://techdocs.audiocodes.com/livehub";
  * Help Center, staging, or placeholder pages.
  */
 export const TECH_DOCS = {
-  home: `${TECHDOCS_BASE}/#LiveHub/livehub-intro.htm?TocPath=_____1`,
+  home: `${TECHDOCS_BASE}/`,
   signIn: `${TECHDOCS_BASE}/Content/LiveHub/signing-into-livehub.htm`,
   userInterface: `${TECHDOCS_BASE}/Content/LiveHub/User-Interface.htm`,
   accountPlans: `${TECHDOCS_BASE}/Content/LiveHub/User%20Account%20Plans.htm`,

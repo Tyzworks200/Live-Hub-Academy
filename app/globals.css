@@ -863,3 +863,55 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Clear-path revision: one first-call journey, with optional detail revealed on demand. */
+.first-call-phases { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; margin-top: 14px; }
+.first-call-phases span { display: flex; min-width: 0; flex-direction: column; gap: 3px; border-radius: 8px; padding: 8px 6px; color: #d7e7fa; background: rgba(255,255,255,.055); font-size: 12px; font-weight: 750; text-align: center; }
+.first-call-phases small { color: #58dff5; font: 800 10px/1 ui-monospace,monospace; }
+.two-choice-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.official-video-strip { display: grid; grid-template-columns: 42px minmax(0,1fr) auto; align-items: center; gap: 14px; margin-top: 14px; border: 1px solid #dbe4f0; border-radius: 16px; padding: 15px 17px; background: rgba(255,255,255,.68); }
+.official-video-strip > svg { width: 20px; color: var(--blue); }
+.official-video-strip > div { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.official-video-strip strong { font-size: 15px; }
+.official-video-strip span { color: #6c7b91; font-size: 14px; line-height: 1.45; }
+.official-video-strip .inline-flex { min-height: 42px; border-color: #cbd9ec; color: #315070; background: #fff; font-size: 14px; }
+
+.orientation-video { overflow: hidden; margin: 0; border: 1px solid #d3deec; border-radius: 20px; background: #fff; box-shadow: 0 22px 55px rgba(12,37,77,.13); }
+.orientation-video .video-frame { aspect-ratio: 16 / 9; }
+.orientation-video figcaption { padding: 12px 15px; color: #697991; font-size: 13px; line-height: 1.45; }
+.orientation-model { margin-top: 64px; }
+
+.journey-choice { display: contents; }
+.journey-group-label { display: block; margin: 5px 8px 1px; color: var(--blue); font-size: 11px; font-weight: 850; letter-spacing: .14em; }
+.journey-group-label.secondary { margin-top: 19px; color: #8b97aa; }
+.recommended-path .journey-tab { border-color: #b9d5ff; background: linear-gradient(145deg,#fff,#f4f8ff) !important; }
+.mission-step strong { display: flex; flex-direction: column; gap: 4px; }
+.mission-step strong em { color: var(--blue); font-size: 11px; font-style: normal; font-weight: 850; letter-spacing: .1em; }
+
+.lesson-support-details, .lesson-troubleshooting-details { margin: 0 clamp(20px,3vw,36px) 26px; border: 1px solid #dce5f0; border-radius: 16px; background: #f8fafc; }
+.lesson-support-details > summary, .lesson-troubleshooting-details > summary { display: grid; min-height: 74px; grid-template-columns: 28px minmax(0,1fr) 18px; align-items: center; gap: 12px; padding: 15px 18px; cursor: pointer; list-style: none; }
+.lesson-support-details > summary::-webkit-details-marker, .lesson-troubleshooting-details > summary::-webkit-details-marker { display: none; }
+.lesson-support-details > summary > svg:first-child { color: var(--blue); }
+.lesson-troubleshooting-details > summary > svg:first-child { color: #cf8816; }
+.lesson-support-details > summary > svg, .lesson-troubleshooting-details > summary > svg { width: 18px; }
+.lesson-support-details > summary > svg:last-child, .lesson-troubleshooting-details > summary > svg:last-child { color: #94a2b5; transition: transform .2s ease; }
+.lesson-support-details[open] > summary > svg:last-child, .lesson-troubleshooting-details[open] > summary > svg:last-child { transform: rotate(90deg); }
+.lesson-support-details summary span, .lesson-troubleshooting-details summary span { display: flex; flex-direction: column; gap: 3px; }
+.lesson-support-details summary strong, .lesson-troubleshooting-details summary strong { font-size: 16px; }
+.lesson-support-details summary small, .lesson-troubleshooting-details summary small { color: #76859a; font-size: 13px; }
+.lesson-support-details .lesson-media-grid { margin: 0; border-top: 1px solid #dce5f0; padding: 18px; }
+.lesson-troubleshooting-details .troubleshooting-list { border-top: 1px solid #eadfc9; padding: 16px 18px 18px; }
+.lesson-troubleshooting-details { border-color: #eadfc9; background: #fffbf3; }
+
+@media (max-width: 820px) {
+  .two-choice-grid { grid-template-columns: 1fr; }
+  .journey-choice { display: block; }
+  .journey-selector { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .first-call-phases { grid-template-columns: repeat(3,1fr); }
+  .official-video-strip { grid-template-columns: 34px 1fr; }
+  .official-video-strip .inline-flex { grid-column: 1 / -1; width: 100%; }
+  .lesson-support-details, .lesson-troubleshooting-details { margin-inline: 17px; }
+}
