@@ -172,6 +172,27 @@ button { cursor: pointer; }
 .track-start:hover { color: var(--blue); background: transparent !important; }
 .track-start svg { width: 13px; }
 
+.academy-location { display: flex; max-width: 720px; align-items: flex-start; gap: 13px; margin-top: 23px; border-left: 3px solid var(--cyan); border-radius: 0 14px 14px 0; padding: 14px 16px; background: #eef8ff; }
+.academy-location > span { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; border-radius: 11px; color: var(--blue); background: #fff; box-shadow: 0 6px 16px rgba(18,104,237,.09); }
+.academy-location svg { width: 17px; }
+.academy-location strong { color: #18304f; font-size: 16px; }
+.academy-location p { margin: 4px 0 0; color: #60738d; font-size: 15px; line-height: 1.55; }
+.learning-loop { display: grid; grid-template-columns: repeat(5,1fr); overflow: hidden; margin-top: 24px; border: 1px solid #d9e2ee; border-radius: 19px; background: #fff; box-shadow: 0 13px 35px rgba(13,31,62,.055); }
+.learning-loop article { position: relative; display: grid; min-height: 112px; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; padding: 18px; border-right: 1px solid #e7ecf3; }
+.learning-loop article:last-child { border-right: 0; }
+.learning-loop article:not(:last-child)::after { content: "→"; position: absolute; z-index: 2; top: 50%; right: -8px; display: grid; width: 16px; height: 24px; place-items: center; color: #8aa3c4; background: #fff; transform: translateY(-50%); }
+.learning-loop article > span { color: var(--blue); font-family: ui-monospace,monospace; font-size: 13px; font-weight: 850; }
+.learning-loop strong { font-size: 17px; }
+.learning-loop p { margin: 4px 0 0; color: #718096; font-size: 14px; line-height: 1.45; }
+.build-ai-start { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(420px,.95fr); gap: clamp(28px,5vw,70px); margin-top: 72px; border: 1px solid #d9e7f7; border-radius: 24px; padding: clamp(27px,4vw,48px); background: radial-gradient(circle at 93% 8%,rgba(22,199,232,.12),transparent 28%),linear-gradient(145deg,#fff,#f5f9ff); box-shadow: 0 22px 55px rgba(13,31,62,.075); }
+.build-ai-intro h2 { margin: 10px 0 12px; font-size: clamp(34px,4vw,56px); line-height: 1.02; letter-spacing: -.05em; }
+.build-ai-intro > p { max-width: 720px; margin: 0; color: #60718a; font-size: 17px; line-height: 1.7; }
+.build-ai-steps { display: grid; gap: 10px; }
+.build-ai-steps article { display: grid; grid-template-columns: 44px 1fr; gap: 13px; border: 1px solid #dbe5f2; border-radius: 15px; padding: 16px; background: rgba(255,255,255,.88); }
+.build-ai-steps article > span { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 12px; color: #fff; background: linear-gradient(135deg,var(--blue),#3150dc); font-size: 14px; font-weight: 850; }
+.build-ai-steps strong { font-size: 17px; }
+.build-ai-steps p { margin: 5px 0 0; color: #65768e; font-size: 15px; line-height: 1.55; }
+
 .orientation-page { padding-top: 48px; }
 .orientation-hero { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(320px,.8fr); align-items: center; gap: clamp(30px,6vw,86px); }
 .orientation-hero h1 { margin: 12px 0 16px; font-size: clamp(44px,5.2vw,75px); line-height: .98; letter-spacing: -.06em; }
@@ -576,13 +597,126 @@ button { cursor: pointer; }
 .coming-page p { color: var(--muted); }
 .mobile-menu-button, .mobile-overlay { display: none; }
 
+/* Readability pass: the Academy is a learning surface, not a dense admin dashboard. */
+.academy-sidebar { width: 290px; }
+.academy-main { margin-left: 290px; }
+.brand-copy small, .academy-label { font-size: 12px; }
+.side-nav-item { height: 48px; font-size: 15px; }
+.progress-card-head, .sidebar-help strong { font-size: 14px; }
+.sidebar-progress-card p, .sidebar-help small { font-size: 13px; }
+.breadcrumb, .top-link, .portal-button { font-size: 14px; }
+.topbar { height: 76px; }
+.eyebrow, .section-kicker { font-size: 13px; }
+.hero-lead { font-size: clamp(18px,1.5vw,22px); }
+.trust-row { font-size: 14px; }
+.console-topline { font-size: 12px; }
+.flow-node strong { font-size: 15px; }
+.flow-node small, .console-result small { font-size: 13px; }
+.console-result strong { font-size: 15px; }
+.section-heading > p { max-width: 360px; font-size: 16px; }
+.goal-card { height: 92px; }
+.goal-card > span:nth-child(2) { font-size: 16px; }
+.view-all { font-size: 15px; }
+.track-card { min-height: 410px; padding: 24px; }
+.track-number, .track-eyebrow { font-size: 12px; }
+.track-card h3 { font-size: 25px; line-height: 1.16; }
+.track-card p { font-size: 16px; }
+.track-meta span { padding: 7px 10px; font-size: 13px; }
+.track-start { height: 46px; font-size: 15px; }
+.orientation-hero > div:first-child > p, .orientation-rule p, .portal-tour-head > p { font-size: 16px; }
+.orientation-rule span, .orientation-next span { font-size: 12px; }
+.landmark-grid { grid-template-columns: repeat(3,1fr); }
+.landmark-grid article { min-height: 165px; }
+.landmark-grid article > span, .destination-grid article > span { font-size: 12px; }
+.landmark-grid h3, .destination-grid strong { font-size: 17px; }
+.landmark-grid p, .destination-grid p, .mental-model-copy p, .mental-model-flow p, .orientation-next p { font-size: 15px; }
+.mental-model-flow span { font-size: 12px; }
+.mental-model-flow h3 { font-size: 18px; }
+.journey-header p { font-size: 17px; }
+.journey-count span { font-size: 12px; }
+.journey-workspace { grid-template-columns: minmax(300px,360px) minmax(0,1fr); }
+.journey-tab { min-height: 88px; height: auto; }
+.journey-tab-copy small { font-size: 12px; }
+.journey-tab-copy strong { font-size: 15px; }
+.mission-panel-head span { font-size: 12px; }
+.mission-panel-head p { font-size: 16px; }
+.mission-meta-row span { padding: 8px 11px; font-size: 13px; }
+.mission-step { min-height: 72px; grid-template-columns: 40px 1fr 20px; padding: 14px 16px; }
+.step-index { width: 36px; height: 36px; font-size: 13px; }
+.mission-step small { font-size: 12px; }
+.mission-step strong { font-size: 16px; }
+.mission-footer span, .mission-footer p { font-size: 13px; }
+.lesson-back { font-size: 14px; }
+.lesson-progress-summary { width: min(380px,48vw); font-size: 12px; }
+.lesson-layout { grid-template-columns: 320px minmax(0,1fr); gap: 18px; }
+.lesson-outline-head > span { font-size: 12px; }
+.lesson-outline-head h2 { font-size: 21px; }
+.lesson-outline-head p, .outline-copy small { font-size: 12px; }
+.outline-lesson { min-height: 68px; }
+.outline-number { width: 34px; height: 34px; font-size: 12px; }
+.outline-copy strong { font-size: 14px; }
+.outline-tip p { font-size: 13px; }
+.lesson-header-meta { font-size: 12px; }
+.lesson-header > p { font-size: 18px; }
+.listen-button, .official-guide-button { min-height: 42px; font-size: 14px; }
+.click-path > span, .lesson-architecture > span { font-size: 12px; }
+.click-path > div span, .lesson-architecture strong { font-size: 14px; }
+.lesson-section-title span { font-size: 12px; }
+.lesson-section-title h2 { font-size: 26px; }
+.before-grid > div, .success-grid > div { min-height: 56px; font-size: 15px; }
+.visual-label, .lesson-visual figcaption, .lesson-video figcaption { font-size: 12px; }
+.visual-label { height: 42px; }
+.lesson-visual figcaption, .lesson-video figcaption { min-height: 44px; }
+.action-row { grid-template-columns: 52px 1fr; padding: 19px; }
+.action-number { width: 44px; height: 44px; font-size: 13px; }
+.action-copy h3 { font-size: 19px; }
+.action-copy > p { font-size: 16px; }
+.action-note, .common-mistake strong, .common-mistake p { font-size: 14px; }
+.troubleshooting-item strong { font-size: 16px; }
+.troubleshooting-item p { font-size: 15px; }
+.lesson-footer-actions strong { font-size: 15px; }
+.lesson-footer-actions p { font-size: 13px; }
+.troubleshooting-hero p, .library-hero p, .glossary-hero p { font-size: 17px; }
+.diagnostic-loop span { font-size: 13px; }
+.symptom-strip > span, .troubleshooting-tools .doc-search > span, .issue-results-head { font-size: 12px; }
+.symptom-strip .inline-flex, .category-button { min-height: 38px; font-size: 13px; }
+.issue-result { min-height: 86px; }
+.issue-result small, .issue-result em, .issue-badges span, .issue-detail-head > p { font-size: 12px; }
+.issue-result strong, .issue-owner, .status-panel strong { font-size: 14px; }
+.status-panel span, .issue-meaning span, .detail-section-title span, .escalation-copy small, .evidence-list > span { font-size: 12px; }
+.status-values code, .evidence-list em { font-size: 13px; }
+.issue-meaning p { font-size: 17px; }
+.issue-detail-grid ul, .issue-detail-grid ol, .escalation-copy p, .related-issues { font-size: 15px; }
+.support-path-grid p, .sharing-grid p { font-size: 14px; }
+.sharing-grid strong, .sharing-grid .inline-flex { font-size: 13px; }
+.library-stat-panel span, .library-results-head, .doc-category, .api-choice-top, .api-resources > span, .source-banner span { font-size: 12px; }
+.doc-search [data-slot="input"] { height: 60px; font-size: 16px; }
+.doc-search kbd { font-size: 12px; }
+.doc-card { min-height: 350px; padding: 22px; }
+.doc-card h2 { font-size: 23px; }
+.doc-card p { font-size: 16px; }
+.doc-meta span { font-size: 12px; }
+.doc-open { height: 46px; font-size: 14px; }
+.empty-results p { font-size: 16px; }
+.api-choice-grid p, .api-resources p { font-size: 15px; }
+.api-choice-grid article > code { font-size: 13px; }
+.api-resources em { font-size: 13px; }
+.source-banner h2 { font-size: 20px; }
+.source-banner .inline-flex { font-size: 14px; }
+.glossary-search > span, .glossary-index, .glossary-tag { font-size: 12px; }
+.glossary-card { min-height: 235px; }
+.glossary-card p { font-size: 16px; }
+
 @media (max-width: 1180px) {
   .goal-grid, .track-grid, .docs-grid, .glossary-grid { grid-template-columns: repeat(2,1fr); }
+  .learning-loop { grid-template-columns: repeat(2,1fr); }
+  .learning-loop article { border-bottom: 1px solid #e7ecf3; }
+  .build-ai-start { grid-template-columns: 1fr; }
   .landmark-grid, .destination-grid { grid-template-columns: repeat(2,1fr); }
   .mental-model { grid-template-columns: 1fr; }
   .hero-grid { grid-template-columns: 1fr; }
   .voice-console { max-width: 680px; }
-  .lesson-layout { grid-template-columns: 230px minmax(0,1fr); }
+  .lesson-layout { grid-template-columns: 285px minmax(0,1fr); }
   .troubleshooting-hero { grid-template-columns: 1fr; }
   .diagnostic-loop { max-width: 760px; }
   .support-path-grid { grid-template-columns: repeat(2,1fr); }
@@ -628,7 +762,10 @@ button { cursor: pointer; }
   .voice-console { margin-inline: -2px; padding: 17px; border-radius: 18px; }
   .waveform { gap: 3px; }
   .flow-map { grid-template-columns: 1fr 26px 1fr 26px 1fr; }
-  .goal-grid, .track-grid, .journey-selector, .docs-grid, .glossary-grid { grid-template-columns: 1fr; }
+  .goal-grid, .track-grid, .journey-selector, .docs-grid, .glossary-grid, .learning-loop { grid-template-columns: 1fr; }
+  .learning-loop article { min-height: 96px; border-right: 0; }
+  .learning-loop article:not(:last-child)::after { display: none; }
+  .build-ai-start { margin-top: 48px; padding: 23px 18px; }
   .landmark-grid, .destination-grid, .mental-model-flow { grid-template-columns: 1fr; }
   .portal-marker { width: 22px; height: 22px; border-width: 2px; font-size: 8px; }
   .orientation-next { align-items: stretch; flex-direction: column; }
@@ -638,7 +775,7 @@ button { cursor: pointer; }
   .journey-preview { margin-top: 60px; }
   .journey-header { align-items: flex-start; flex-direction: column; }
   .journey-count { display: none; }
-  .journey-tab { height: 66px; }
+  .journey-tab { min-height: 82px; height: auto; }
   .mission-panel-head { grid-template-columns: 1fr; }
   .mission-footer { align-items: stretch; flex-direction: column; }
   .mission-footer .primary-cta { width: 100%; }
@@ -671,7 +808,7 @@ button { cursor: pointer; }
   .troubleshooting-tools .doc-search > span { display: none; }
   .issue-detail-grid, .escalation-panel, .status-panel, .api-choice-grid { grid-template-columns: 1fr; }
   .support-path-grid { grid-template-columns: 1fr; }
-  .issue-meaning p { font-size: 12px; }
+  .issue-meaning p { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
