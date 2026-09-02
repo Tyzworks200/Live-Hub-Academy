@@ -6,6 +6,15 @@ export type LessonAction = {
   note?: string;
 };
 
+export type LessonDecision = {
+  question: string;
+  options: {
+    title: string;
+    chooseWhen: string;
+    next: string;
+  }[];
+};
+
 export type Lesson = {
   id: string;
   title: string;
@@ -23,6 +32,8 @@ export type Lesson = {
   imageAlt?: string;
   videoId?: string;
   videoTitle?: string;
+  decision?: LessonDecision;
+  skipForNow?: string[];
 };
 
 const images = {
@@ -52,26 +63,26 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
   "voice-agent": [
     {
       id: "create-agent",
-      title: "Create a focused AI agent",
-      objective: "Finish with one saved agent whose job and opening behavior are easy to test.",
+      title: "Create your first agent with Build with AI",
+      objective: "Use Live Hub's built-in AI Assistant to create one focused agent you can immediately test and improve.",
       duration: "5 min",
-      path: ["AI Agents", "Agents", "Add new agent"],
+      path: ["AI Agents", "Build with AI"],
       architecture: ["Caller", "Voice channel", "Routing rule", "Bot connection", "AI agent"],
       before: ["A clear agent name", "One job the agent should do", "One question a caller will ask"],
       actions: [
-        { title: "Open the agent builder", instruction: "From the left menu, open AI Agents → Agents, then select Add new agent." },
-        { title: "Name the outcome", instruction: "Use a name that explains the job and environment, such as Support-Triage-QA." },
-        { title: "Write one clear job", instruction: "Describe one outcome: “Answer basic support questions and collect the caller’s case number.”" },
-        { title: "Choose how the conversation starts", instruction: "Add a short greeting or opening behavior so you can recognize the agent during a test." },
-        { title: "Save and reopen", instruction: "Save the agent, return to the list, and reopen it to prove the configuration persisted." },
+        { title: "Open Build with AI", instruction: "From the left menu, open AI Agents and select Build with AI at the top of the screen." },
+        { title: "Describe one useful outcome", instruction: "Tell the assistant the agent name, use case, language, information to collect, and how the conversation should end. Example: “Create Support-Triage-QA. It should answer basic support questions, collect a case number, and offer a human handoff when it cannot help.”" },
+        { title: "Review every proposed action", instruction: "Watch what the assistant creates. Ask it to explain any agent, flow, tool, or setting that is unclear before you accept the change." },
+        { title: "Ask for a test chat", instruction: "Tell the assistant to simulate the caller question you prepared and report what happened." },
+        { title: "Open the result", instruction: "Go to AI Agents → Agents, open the new agent, and confirm its name, instructions, and opening behavior.", note: "Prefer building manually? Use AI Agents → Agents → Add new agent. The rest of this mission is exactly the same." },
       ],
       success: ["The agent appears in the Agents list", "You can reopen it without an error", "Its name and purpose are easy to recognize"],
       troubleshooting: [
         { problem: "The agent is missing", fix: "Confirm the Current account at the top of Live Hub, then return to AI Agents → Agents and save again." },
         { problem: "The scope feels vague", fix: "Use one audience, one task, and one expected result. Expand only after the smallest version works." },
       ],
-      commonMistake: "Building a do-everything agent before proving one small conversation.",
-      docUrl: TECH_DOCS.aiAgent,
+      commonMistake: "Asking the assistant to build an entire production solution at once. Start with one job, then add knowledge and tools after the conversation works.",
+      docUrl: TECH_DOCS.aiAssistant,
       image: images.agentFramework,
       imageAlt: "Live Hub AI Agent framework selection screen",
       videoId: "Ggv2W6vYtIo",
@@ -305,6 +316,338 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       troubleshooting: [{ problem: "The flow repeats or gets stuck", fix: "Inspect transition conditions, variable updates, and exit paths. Make each condition mutually understandable and give loops a stop condition." }],
       commonMistake: "Building a complex flow for a flexible conversation—or relying on a free-form agent where mandatory checkpoints exist.",
       docUrl: TECH_DOCS.aiAgent,
+    },
+  ],
+
+  "sip-trunk": [
+    {
+      id: "sip-choose-path",
+      title: "Choose the correct SIP connection type",
+      objective: "Select the matching provider profile or the correct generic connection family before touching technical fields.",
+      duration: "4 min",
+      path: ["Voice channels", "SIP Connections", "Add new SIP connection"],
+      decision: {
+        question: "What are you connecting, and is its provider listed?",
+        options: [
+          {
+            title: "Yes — use the listed provider",
+            chooseWhen: "Your carrier, PBX, or contact-center provider appears by name.",
+            next: "Select its provider profile. Live Hub will show the settings that apply to that integration.",
+          },
+          {
+            title: "No — use Generic SIP Trunk",
+            chooseWhen: "A carrier, PBX, or custom SIP trunk is not listed by name.",
+            next: "Set Provider type to SIP Trunk and Provider to Generic SIP Trunk, then follow the complete SIP path in this mission.",
+          },
+          {
+            title: "No — use another Generic type",
+            chooseWhen: "You are connecting an unlisted contact center or unified communications platform.",
+            next: "Choose Contact Center or UC as the Provider type, then select its Generic provider option. Do not label every SIP connection as a SIP Trunk.",
+          },
+        ],
+      },
+      architecture: ["Your SIP provider", "SIP connection", "Routing rule", "Live Hub destination"],
+      before: ["Provider or platform name", "Live Hub region", "Whether calls are inbound, outbound, or both"],
+      actions: [
+        { title: "Open SIP Connections", instruction: "From Voice channels, open SIP Connections and select Add new SIP connection." },
+        { title: "Choose the provider type", instruction: "Use SIP Trunk for a carrier or PBX trunk, Contact Center for a contact-center platform, and UC for a unified communications platform. Do not choose Client Applications unless you are configuring a supported client channel such as WebRTC." },
+        { title: "Check the Provider list", instruction: "If your provider appears, select it. If it does not, choose the Generic option inside the correct provider type. Generic does not mean limited—it means you supply the standard SIP details yourself." },
+        { title: "Use a clear name and region", instruction: "Name the connection after the provider and environment, such as Provider-SIP-QA, and select the same region used by the services this trunk will reach." },
+      ],
+      skipForNow: ["Routing rules", "Transfer mode", "Custom codecs", "Number rewriting"],
+      success: ["Provider type matches SIP Trunk, Contact Center, or UC", "You selected exactly one listed or generic path", "The connection name identifies provider and environment", "The Live Hub region is correct"],
+      troubleshooting: [
+        { problem: "The provider is not listed", fix: "Choose Generic SIP Trunk and collect the hostname, addresses, protocols, authentication, and number format from the provider." },
+        { problem: "You are unsure whether it is SIP", fix: "Ask the provider whether it supports a standard SIP trunk and whether it supplies a hostname or signaling IP addresses." },
+      ],
+      commonMistake: "Mixing a listed-provider guide with Generic SIP fields. Choose one path and stay with it for the first connection.",
+      docUrl: TECH_DOCS.sipConnections,
+    },
+    {
+      id: "sip-provider-checklist",
+      title: "Collect the provider checklist",
+      objective: "Get the seven answers that prevent most trial-and-error during SIP setup.",
+      duration: "5 min",
+      path: ["Provider documentation or support", "Connection worksheet"],
+      architecture: ["Provider requirements", "Live Hub fields", "One agreed call format"],
+      before: ["A technical contact at the provider", "The countries and numbers you will test"],
+      actions: [
+        { title: "Get the destination", instruction: "Collect the provider hostname or signaling IP addresses, ports, and the supported transport: UDP, TCP, or TLS." },
+        { title: "Confirm authentication", instruction: "Ask whether the provider uses registration, username and password, source IP, Request-URI FQDN, incoming DIDs, or a combination." },
+        { title: "Confirm security", instruction: "Ask whether TLS is required and whether the provider must trust the Live Hub certificate. Also confirm which Live Hub signaling and media addresses they must allowlist." },
+        { title: "Confirm number format", instruction: "Agree whether calling and called numbers use E.164 with +, without +, 00, 0, or a national format." },
+        { title: "Confirm optional behavior", instruction: "Ask whether the provider supports SIP OPTIONS keep-alive, DTMF method, REFER or INVITE transfer, and any required codecs." },
+      ],
+      skipForNow: ["Provider options that are not explicitly required", "Production capacity increases", "Advanced header manipulation"],
+      success: ["Hostname or IP, port, and transport are known", "Authentication method is known", "Number format is agreed", "Optional provider requirements are recorded"],
+      troubleshooting: [
+        { problem: "The provider only sent an IP address", fix: "Ask for port, transport, authentication method, number format, and whether they expect Live Hub IPs to be allowlisted." },
+        { problem: "The provider says ‘standard SIP’", fix: "Still confirm TLS versus TCP/UDP, inbound authentication, number format, OPTIONS support, and transfer method." },
+      ],
+      commonMistake: "Starting the wizard with only a hostname and guessing every other provider requirement.",
+      docUrl: TECH_DOCS.sipConnections,
+    },
+    {
+      id: "sip-general-traffic",
+      title: "Configure General, Incoming, and Outgoing",
+      objective: "Create the smallest valid signaling path in both directions.",
+      duration: "9 min",
+      path: ["SIP connection", "General", "Incoming", "Outgoing"],
+      architecture: ["Incoming authentication", "Live Hub SIP connection", "Outgoing destination"],
+      before: ["The completed provider checklist", "Registration credentials if required"],
+      actions: [
+        { title: "Set security correctly", instruction: "Enable Security only for TLS. If the provider uses TCP or UDP, disable Security; otherwise those protocols will not appear." },
+        { title: "Add registration only when required", instruction: "Under Registration and authentication, enable registration and enter the supplied credentials only if the provider expects REGISTER. Add Contact name only when the provider requires that value." },
+        { title: "Choose incoming authentication", instruction: "Use FQDN (Request-URI) when the provider can send calls to your unique Live Hub FQDN. Otherwise use Dialed Numbers (DIDs), then add Source IP Address or Credentials as required.", note: "The first incoming method must be FQDN or Dialed Numbers (DIDs)." },
+        { title: "Set the outgoing destination", instruction: "Add the provider hostname when supplied. Add signaling addresses with the correct port and protocol; use the provider's DNS method only when required." },
+        { title: "Confirm allowlisting", instruction: "Give the provider every signaling and media address shown by Live Hub, including the relevant ports. Partial allowlisting can create one-way audio or intermittent failures." },
+      ],
+      skipForNow: ["Call transfer", "DTMF", "Codec changes", "Contact hostname"],
+      success: ["Security matches the transport", "Incoming authentication has a valid first method", "Outgoing hostname or addresses are complete", "Required credentials are stored only in secure fields"],
+      troubleshooting: [
+        { problem: "Only TLS is available", fix: "Security is enabled. Disable it when the provider uses TCP or UDP." },
+        { problem: "Incoming calls are not recognized", fix: "Confirm the Request-URI uses the Live Hub FQDN, or add the correct incoming DIDs and the additional authentication method." },
+      ],
+      commonMistake: "Using Source IP as the only incoming method. Start with FQDN or DIDs, then add Source IP or Credentials.",
+      docUrl: TECH_DOCS.sipConnections,
+    },
+    {
+      id: "sip-numbers-advanced",
+      title: "Match numbers and add only required options",
+      objective: "Align caller and destination formats, then configure only the advanced behavior your provider requires.",
+      duration: "7 min",
+      path: ["SIP connection", "Numbers", "Advanced"],
+      architecture: ["Live Hub number format", "SIP headers", "Provider number format"],
+      before: ["The provider's exact calling and called number examples", "Optional SIP requirements from the checklist"],
+      actions: [
+        { title: "Set E.164 format", instruction: "In Numbers, choose the provider's required format: with +, without +, starting with 0, or starting with 00." },
+        { title: "Add national format only when supported", instruction: "Configure national calling rules only when the provider expects local formats. Keep the first test on one known format." },
+        { title: "Enable keep-alive if supported", instruction: "In Advanced, enable SIP OPTIONS and set the interval. A 200 OK response keeps the connection status marked Connected." },
+        { title: "Match DTMF and transfer", instruction: "Choose the provider-supported DTMF method. For transfers, use INVITE or REFER according to the provider's interop requirements." },
+        { title: "Keep defaults unless required", instruction: "Change codecs, Contact hostname, maximum call duration, or other advanced fields only when there is a documented provider requirement." },
+      ],
+      skipForNow: ["Multiple number rewrite patterns", "Unrequested codecs", "Transfer tuning before a basic call succeeds"],
+      success: ["A test number has one agreed format", "OPTIONS is enabled only when supported", "DTMF and transfer match provider requirements", "Unneeded advanced settings remain at their defaults"],
+      troubleshooting: [
+        { problem: "The provider rejects the number", fix: "Compare the actual called and calling number in the SIP Ladder with the provider's required format." },
+        { problem: "Keep-alive shows Disconnected", fix: "Open SIP Info and inspect the OPTIONS ladder. Confirm address, port, transport, firewall, and the provider response." },
+      ],
+      commonMistake: "Changing every Advanced setting because it exists. Defaults are safer unless the provider requires something different.",
+      docUrl: TECH_DOCS.sipConnections,
+    },
+    {
+      id: "sip-info-test",
+      title: "Use SIP Info, test, route, and prove",
+      objective: "Verify the connection with Live Hub evidence before calling it complete.",
+      duration: "6 min",
+      path: ["SIP Connections", "Edit", "Info", "Test your SIP connection"],
+      architecture: ["REGISTER or OPTIONS", "Test call", "Routing", "Call History", "SIP Ladder"],
+      before: ["A saved SIP connection", "A provider test destination", "One known calling number"],
+      actions: [
+        { title: "Open SIP Info", instruction: "Record the unique Live Hub FQDN and SIP Connection ID. Download the certificate only when the TLS peer requires it." },
+        { title: "Check addresses and limits", instruction: "Confirm the provider allowlisted every displayed signaling and media address. Review call-establishment and concurrent-call limits before production." },
+        { title: "Run signaling tests", instruction: "When enabled, send REGISTER or OPTIONS from the Troubleshoot area and inspect the returned SIP Ladder." },
+        { title: "Place a direct test", instruction: "Use Test your SIP connection or the phone icon with a known calling and called number." },
+        { title: "Add one routing rule", instruction: "Route the SIP connection to one ready destination. Keep the first condition exact and do not enable optional services yet." },
+        { title: "Prove it in Call History", instruction: "Open the exact call, read Completion status, and inspect the SIP Ladder to confirm which side accepted or rejected each stage." },
+      ],
+      success: ["REGISTER or OPTIONS succeeds when used", "A test call appears in Call History", "The correct routing rule handles it", "You can identify the provider and Live Hub sides in the SIP Ladder"],
+      troubleshooting: [
+        { problem: "The test call disconnects immediately", fix: "Open Call History and read Completion status and the SIP Ladder before changing the trunk." },
+        { problem: "The status is red", fix: "Use the Info troubleshoot controls to inspect the last REGISTER or OPTIONS exchange and find which side returned the first failure." },
+      ],
+      commonMistake: "Calling the trunk ‘connected’ because the card exists. A completed test call and its evidence are the real success check.",
+      docUrl: TECH_DOCS.callHistory,
+      image: images.sipLadder,
+      imageAlt: "Live Hub SIP Ladder used to verify a SIP connection",
+    },
+  ],
+
+  routing: [
+    {
+      id: "routing-model",
+      title: "Understand origin, condition, and destination",
+      objective: "Read a routing rule as one simple sentence before creating it.",
+      duration: "3 min",
+      path: ["Routing", "Routing Rules"],
+      architecture: ["Origin", "Match condition", "Route To", "Optional services"],
+      before: ["The channel where the call starts", "The service that should receive it", "One exact test number"],
+      actions: [
+        { title: "Name the origin", instruction: "Choose where the call begins: a Live Hub number, SIP connection, bot, or another configured voice channel." },
+        { title: "Choose Call or Transfer", instruction: "Use Call for a new incoming or outgoing call. Use Transfer only when an existing call is being transferred." },
+        { title: "Choose one exact condition", instruction: "For the first test, match the exact calling or called number. Add prefixes and broader patterns only after the route works." },
+        { title: "Name the destination", instruction: "Choose the bot, SIP trunk, phone number, contact center, or other Live Hub service that should receive the call." },
+      ],
+      skipForNow: ["Recordings", "Agent Assist", "Voice translation", "Number customization"],
+      success: ["You can say: When a call comes from X and matches Y, send it to Z", "Origin and destination already exist in the same region"],
+      troubleshooting: [{ problem: "You cannot select an origin or destination", fix: "Create that number, bot, or connection first and confirm it uses the same account and region." }],
+      commonMistake: "Starting with optional services before the basic origin-to-destination route succeeds.",
+      docUrl: TECH_DOCS.routing,
+      image: images.routeList,
+      imageAlt: "Expanded Live Hub routing rule",
+    },
+    {
+      id: "routing-create",
+      title: "Create the smallest working rule",
+      objective: "Build one exact rule that sends one test call to one destination.",
+      duration: "5 min",
+      path: ["Routing", "Add new routing rule"],
+      architecture: ["Exact test call", "Matching rule", "One destination"],
+      before: ["Ready origin", "Ready destination", "Matching Live Hub region"],
+      actions: [
+        { title: "Add a rule", instruction: "Open Routing and select Add new routing rule." },
+        { title: "Select the region", instruction: "Choose the region where the origin and destination services are configured." },
+        { title: "Configure Origin", instruction: "Set Type to Call for a normal call, select the Call origin, and enter the exact calling or called number used by your test." },
+        { title: "Configure Route To", instruction: "Select the single bot, SIP connection, phone number, or service that should receive the call." },
+        { title: "Create", instruction: "Save the rule, expand it in the routing table, and read it back from origin to destination." },
+      ],
+      skipForNow: ["Reject Call", "Optional services", "Call initiator", "Number customization"],
+      success: ["The rule appears in Routing", "Region, origin, condition, and destination are correct", "No optional service is hiding the basic result"],
+      troubleshooting: [
+        { problem: "The wrong rule matches", fix: "Make the test condition more specific and review the order of other rules that can match the same call." },
+        { problem: "The rule never matches", fix: "Compare the actual number format with the rule, including +, country code, prefix, and called-versus-calling field." },
+      ],
+      commonMistake: "Using a broad wildcard for the first test and then not knowing which traffic the rule captures.",
+      docUrl: TECH_DOCS.routing,
+      image: images.routeCreate,
+      imageAlt: "Create a new Live Hub routing rule",
+    },
+    {
+      id: "routing-test",
+      title: "Test the route before adding features",
+      objective: "Prove the exact call reaches the correct destination with a clean baseline.",
+      duration: "4 min",
+      path: ["Place test call", "Calls", "Call History"],
+      architecture: ["Caller", "Origin", "Routing rule", "Destination", "Call History"],
+      before: ["The saved rule", "A test caller", "The expected destination behavior"],
+      actions: [
+        { title: "Place one controlled call", instruction: "Use the exact calling and called numbers configured in the rule." },
+        { title: "Confirm the destination", instruction: "Verify the intended bot, SIP connection, or person receives the call." },
+        { title: "Open the call record", instruction: "In Calls, confirm Completion status, routing information, duration, and participants." },
+        { title: "Keep the baseline", instruction: "Record the successful Call ID before adding recordings, transfers, translation, or Agent Assist." },
+      ],
+      success: ["The intended destination receives the call", "The correct rule appears in call details", "Completion status is understood", "A baseline Call ID is saved"],
+      troubleshooting: [
+        { problem: "The call never appears in Calls", fix: "The attempt may not have reached Live Hub. Check the source channel, dialed number, and provider." },
+        { problem: "The call appears but routes incorrectly", fix: "Check rule order, region, number format, origin, and the exact matching condition." },
+      ],
+      commonMistake: "Adding features to a route that has never passed a plain end-to-end call.",
+      docUrl: TECH_DOCS.callHistory,
+      image: images.callHistory,
+      imageAlt: "Live Hub Call History used to verify a routing rule",
+    },
+    {
+      id: "routing-add-services",
+      title: "Add one optional service safely",
+      objective: "Extend a proven rule without losing the ability to identify what changed.",
+      duration: "5 min",
+      path: ["Routing", "Edit rule", "Services or Number Customization"],
+      architecture: ["Working baseline", "One optional service", "Repeat test", "Compare evidence"],
+      before: ["A successful baseline Call ID", "One feature requirement"],
+      actions: [
+        { title: "Choose one addition", instruction: "Enable only one: Live Hub recording, external recording, Agent Assist, Voice Translation, call initiator behavior, or number customization." },
+        { title: "Confirm prerequisites", instruction: "External recording needs a Generic Recording Server; Agent Assist needs an assist bot; Voice Translation needs a translation profile." },
+        { title: "Customize numbers only when needed", instruction: "Change calling, called, or service number only when the downstream service requires a specific value." },
+        { title: "Repeat the same call", instruction: "Use the baseline caller, destination, and test phrase so the new service is the only meaningful change." },
+        { title: "Compare the two calls", instruction: "Check completion, routing, services, recording or transcript, and timing against the saved baseline Call ID." },
+      ],
+      success: ["Only one feature was added", "Its prerequisite exists", "The repeated call still completes", "The expected new evidence appears"],
+      troubleshooting: [
+        { problem: "A service cannot be selected", fix: "Create its required bot, profile, server, or account entitlement before editing the rule." },
+        { problem: "The call fails after the change", fix: "Disable the one new option, confirm the baseline returns, then investigate that feature's configuration." },
+      ],
+      commonMistake: "Enabling several services at once and losing the clean baseline that proves which one caused a problem.",
+      docUrl: TECH_DOCS.routing,
+    },
+  ],
+
+  operate: [
+    {
+      id: "operate-dashboard",
+      title: "Read the dashboard and active alarms",
+      objective: "Know what is configured, what is happening now, and what needs attention.",
+      duration: "5 min",
+      path: ["Dashboard"],
+      architecture: ["Current account", "Services", "Call statistics", "Active alarms"],
+      before: ["The correct Current account", "A time range you want to review"],
+      actions: [
+        { title: "Confirm Current account", instruction: "Check the account selector at the top before interpreting service counts, calls, alarms, or billing." },
+        { title: "Review Main Services", instruction: "Use the service counters to see how many SIP connections, bot connections, phone numbers, agents, translations, and routing rules exist. Select a counter to open that area." },
+        { title: "Read Call statistics", instruction: "Choose the interval and review call volume, success ratio, duration, concurrent calls, and voice quality after traffic begins." },
+        { title: "Open Active alarms", instruction: "Select a severity or alarm count to open Alarms. Read the condition and threshold before changing configuration." },
+      ],
+      success: ["The Current account is correct", "You can identify active services", "You know the current call interval", "Every active alarm has an owner or next check"],
+      troubleshooting: [{ problem: "The dashboard shows zero", fix: "Confirm the account and interval first. Then check whether the services and calls exist in the expected region and time range." }],
+      commonMistake: "Treating a zero count as a product failure before checking Current account and time interval.",
+      docUrl: TECH_DOCS.dashboard,
+    },
+    {
+      id: "operate-call-evidence",
+      title: "Enable transcripts and recordings deliberately",
+      objective: "Capture the evidence you need while respecting privacy and retention.",
+      duration: "6 min",
+      path: ["Bot connections", "Edit", "Features"],
+      architecture: ["Call", "Transcript or recording", "Call History", "Retention and sharing"],
+      before: ["A clear support, QA, or compliance purpose", "The account's privacy and retention requirements"],
+      actions: [
+        { title: "Enable the required evidence", instruction: "Turn on Call Transcript and/or Call Recording only for the bot connection or route that needs it." },
+        { title: "Run a test call", instruction: "Place one call and open it in Call History. Confirm the transcript or recording is present and understandable." },
+        { title: "Know the sharing scope", instruction: "Bot transcript sharing is per bot connection and is available only after transcription is enabled. AI agent log sharing is account-wide under Settings → Advanced." },
+        { title: "Handle recordings separately", instruction: "Recordings have no standing support-access switch. Download and send only the exact recording support needs." },
+        { title: "Protect retention-dependent evidence", instruction: "Download files required by an open investigation before the account retention period expires." },
+      ],
+      success: ["The selected evidence appears in Call History", "Sharing scope is understood", "No unnecessary call content is exposed", "Retention is sufficient for the task"],
+      troubleshooting: [
+        { problem: "Transcript sharing is unavailable", fix: "Enable Call Transcript first; there is nothing to share until transcription is active." },
+        { problem: "Support cannot see a recording", fix: "Download the exact recording and send it through your approved channel. There is no standing recording-access setting." },
+      ],
+      commonMistake: "Turning on every evidence type account-wide when one bot connection and one test call are enough.",
+      docUrl: TECH_DOCS.callTranscript,
+    },
+    {
+      id: "operate-billing",
+      title: "Read usage and billing",
+      objective: "Understand current consumption and find the monthly service breakdown.",
+      duration: "5 min",
+      path: ["Top bar", "Account Balance or Monthly Usage", "Billing"],
+      architecture: ["Service usage", "Current balance or monthly usage", "Billing report", "CSV"],
+      before: ["Know whether the account is prepaid or postpaid", "Permission to view billing"],
+      actions: [
+        { title: "Read the top-right indicator", instruction: "Prepaid accounts show Account Balance; postpaid accounts show Monthly Usage. Both reflect current consumption." },
+        { title: "Open Billing", instruction: "Select the balance or monthly usage indicator, or open Profile → Billing." },
+        { title: "Review monthly reports", instruction: "Open the current or previous month and inspect the usage and charge breakdown by service." },
+        { title: "Export when needed", instruction: "Use the CSV export for analysis or reconciliation. Prepaid accounts can also add funds and update billing details from this area." },
+      ],
+      success: ["Billing type is known", "Current balance or usage is understood", "A monthly service breakdown can be opened", "The report can be exported"],
+      troubleshooting: [
+        { problem: "You cannot change prepaid or postpaid", fix: "Contact the Live Hub team to request an account billing-type change." },
+        { problem: "You cannot find an invoice", fix: "Invoices are sent to the designated contact. Ask the Live Hub team to update the recipient or provide earlier copies." },
+      ],
+      commonMistake: "Reading the top-bar amount without opening the monthly report that explains which services created it.",
+      docUrl: TECH_DOCS.billing,
+    },
+    {
+      id: "operate-iam",
+      title: "Manage users and API clients with IAM",
+      objective: "Give people and systems only the access they need.",
+      duration: "8 min",
+      path: ["Profile picture", "Access Control (IAM)"],
+      architecture: ["IAM", "Users and groups", "API clients", "Live Hub account"],
+      before: ["The user or system that needs access", "The minimum required role or API scope"],
+      actions: [
+        { title: "Open Access Control", instruction: "Select the profile picture and choose Access Control (IAM). Confirm the account before editing access." },
+        { title: "Manage people", instruction: "Add, edit, or remove users and place them in the appropriate predefined user group. Do not grant broad access for convenience." },
+        { title: "Create API clients separately", instruction: "Use the API clients area for system-to-system access. Name each client after its integration and environment." },
+        { title: "Protect credentials", instruction: "Store client secrets in an approved secret store. Never place passwords, API keys, client secrets, or bearer tokens in Academy notes, logs, or support tickets." },
+        { title: "Review access", instruction: "Remove unused users and clients, and confirm remaining permissions still match their purpose." },
+      ],
+      success: ["Every user has an intentional group", "API clients are named by integration and environment", "Secrets are stored safely", "Unused access is removed"],
+      troubleshooting: [
+        { problem: "A user cannot see a feature", fix: "Check the Current account and the user's assigned group before creating a duplicate invitation." },
+        { problem: "An API call returns 401 or 403", fix: "Confirm the API client, token endpoint, client secret, requested scope, and the target account without exposing credentials." },
+      ],
+      commonMistake: "Using a personal login for automation instead of a purpose-built API client with limited access.",
+      docUrl: TECH_DOCS.userGroups,
     },
   ],
 

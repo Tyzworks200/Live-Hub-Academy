@@ -62,10 +62,10 @@ type Track = {
 const tracks: Track[] = [
   {
     id: "voice-agent",
-    eyebrow: "Most popular",
-    title: "Launch a Voice AI Agent",
+    eyebrow: "Recommended first build",
+    title: "Build Your First AI Agent",
     description:
-      "Give an AI agent a voice, connect a real number, and complete your first test call.",
+      "Create one focused agent, test it in chat and by voice, then connect a real number.",
     time: "34 min",
     level: "Start here",
     icon: Bot,
@@ -73,52 +73,40 @@ const tracks: Track[] = [
     steps: lessonsByTrack["voice-agent"].map((lesson) => lesson.title),
   },
   {
-    id: "agent-builder",
-    eyebrow: "Build beyond the demo",
-    title: "Power Up an AI Agent",
+    id: "sip-trunk",
+    eyebrow: "Telephony path",
+    title: "Connect a SIP Provider",
     description:
-      "Add trusted knowledge, one safe tool, post-call outcomes, repeatable tests, and controlled flows.",
-    time: "37 min",
-    level: "Builder",
-    icon: Sparkles,
-    color: "green",
-    steps: lessonsByTrack["agent-builder"].map((lesson) => lesson.title),
-  },
-  {
-    id: "voice-channel",
-    eyebrow: "Voice foundations",
-    title: "Connect a Voice Channel",
-    description:
-      "Bring SIP, Teams, WebRTC, WhatsApp, a contact center, or a global number into Live Hub.",
-    time: "15 min",
-    level: "Beginner",
-    icon: Network,
+      "Choose a listed provider or the correct generic SIP, contact-center, or UC path, then prove a test call.",
+    time: "31 min",
+    level: "Technical",
+    icon: Radio,
     color: "blue",
-    steps: lessonsByTrack["voice-channel"].map((lesson) => lesson.title),
+    steps: lessonsByTrack["sip-trunk"].map((lesson) => lesson.title),
   },
   {
-    id: "agent-assist",
-    eyebrow: "For contact centers",
-    title: "Add Live-Agent Assist",
+    id: "routing",
+    eyebrow: "Live Hub core",
+    title: "Route and Test a Call",
     description:
-      "Let an AI assistant follow live conversations and help agents in the moment.",
-    time: "20 min",
-    level: "Intermediate",
-    icon: Headphones,
+      "Connect one origin to one destination, test the basic route, then add only the services you need.",
+    time: "17 min",
+    level: "Beginner",
+    icon: Route,
+    color: "green",
+    steps: lessonsByTrack.routing.map((lesson) => lesson.title),
+  },
+  {
+    id: "operate",
+    eyebrow: "Run the service",
+    title: "Monitor and Operate Live Hub",
+    description:
+      "Read calls and alarms, enable evidence, understand billing, and manage access safely.",
+    time: "24 min",
+    level: "All users",
+    icon: Activity,
     color: "violet",
-    steps: lessonsByTrack["agent-assist"].map((lesson) => lesson.title),
-  },
-  {
-    id: "translation",
-    eyebrow: "50+ languages",
-    title: "Translate a Live Call",
-    description:
-      "Make agents and customers sound local to one another with two-way real-time translation.",
-    time: "15 min",
-    level: "Intermediate",
-    icon: Languages,
-    color: "pink",
-    steps: lessonsByTrack.translation.map((lesson) => lesson.title),
+    steps: lessonsByTrack.operate.map((lesson) => lesson.title),
   },
   {
     id: "diagnose",
@@ -145,11 +133,9 @@ const navItems: { id: View; label: string; icon: typeof Bot }[] = [
 
 const quickGoals = [
   { label: "Build an AI agent", icon: Bot, track: "voice-agent" },
-  { label: "Improve my agent", icon: Sparkles, track: "agent-builder" },
-  { label: "Connect telephony", icon: PhoneCall, track: "voice-channel" },
-  { label: "Assist human agents", icon: Headphones, track: "agent-assist" },
-  { label: "Translate calls", icon: Languages, track: "translation" },
-  { label: "Fix a failed call", icon: AlertTriangle, track: "diagnose" },
+  { label: "Connect SIP or a contact center", icon: Radio, track: "sip-trunk" },
+  { label: "Create a routing rule", icon: Route, track: "routing" },
+  { label: "Monitor calls and usage", icon: Activity, track: "operate" },
 ];
 
 type DocItem = {
@@ -184,6 +170,7 @@ const troubleshootingIssues = troubleshootingData as TroubleshootingIssue[];
 const docs: DocItem[] = [
   { title: "Start with Live Hub", description: "Sign in, learn the product model, and choose the shortest path to a first call.", category: "Get started", time: "5 min", level: "Start", icon: Sparkles, url: TECH_DOCS.home },
   { title: "Tour the dashboard", description: "Learn the navigation, account selector, usage, Help Center, wizard, and monitoring cards.", category: "Get started", time: "6 min", level: "Tour", icon: ListChecks, url: TECH_DOCS.dashboard },
+  { title: "Quick setup wizard", description: "Use Live Hub's guided configuration when you need help creating a common first call path.", category: "Get started", time: "6 min", level: "Wizard", icon: ListChecks, url: TECH_DOCS.quickSetupWizard },
   { title: "Build a native AI Agent", description: "Create an agent, enable Speech and Telephony, and connect it to Live Hub voice.", category: "Build", time: "15 min", level: "Guide", icon: Bot, url: TECH_DOCS.aiAgent },
   { title: "AI Agent tools", description: "Give an agent a focused, testable external action and inspect the result in logs.", category: "Build", time: "12 min", level: "Guide", icon: SlidersHorizontal, url: TECH_DOCS.aiTools },
   { title: "Agent Assist modes", description: "Choose the assistant behavior that matches your live-agent experience.", category: "Build", time: "9 min", level: "Guide", icon: Headphones, url: TECH_DOCS.agentAssistMode },
@@ -191,19 +178,22 @@ const docs: DocItem[] = [
   { title: "Bot features and failover", description: "Configure transcript, recording, transfer, outbound calling, background music, and failover.", category: "Build", time: "13 min", level: "Guide", icon: SlidersHorizontal, url: TECH_DOCS.botFeatures },
   { title: "Voice channels overview", description: "Choose among numbers, SIP, Teams, WebRTC, WhatsApp, PBXs, and contact centers.", category: "Connect", time: "8 min", level: "Overview", icon: Network, url: TECH_DOCS.voiceChannels },
   { title: "Phone numbers", description: "Purchase and manage a Live Hub number for a simple inbound or outbound path.", category: "Connect", time: "8 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.phoneNumbers },
-  { title: "SIP connections", description: "Create a provider-tested or generic SIP, UC, or contact-center connection.", category: "Connect", time: "14 min", level: "Guide", icon: Radio, url: TECH_DOCS.sipConnections },
-  { title: "Microsoft Teams", description: "Create a Teams voice connection and prepare licensed users for calling.", category: "Connect", time: "18 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.teams },
+  { title: "Listed or Generic SIP", description: "Use a provider profile when available; otherwise configure a Generic SIP trunk, contact center, or UC connection.", category: "Connect", time: "14 min", level: "Technical", icon: Radio, url: TECH_DOCS.sipConnections },
+  { title: "SIP Info and troubleshooting", description: "Find the connection FQDN, addresses, certificate, limits, REGISTER/OPTIONS tools, and SIP evidence.", category: "Connect", time: "10 min", level: "Technical", icon: Activity, url: TECH_DOCS.sipConnections },
   { title: "WhatsApp voice calling", description: "Connect a verified WhatsApp Business number and route voice calls.", category: "Connect", time: "12 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.whatsapp },
   { title: "WebRTC Click-to-Call", description: "Add browser or mobile calling with the widget, SDK, and authentication code.", category: "Connect", time: "15 min", level: "Guide", icon: Code2, url: TECH_DOCS.clickToCall },
   { title: "Routing rules", description: "Match an origin, choose a destination, order rules, and attach call services.", category: "Route", time: "14 min", level: "Core", icon: Route, url: TECH_DOCS.routing },
+  { title: "Advanced call transfer", description: "Choose INVITE or REFER, route the transfer, pass SIP headers, and inspect transfer notifications.", category: "Route", time: "15 min", level: "Advanced", icon: Route, url: TECH_DOCS.callTransfer },
   { title: "Live-Agent Assist", description: "Connect an assist bot in-path or through SIPREC and attach it as a service.", category: "Route", time: "13 min", level: "Guide", icon: Headphones, url: TECH_DOCS.agentAssist },
   { title: "Real-time translation", description: "Configure language pairs, activation, speech, voice, and two-way translation.", category: "Route", time: "10 min", level: "Guide", icon: Languages, url: TECH_DOCS.translation },
   { title: "Outbound calling", description: "Place controlled outbound calls from a bot connection.", category: "Operate", time: "10 min", level: "Guide", icon: Activity, url: TECH_DOCS.outboundCalling },
   { title: "Outbound automation", description: "Automate campaigns while controlling schedules, traffic, and results.", category: "Operate", time: "13 min", level: "Guide", icon: Activity, url: TECH_DOCS.outboundAutomation },
   { title: "Call History", description: "Inspect completion status, services, media, transcript, latency, and SIP evidence.", category: "Operate", time: "10 min", level: "Reference", icon: Activity, url: TECH_DOCS.callHistory },
+  { title: "Dashboard statistics and alarms", description: "Monitor configured services, traffic, success, voice quality, and active alarm severity.", category: "Operate", time: "8 min", level: "Monitor", icon: Activity, url: TECH_DOCS.dashboard },
   { title: "Call transcripts", description: "Enable, review, retain, download, and share transcripts safely.", category: "Operate", time: "8 min", level: "Policy", icon: FileText, url: TECH_DOCS.callTranscript },
+  { title: "Call recordings", description: "Choose automatic or bot-controlled recording, test the result, and download recordings from Call History.", category: "Operate", time: "8 min", level: "Policy", icon: FileText, url: TECH_DOCS.callRecording },
   { title: "Billing and usage", description: "Understand balance, consumption, billing controls, and continuity risks.", category: "Operate", time: "9 min", level: "Admin", icon: Bookmark, url: TECH_DOCS.billing },
-  { title: "Users and access", description: "Manage users and permissions with roles and user groups.", category: "Operate", time: "9 min", level: "Admin", icon: ShieldCheck, url: TECH_DOCS.userGroups },
+  { title: "Users, access, and API clients", description: "Manage people and system identities in IAM with the minimum required user group.", category: "Operate", time: "9 min", level: "Admin", icon: ShieldCheck, url: TECH_DOCS.userGroups },
   { title: "Live Hub REST API", description: "Manage and monitor Live Hub from your own system.", category: "Develop", time: "12 min", level: "API", icon: Code2, url: TECH_DOCS.restApi },
   { title: "REST API authentication", description: "Create an API client and obtain a bearer token with OAuth client credentials.", category: "Develop", time: "8 min", level: "API", icon: ShieldCheck, url: TECH_DOCS.restAuthentication },
   { title: "Support and evidence", description: "Use documentation, assistants, tickets, and privacy-aware evidence sharing.", category: "Support", time: "8 min", level: "Guide", icon: CircleHelp, url: TECH_DOCS.support },
@@ -361,7 +351,14 @@ export default function Home() {
           </div>
         </header>
 
-        {view === "home" && <HomeView goToTrack={goToTrack} goToOrientation={() => goToView("orientation")} />}
+        {view === "home" && (
+          <HomeView
+            goToTrack={goToTrack}
+            goToOrientation={() => goToView("orientation")}
+            goToJourneys={() => goToView("journeys")}
+            goToTroubleshooting={() => goToView("troubleshooting")}
+          />
+        )}
         {view === "orientation" && <OrientationView goToTrack={goToTrack} />}
         {view === "journeys" && (
           <JourneysView
@@ -380,31 +377,45 @@ export default function Home() {
   );
 }
 
-function HomeView({ goToTrack, goToOrientation }: { goToTrack: (id: string) => void; goToOrientation: () => void }) {
+function HomeView({
+  goToTrack,
+  goToOrientation,
+  goToJourneys,
+  goToTroubleshooting,
+}: {
+  goToTrack: (id: string) => void;
+  goToOrientation: () => void;
+  goToJourneys: () => void;
+  goToTroubleshooting: () => void;
+}) {
   return (
     <div className="page home-page">
       <section className="hero-grid">
         <div className="hero-copy">
-          <div className="eyebrow"><Zap /> FROM FIRST CLICK TO FIRST CALL</div>
+          <div className="eyebrow"><Sparkles /> WELCOME TO THE LIVE HUB ACADEMY</div>
           <h1>
-            Don&apos;t just read Live Hub.
-            <span>Make it talk.</span>
+            Your practical guide to AudioCodes Live Hub.
+            <span>Learn it by building.</span>
           </h1>
           <p className="hero-lead">
-            Pick an outcome. Follow one clear path. Build, connect, test, and ship your voice AI experience with confidence.
+            Live Hub is AudioCodes&apos; enterprise Voice AI platform. It connects AI agents, bots, phone numbers, SIP providers, and other voice channels—then routes and operates every call in one place.
           </p>
+          <div className="academy-location">
+            <span><BookOpen /></span>
+            <div><strong>You are in the Live Hub Academy.</strong><p>Start with one outcome. The Academy shows only the settings you need now and keeps advanced options for later.</p></div>
+          </div>
           <div className="hero-actions">
             <Button size="lg" className="primary-cta" onClick={goToOrientation}>
-              <ListChecks /> Tour Live Hub first
+              <ListChecks /> I&apos;m new — show me around
             </Button>
-            <Button size="lg" variant="outline" className="secondary-cta" onClick={() => goToTrack("voice-agent")}>
-              Build your first agent <ArrowRight />
+            <Button size="lg" variant="outline" className="secondary-cta" onClick={goToJourneys}>
+              I know my task <ArrowRight />
             </Button>
           </div>
           <div className="trust-row">
-            <span><Check /> No telephony expertise required</span>
-            <span><Clock3 /> Learn by doing</span>
-            <span><ShieldCheck /> Production-minded</span>
+            <span><Check /> One outcome at a time</span>
+            <span><Clock3 /> Short guided missions</span>
+            <span><ShieldCheck /> Official TechDocs when needed</span>
           </div>
         </div>
 
@@ -435,13 +446,37 @@ function HomeView({ goToTrack, goToOrientation }: { goToTrack: (id: string) => v
         </div>
       </section>
 
+      <section className="start-choice-section">
+        <div className="section-heading compact">
+          <div><span className="section-kicker">CHOOSE WHERE YOU ARE</span><h2>One question. Three clear ways in.</h2></div>
+          <p>You do not need to understand the whole platform before you start.</p>
+        </div>
+        <div className="start-choice-grid">
+          <Button variant="ghost" className="start-choice-card recommended" onClick={goToOrientation}>
+            <span className="choice-number">01</span><ListChecks />
+            <span><small>FIRST TIME HERE</small><strong>Show me the Live Hub basics</strong><em>Dashboard, account, menu, wizard, and the complete call model.</em></span>
+            <ArrowRight />
+          </Button>
+          <Button variant="ghost" className="start-choice-card" onClick={goToJourneys}>
+            <span className="choice-number">02</span><Route />
+            <span><small>I HAVE A TASK</small><strong>Take me to the guided missions</strong><em>Build an agent, connect SIP, route a call, or operate the service.</em></span>
+            <ArrowRight />
+          </Button>
+          <Button variant="ghost" className="start-choice-card" onClick={goToTroubleshooting}>
+            <span className="choice-number">03</span><AlertTriangle />
+            <span><small>SOMETHING FAILED</small><strong>Help me diagnose one call</strong><em>Start with the exact result, inspect the right layer, and change one thing.</em></span>
+            <ArrowRight />
+          </Button>
+        </div>
+      </section>
+
       <section className="goal-section">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">YOUR FASTEST WAY IN</span>
-            <h2>What do you want to make happen?</h2>
+            <span className="section-kicker">CORE TASKS</span>
+            <h2>What do you need to do now?</h2>
           </div>
-          <p>Skip the manual. Start with the outcome.</p>
+          <p>Everything else stays out of the way until the basic call works.</p>
         </div>
         <div className="goal-grid">
           {quickGoals.map((goal) => {
@@ -457,19 +492,20 @@ function HomeView({ goToTrack, goToOrientation }: { goToTrack: (id: string) => v
         </div>
       </section>
 
-      <section className="journey-preview">
+      <section className="core-path-section">
         <div className="section-heading compact">
           <div>
-            <span className="section-kicker">GUIDED MISSIONS</span>
-            <h2>From “hello” to production</h2>
+            <span className="section-kicker">THE LIVE HUB CORE PATH</span>
+            <h2>Every successful setup follows three jobs.</h2>
           </div>
-          <Button variant="ghost" className="view-all" onClick={() => goToTrack("voice-agent")}>View all journeys <ArrowRight /></Button>
+          <Button variant="ghost" className="view-all" onClick={goToJourneys}>Open all missions <ArrowRight /></Button>
         </div>
-        <div className="track-grid">
-          {tracks.map((track, index) => (
-            <TrackCard key={track.id} track={track} index={index} onSelect={() => goToTrack(track.id)} />
-          ))}
+        <div className="core-path-grid">
+          <article><span>01</span><div><strong>Build or connect</strong><p>Create an AI agent, connect an existing bot, buy a number, or add a SIP trunk.</p></div></article>
+          <article><span>02</span><div><strong>Route the call</strong><p>Choose one origin, one destination, and the smallest exact matching rule.</p></div></article>
+          <article><span>03</span><div><strong>Prove and operate</strong><p>Make a test call, inspect Call History, then monitor usage, alarms, and evidence.</p></div></article>
         </div>
+        <p className="advanced-later"><Lightbulb /> Add transfers, recordings, translation, Agent Assist, campaigns, headers, and custom APIs only after this core path works.</p>
       </section>
     </div>
   );
@@ -489,11 +525,10 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
   const destinations = [
     ["Build native AI behavior", "AI Agents"],
     ["Connect an existing external bot", "Bot connections"],
-    ["Choose STT or TTS", "Speech providers"],
-    ["Add number, SIP, Teams, web, or WhatsApp", "Voice channels"],
+    ["Add a phone number or SIP trunk", "Voice channels"],
     ["Decide where a call goes", "Routing"],
-    ["Prove telephony, media, or termination", "Calls"],
-    ["Explain prompts, tools, variables, or PCA", "AI Agents → Logs"],
+    ["Prove what happened", "Calls and AI Agents → Logs"],
+    ["Manage billing, users, or API clients", "Profile and IAM"],
   ];
 
   return (
@@ -555,16 +590,14 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
       <section className="mental-model">
         <div className="mental-model-copy">
           <span className="section-kicker">THE COMPLETE CALL MODEL</span>
-          <h2>Every working journey follows five jobs.</h2>
-          <p>If something fails, the last completed job tells you where to investigate next.</p>
+          <h2>Every working setup follows three jobs.</h2>
+          <p>Build or connect one thing, route one call, then prove the result before adding options.</p>
         </div>
         <div className="mental-model-flow">
           {[
-            ["01", "Enter", "Number, SIP, Teams, web, or WhatsApp"],
-            ["02", "Identify", "Account, region, origin, and caller"],
-            ["03", "Route", "Rule matches and selects the destination"],
-            ["04", "Handle", "Agent, bot, person, or translation acts"],
-            ["05", "Prove", "Calls shows voice; AI Logs shows behavior"],
+            ["01", "Build or connect", "Create the agent, bot, number, or SIP connection"],
+            ["02", "Route", "Match one origin and send it to one destination"],
+            ["03", "Prove", "Call History shows voice; AI Logs explains behavior"],
           ].map(([number, title, detail]) => (
             <article key={number}><span>{number}</span><h3>{title}</h3><p>{detail}</p></article>
           ))}
@@ -650,9 +683,9 @@ function JourneysView({
     <div className="page journeys-page">
       <div className="journey-header">
         <div>
-          <span className="section-kicker">LEARNING JOURNEYS</span>
-          <h1>Choose a mission. Ship an outcome.</h1>
-          <p>Each journey connects the right concepts, settings, and checks in the order you actually need them.</p>
+          <span className="section-kicker">FIVE FOCUSED MISSIONS</span>
+          <h1>Choose only what you need now.</h1>
+          <p>Start with one outcome. Advanced settings appear inside the mission only when they are relevant.</p>
         </div>
         <div className="journey-count"><strong>{tracks.length}</strong><span>guided<br />missions</span></div>
       </div>
@@ -695,6 +728,7 @@ function JourneysView({
             <span><Zap /> {selected.level}</span>
             <span><Check /> Clear success check</span>
           </div>
+          <div className="mission-guardrail"><Lightbulb /><span><strong>Stay focused:</strong> finish this mission&apos;s success checks before adding another channel or optional service.</span></div>
           <div className="mission-steps">
             {selected.steps.map((step, index) => {
               const stepKey = `${selected.id}:${index}`;
@@ -769,8 +803,10 @@ function LessonWorkspace({
   const lessonNarration = [
     lesson.title,
     lesson.objective,
+    lesson.decision ? `${lesson.decision.question}. ${lesson.decision.options.map((option) => `${option.title}: ${option.chooseWhen} ${option.next}`).join(" ")}` : "",
     lesson.architecture ? `Architecture: ${lesson.architecture.join(" to ")}.` : "",
     `Before you start: ${lesson.before.join(". ")}.`,
+    lesson.skipForNow ? `Ignore these for now: ${lesson.skipForNow.join(", ")}.` : "",
     ...lesson.actions.map((action, index) => `Step ${index + 1}. ${action.title}. ${action.instruction}`),
     `Success check: ${lesson.success.join(". ")}.`,
   ].join(" ");
@@ -872,6 +908,25 @@ function LessonWorkspace({
             </div>
           </section>
 
+          {lesson.decision && (
+            <section className="lesson-decision" aria-label="Choose the correct setup path">
+              <div className="lesson-decision-head">
+                <span>CHOOSE ONE PATH FIRST</span>
+                <h2>{lesson.decision.question}</h2>
+              </div>
+              <div className="decision-grid">
+                {lesson.decision.options.map((option, index) => (
+                  <article key={option.title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <h3>{option.title}</h3>
+                    <p>{option.chooseWhen}</p>
+                    <div><ArrowRight /><strong>{option.next}</strong></div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
           {lesson.architecture && (
             <section className="lesson-architecture" aria-label="Architecture for this lesson">
               <span>WHAT CONNECTS TO WHAT</span>
@@ -892,6 +947,16 @@ function LessonWorkspace({
               {lesson.before.map((item) => <div key={item}><Check /> {item}</div>)}
             </div>
           </section>
+
+          {lesson.skipForNow && (
+            <section className="skip-for-now">
+              <Lightbulb />
+              <div>
+                <strong>Ignore these for now</strong>
+                <p>{lesson.skipForNow.join(" · ")}</p>
+              </div>
+            </section>
+          )}
 
           {(lesson.image || lesson.videoId) && (
             <section className="lesson-media-grid">
