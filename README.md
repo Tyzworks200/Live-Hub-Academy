@@ -6,10 +6,11 @@ Live version: https://live-hub-academy.audiocodes.chatgpt.site
 
 ## What is included
 
-- Five guided missions with exact portal paths, numbered actions, success checks, official screenshots, video, and browser-based lesson narration
-- Hands-on paths for launching a Voice AI Agent, connecting voice channels, Agent Assist, real-time translation, and diagnosing a failed call
+- A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
+- Six guided missions with exact portal paths, architecture maps, numbered actions, common mistakes, success checks, official screenshots, video, and browser-based narration
+- Hands-on paths for launching and improving an AI Agent, connecting voice channels, Agent Assist, real-time translation, and diagnosing a failed call
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
-- Documentation library aligned to the current product structure: Get started, Concepts, Bot connections, Speech providers, Voice channels, Routing, AI Agents, Hub+, Calls, Monitoring, Administration, APIs, Support, and Release notes
+- A centralized official-TechDocs link map used by every lesson and library card
 - Support guidance covering documentation, chat, AI Assistant, ticket severity, transcript/log sharing, recordings, and retention
 - Developer compass for the Live Hub REST API versus Bot and speech provider APIs
 - Device-local progress tracking with no account or database required
@@ -33,43 +34,58 @@ Create a production build:
 
 ```bash
 npm run build
+npm run build:pages
 ```
 
 ## Upload to GitHub
 
-The simplest route is:
+This package is configured for the repository:
 
-1. Create an empty GitHub repository.
-2. Unzip the Academy package.
-3. In GitHub, choose **Add file → Upload files**.
-4. Drag the unzipped files and folders into the upload area.
-5. Commit to the `main` branch.
+`https://github.com/Tyzworks200/Live-Hub-Academy`
 
-Or push from a terminal:
+To replace the earlier upload:
+
+1. Unzip the corrected Academy package.
+2. Open the existing `Live-Hub-Academy` repository on GitHub.
+3. Choose **Add file → Upload files**.
+4. Drag everything inside the unzipped `Live-Hub-Academy` folder into GitHub.
+5. Allow GitHub to replace files with the same names, then commit to `main`.
+6. Open **Settings → Pages**.
+7. Under **Build and deployment → Source**, select **Deploy from a branch**.
+8. Select the `main` branch and the `/docs` folder, then click **Save**.
+9. Wait a minute or two for GitHub to show the published address.
+
+The published address will be:
+
+`https://tyzworks200.github.io/Live-Hub-Academy/`
+
+To push from a terminal instead:
 
 ```bash
-git init
 git add .
-git commit -m "Add Live Hub Academy"
-git branch -M main
-git remote add origin https://github.com/YOUR-ORG/YOUR-REPOSITORY.git
-git push -u origin main
+git commit -m "Enable Live Hub Academy on GitHub Pages"
+git push
 ```
 
-The included GitHub Actions workflow verifies every push with a clean install and production build.
+The ready-to-publish website is stored in `docs/`. The included GitHub Actions workflow also verifies that the static Academy still builds successfully after changes.
 
 ## Deployment note
 
-This is a Vinext/Cloudflare Worker application, not a static GitHub Pages bundle. Store and review the source in GitHub, then deploy it through the existing Sites project or another compatible Cloudflare Worker pipeline. The production Academy currently runs at the live URL above.
+The project keeps its existing Sites/Vinext configuration and adds a separate static GitHub Pages build. Both versions use the same Academy source and design.
 
 ## Main files
 
 - `app/page.tsx` - application navigation and interactive views
-- `app/lesson-data.ts` - five detailed guided missions
+- `app/lesson-data.ts` - six detailed guided missions
+- `app/techdocs.ts` - centralized official documentation destinations
 - `app/troubleshooting-data.json` - 100 structured troubleshooting entries
 - `app/globals.css` - complete visual system and responsive layout
+- `github-pages/index.html` - source template for the GitHub Pages entry point
+- `github-pages/main.tsx` - static React entry point
+- `docs/index.html` - ready-to-publish GitHub Pages homepage
+- `vite.pages.config.ts` - repository-aware static build
 - `.openai/hosting.json` - existing Sites project binding
-- `.github/workflows/verify.yml` - GitHub build verification
+- `.github/workflows/verify.yml` - GitHub Pages build verification
 
 ## Content note
 

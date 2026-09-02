@@ -42,9 +42,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { lessonsByTrack, type Lesson } from "./lesson-data";
+import { TECH_DOCS } from "./techdocs";
 import troubleshootingData from "./troubleshooting-data.json";
 
-type View = "home" | "journeys" | "troubleshooting" | "library" | "glossary";
+type View = "home" | "orientation" | "journeys" | "troubleshooting" | "library" | "glossary";
 
 type Track = {
   id: string;
@@ -65,11 +66,23 @@ const tracks: Track[] = [
     title: "Launch a Voice AI Agent",
     description:
       "Give an AI agent a voice, connect a real number, and complete your first test call.",
-    time: "25 min",
+    time: "34 min",
     level: "Start here",
     icon: Bot,
     color: "cyan",
     steps: lessonsByTrack["voice-agent"].map((lesson) => lesson.title),
+  },
+  {
+    id: "agent-builder",
+    eyebrow: "Build beyond the demo",
+    title: "Power Up an AI Agent",
+    description:
+      "Add trusted knowledge, one safe tool, post-call outcomes, repeatable tests, and controlled flows.",
+    time: "37 min",
+    level: "Builder",
+    icon: Sparkles,
+    color: "green",
+    steps: lessonsByTrack["agent-builder"].map((lesson) => lesson.title),
   },
   {
     id: "voice-channel",
@@ -123,6 +136,7 @@ const tracks: Track[] = [
 
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "home", label: "Academy home", icon: Sparkles },
+  { id: "orientation", label: "Start here", icon: ListChecks },
   { id: "journeys", label: "Learning journeys", icon: Route },
   { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
   { id: "library", label: "Doc library", icon: LibraryBig },
@@ -131,6 +145,7 @@ const navItems: { id: View; label: string; icon: typeof Bot }[] = [
 
 const quickGoals = [
   { label: "Build an AI agent", icon: Bot, track: "voice-agent" },
+  { label: "Improve my agent", icon: Sparkles, track: "agent-builder" },
   { label: "Connect telephony", icon: PhoneCall, track: "voice-channel" },
   { label: "Assist human agents", icon: Headphones, track: "agent-assist" },
   { label: "Translate calls", icon: Languages, track: "translation" },
@@ -167,34 +182,32 @@ type TroubleshootingIssue = {
 const troubleshootingIssues = troubleshootingData as TroubleshootingIssue[];
 
 const docs: DocItem[] = [
-  { title: "Sign up and sign in", description: "Create access, enter the portal, and know where to start after login.", category: "Get started", time: "4 min", level: "Start", icon: Sparkles, url: "https://livehub.audiocodes.io/login" },
-  { title: "Your first call, end to end", description: "See the complete chain from agent and speech to channel, route, test, and call record.", category: "Get started", time: "8 min", level: "Walkthrough", icon: PhoneCall, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Tour the interface", description: "Learn the side navigation, dashboard, Help Center, profile, balance, and Build with AI controls.", category: "Get started", time: "6 min", level: "Tour", icon: ListChecks, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Quick setup wizard", description: "Choose a use case, connect a number and bot, then create a first routing rule.", category: "Get started", time: "7 min", level: "Wizard", icon: Zap, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Core Live Hub concepts", description: "Understand the voice channel, destination, and routing rule behind every call path.", category: "Concepts", time: "7 min", level: "Foundation", icon: Network, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Regions and data privacy", description: "Align entity regions and understand where recordings, transcripts, and call data are handled.", category: "Concepts", time: "9 min", level: "Foundation", icon: ShieldCheck, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Recording and transcripts", description: "Plan capture, retention, downloads, and support-sharing choices before production.", category: "Concepts", time: "8 min", level: "Policy", icon: FileText, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/managing_call_history_new.htm" },
-  { title: "Build a native AI Agent", description: "Create agents, flows, tools, and documents in Live Hub's native agent platform.", category: "Build", time: "15 min", level: "Guide", icon: Bot, url: "https://intercom.help/audiocodes-1a6772ae1c8a/en/articles/11999522-video-guide-for-creating-ai-agents-in-live-hub" },
-  { title: "Connect a bot", description: "Attach Live Hub AI Agents, Copilot Studio, Dialogflow, RASA, or a custom framework.", category: "Build", time: "12 min", level: "Guide", icon: Bot, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/LiveHub-AIAgent.htm" },
-  { title: "Speech providers", description: "Select independent STT and TTS providers, models, languages, voices, and custom services.", category: "Build", time: "11 min", level: "Catalog", icon: Volume2, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Editing%20your%20bot.htm" },
-  { title: "Bot features and failover", description: "Configure transcription, recording, background music, transfer, outbound calls, and failover actions.", category: "Build", time: "13 min", level: "Guide", icon: SlidersHorizontal, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Editing%20your%20bot.htm" },
-  { title: "Voice channels overview", description: "Choose among phone numbers, SIP, Teams, WebRTC, WhatsApp, PBXs, and contact centers.", category: "Connect", time: "8 min", level: "Overview", icon: Network, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/voice-channels.htm" },
-  { title: "SIP connections", description: "Create a tested provider connection or configure a generic SIP, UC, or contact-center path.", category: "Connect", time: "14 min", level: "Guide", icon: Radio, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/sip_connections.htm" },
-  { title: "Microsoft Teams connection", description: "Connect a Teams tenant, create a voice route, and prepare licensed users for calling.", category: "Connect", time: "18 min", level: "Guide", icon: PhoneCall, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Creating%20Teams%20connection.htm" },
-  { title: "WhatsApp voice calling", description: "Connect a verified WhatsApp Business number and route calls to bots or contact centers.", category: "Connect", time: "12 min", level: "Guide", icon: PhoneCall, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/buy-whats-app-number.htm" },
-  { title: "WebRTC Click-to-Call", description: "Add browser or mobile calling with the widget, SDK, and authentication-code options.", category: "Connect", time: "15 min", level: "Guide", icon: Code2, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/configuration-WebRTC-Click-to-Call.htm" },
-  { title: "Routing rules", description: "Match origins and number patterns, choose destinations, order rules, and apply call services.", category: "Route", time: "14 min", level: "Core", icon: Route, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Defining%20Routing.htm" },
-  { title: "Live-Agent Assist", description: "Connect an assist bot in-path or through SIPREC and attach it as a routing service.", category: "Route", time: "13 min", level: "Guide", icon: Headphones, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Agent%20assist.htm" },
-  { title: "Real-time voice translation", description: "Configure languages, speech providers, activation, volume, and two-way translation.", category: "Route", time: "10 min", level: "Guide", icon: Languages, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/Voice-translation.htm" },
-  { title: "Outbound campaigns and Hub+", description: "Automate outbound calling while controlling schedules, traffic, and campaign results.", category: "Operate", time: "13 min", level: "Guide", icon: Activity, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Call history and logs", description: "Inspect completion status, services, recordings, transcripts, AI logs, latency, and SIP Ladder.", category: "Operate", time: "10 min", level: "Reference", icon: Activity, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/managing_call_history_new.htm" },
-  { title: "Monitoring and alarms", description: "Watch activity, voice quality, current alarms, and alarm history across the account.", category: "Operate", time: "9 min", level: "Reference", icon: AlertTriangle, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Administration and IAM", description: "Manage accounts, users, roles, permissions, API clients, plans, balance, and billing.", category: "Operate", time: "12 min", level: "Admin", icon: ShieldCheck, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Live Hub REST API", description: "Authenticate with OAuth client credentials and manage calls, transcripts, recordings, campaigns, and more.", category: "Develop", time: "12 min", level: "API", icon: Code2, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/API/API-Endpoints.htm" },
-  { title: "SIP Ladder API", description: "Retrieve the signaling sequence as JSON for deeper troubleshooting and visualization.", category: "Develop", time: "7 min", level: "API", icon: Code2, url: "https://techdocs.audiocodes.com/livehub/Content/LiveHub/API/api-sip-ladder.htm" },
-  { title: "Bot and speech provider APIs", description: "Implement a server that Live Hub connects to when you build a framework, middleware, or custom speech provider.", category: "Develop", time: "14 min", level: "API", icon: FileText, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Support and evidence sharing", description: "Use documentation, chat, AI Assistant, tickets, and privacy-aware sharing for investigations.", category: "Support", time: "8 min", level: "Guide", icon: CircleHelp, url: "https://techdocs.audiocodes.com/livehub/" },
-  { title: "Release notes", description: "Review recent platform changes before diagnosing a behavior that changed after an update.", category: "Support", time: "6 min", level: "Reference", icon: Bookmark, url: "https://techdocs.audiocodes.com/livehub/" },
+  { title: "Start with Live Hub", description: "Sign in, learn the product model, and choose the shortest path to a first call.", category: "Get started", time: "5 min", level: "Start", icon: Sparkles, url: TECH_DOCS.home },
+  { title: "Tour the dashboard", description: "Learn the navigation, account selector, usage, Help Center, wizard, and monitoring cards.", category: "Get started", time: "6 min", level: "Tour", icon: ListChecks, url: TECH_DOCS.dashboard },
+  { title: "Build a native AI Agent", description: "Create an agent, enable Speech and Telephony, and connect it to Live Hub voice.", category: "Build", time: "15 min", level: "Guide", icon: Bot, url: TECH_DOCS.aiAgent },
+  { title: "AI Agent tools", description: "Give an agent a focused, testable external action and inspect the result in logs.", category: "Build", time: "12 min", level: "Guide", icon: SlidersHorizontal, url: TECH_DOCS.aiTools },
+  { title: "Agent Assist modes", description: "Choose the assistant behavior that matches your live-agent experience.", category: "Build", time: "9 min", level: "Guide", icon: Headphones, url: TECH_DOCS.agentAssistMode },
+  { title: "Test a bot connection", description: "Make a browser test call before introducing a phone number and routing rule.", category: "Build", time: "5 min", level: "Test", icon: PhoneCall, url: TECH_DOCS.botTest },
+  { title: "Bot features and failover", description: "Configure transcript, recording, transfer, outbound calling, background music, and failover.", category: "Build", time: "13 min", level: "Guide", icon: SlidersHorizontal, url: TECH_DOCS.botFeatures },
+  { title: "Voice channels overview", description: "Choose among numbers, SIP, Teams, WebRTC, WhatsApp, PBXs, and contact centers.", category: "Connect", time: "8 min", level: "Overview", icon: Network, url: TECH_DOCS.voiceChannels },
+  { title: "Phone numbers", description: "Purchase and manage a Live Hub number for a simple inbound or outbound path.", category: "Connect", time: "8 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.phoneNumbers },
+  { title: "SIP connections", description: "Create a provider-tested or generic SIP, UC, or contact-center connection.", category: "Connect", time: "14 min", level: "Guide", icon: Radio, url: TECH_DOCS.sipConnections },
+  { title: "Microsoft Teams", description: "Create a Teams voice connection and prepare licensed users for calling.", category: "Connect", time: "18 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.teams },
+  { title: "WhatsApp voice calling", description: "Connect a verified WhatsApp Business number and route voice calls.", category: "Connect", time: "12 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.whatsapp },
+  { title: "WebRTC Click-to-Call", description: "Add browser or mobile calling with the widget, SDK, and authentication code.", category: "Connect", time: "15 min", level: "Guide", icon: Code2, url: TECH_DOCS.clickToCall },
+  { title: "Routing rules", description: "Match an origin, choose a destination, order rules, and attach call services.", category: "Route", time: "14 min", level: "Core", icon: Route, url: TECH_DOCS.routing },
+  { title: "Live-Agent Assist", description: "Connect an assist bot in-path or through SIPREC and attach it as a service.", category: "Route", time: "13 min", level: "Guide", icon: Headphones, url: TECH_DOCS.agentAssist },
+  { title: "Real-time translation", description: "Configure language pairs, activation, speech, voice, and two-way translation.", category: "Route", time: "10 min", level: "Guide", icon: Languages, url: TECH_DOCS.translation },
+  { title: "Outbound calling", description: "Place controlled outbound calls from a bot connection.", category: "Operate", time: "10 min", level: "Guide", icon: Activity, url: TECH_DOCS.outboundCalling },
+  { title: "Outbound automation", description: "Automate campaigns while controlling schedules, traffic, and results.", category: "Operate", time: "13 min", level: "Guide", icon: Activity, url: TECH_DOCS.outboundAutomation },
+  { title: "Call History", description: "Inspect completion status, services, media, transcript, latency, and SIP evidence.", category: "Operate", time: "10 min", level: "Reference", icon: Activity, url: TECH_DOCS.callHistory },
+  { title: "Call transcripts", description: "Enable, review, retain, download, and share transcripts safely.", category: "Operate", time: "8 min", level: "Policy", icon: FileText, url: TECH_DOCS.callTranscript },
+  { title: "Billing and usage", description: "Understand balance, consumption, billing controls, and continuity risks.", category: "Operate", time: "9 min", level: "Admin", icon: Bookmark, url: TECH_DOCS.billing },
+  { title: "Users and access", description: "Manage users and permissions with roles and user groups.", category: "Operate", time: "9 min", level: "Admin", icon: ShieldCheck, url: TECH_DOCS.userGroups },
+  { title: "Live Hub REST API", description: "Manage and monitor Live Hub from your own system.", category: "Develop", time: "12 min", level: "API", icon: Code2, url: TECH_DOCS.restApi },
+  { title: "REST API authentication", description: "Create an API client and obtain a bearer token with OAuth client credentials.", category: "Develop", time: "8 min", level: "API", icon: ShieldCheck, url: TECH_DOCS.restAuthentication },
+  { title: "Support and evidence", description: "Use documentation, assistants, tickets, and privacy-aware evidence sharing.", category: "Support", time: "8 min", level: "Guide", icon: CircleHelp, url: TECH_DOCS.support },
+  { title: "Release notes", description: "Check platform changes before diagnosing behavior that changed after an update.", category: "Support", time: "6 min", level: "Reference", icon: Bookmark, url: TECH_DOCS.releaseNotes },
 ];
 
 const glossary = [
@@ -318,11 +331,11 @@ export default function Home() {
         </div>
 
         <Button asChild variant="ghost" className="sidebar-help">
-          <a href="https://intercom.help/audiocodes-1a6772ae1c8a/en/" target="_blank" rel="noreferrer">
+          <a href={TECH_DOCS.support} target="_blank" rel="noreferrer">
             <CircleHelp />
             <span className="sidebar-help-copy">
-              <strong>Need a human?</strong>
-              <small>Open Live Hub support</small>
+              <strong>Need official detail?</strong>
+              <small>Open Live Hub TechDocs</small>
             </span>
             <ArrowRight />
           </a>
@@ -348,7 +361,8 @@ export default function Home() {
           </div>
         </header>
 
-        {view === "home" && <HomeView goToTrack={goToTrack} />}
+        {view === "home" && <HomeView goToTrack={goToTrack} goToOrientation={() => goToView("orientation")} />}
+        {view === "orientation" && <OrientationView goToTrack={goToTrack} />}
         {view === "journeys" && (
           <JourneysView
             selected={selectedTrack}
@@ -366,7 +380,7 @@ export default function Home() {
   );
 }
 
-function HomeView({ goToTrack }: { goToTrack: (id: string) => void }) {
+function HomeView({ goToTrack, goToOrientation }: { goToTrack: (id: string) => void; goToOrientation: () => void }) {
   return (
     <div className="page home-page">
       <section className="hero-grid">
@@ -380,11 +394,11 @@ function HomeView({ goToTrack }: { goToTrack: (id: string) => void }) {
             Pick an outcome. Follow one clear path. Build, connect, test, and ship your voice AI experience with confidence.
           </p>
           <div className="hero-actions">
-            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>
-              <Play /> Start your first call
+            <Button size="lg" className="primary-cta" onClick={goToOrientation}>
+              <ListChecks /> Tour Live Hub first
             </Button>
-            <Button size="lg" variant="outline" className="secondary-cta" onClick={() => goToTrack("voice-channel")}>
-              Explore all journeys <ArrowRight />
+            <Button size="lg" variant="outline" className="secondary-cta" onClick={() => goToTrack("voice-agent")}>
+              Build your first agent <ArrowRight />
             </Button>
           </div>
           <div className="trust-row">
@@ -456,6 +470,110 @@ function HomeView({ goToTrack }: { goToTrack: (id: string) => void }) {
             <TrackCard key={track.id} track={track} index={index} onSelect={() => goToTrack(track.id)} />
           ))}
         </div>
+      </section>
+    </div>
+  );
+}
+
+function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
+  const landmarks = [
+    { number: 1, title: "Current account", detail: "Check this before every edit. The right object in the wrong account still looks like it disappeared." },
+    { number: 2, title: "Main menu", detail: "This is the map: build, connect, route, operate, and administer from the left side." },
+    { number: 3, title: "Monthly usage", detail: "Watch consumption and plan limits before a test becomes production traffic." },
+    { number: 4, title: "Help Center", detail: "Open official documentation and the supported contact path from here." },
+    { number: 5, title: "Profile and IAM", detail: "Manage identity, access, API clients, and account-level settings." },
+    { number: 6, title: "Launch wizard", detail: "Use the guided setup when you want help creating a common call path." },
+    { number: 7, title: "Support assistant", detail: "Ask a product question from the screen you are already working on." },
+  ];
+
+  const destinations = [
+    ["Build native AI behavior", "AI Agents"],
+    ["Connect an existing external bot", "Bot connections"],
+    ["Choose STT or TTS", "Speech providers"],
+    ["Add number, SIP, Teams, web, or WhatsApp", "Voice channels"],
+    ["Decide where a call goes", "Routing"],
+    ["Prove telephony, media, or termination", "Calls"],
+    ["Explain prompts, tools, variables, or PCA", "AI Agents → Logs"],
+  ];
+
+  return (
+    <div className="page orientation-page">
+      <section className="orientation-hero">
+        <div>
+          <span className="section-kicker">START HERE · 6 MINUTES</span>
+          <h1>Know where you are<br /><span>before you build.</span></h1>
+          <p>This is the real Live Hub dashboard. Learn the seven landmarks, then use the decision map below whenever you are unsure which option belongs to your task.</p>
+          <div className="hero-actions">
+            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}><Play /> Start the first build</Button>
+            <Button asChild size="lg" variant="outline" className="secondary-cta">
+              <a href={TECH_DOCS.dashboard} target="_blank" rel="noreferrer">Open dashboard TechDocs <ExternalLink /></a>
+            </Button>
+          </div>
+        </div>
+        <div className="orientation-rule">
+          <span>THE RULE THAT PREVENTS MOST CONFUSION</span>
+          <strong>Choose the account first.<br />Choose the product area second.</strong>
+          <p>Then make one change, run one test, and inspect one result.</p>
+        </div>
+      </section>
+
+      <section className="portal-tour">
+        <div className="portal-tour-head">
+          <div><span className="section-kicker">YOUR LIVE HUB MAP</span><h2>Seven landmarks on the real screen</h2></div>
+          <p>The Academy markers sit on top of your dashboard screenshot; nothing in the product has been redrawn.</p>
+        </div>
+        <div className="portal-shot">
+          <img src="live-hub-dashboard.png" alt="Live Hub dashboard with navigation, account, usage, Help Center, wizard, and support assistant" />
+          {landmarks.map((item) => <span key={item.number} className={`portal-marker marker-${item.number}`}>{item.number}</span>)}
+        </div>
+        <div className="landmark-grid">
+          {landmarks.map((item) => (
+            <article key={item.number}>
+              <span>{String(item.number).padStart(2, "0")}</span>
+              <div><h3>{item.title}</h3><p>{item.detail}</p></div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="where-to-go">
+        <div className="section-heading compact">
+          <div><span className="section-kicker">STOP GUESSING BETWEEN OPTIONS</span><h2>Choose the screen by the question.</h2></div>
+          <p>The same call can touch several areas. Start with the layer you are changing or proving.</p>
+        </div>
+        <div className="destination-grid">
+          {destinations.map(([question, destination], index) => (
+            <article key={question}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p>{question}</p>
+              <div><ArrowRight /><strong>{destination}</strong></div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mental-model">
+        <div className="mental-model-copy">
+          <span className="section-kicker">THE COMPLETE CALL MODEL</span>
+          <h2>Every working journey follows five jobs.</h2>
+          <p>If something fails, the last completed job tells you where to investigate next.</p>
+        </div>
+        <div className="mental-model-flow">
+          {[
+            ["01", "Enter", "Number, SIP, Teams, web, or WhatsApp"],
+            ["02", "Identify", "Account, region, origin, and caller"],
+            ["03", "Route", "Rule matches and selects the destination"],
+            ["04", "Handle", "Agent, bot, person, or translation acts"],
+            ["05", "Prove", "Calls shows voice; AI Logs shows behavior"],
+          ].map(([number, title, detail]) => (
+            <article key={number}><span>{number}</span><h3>{title}</h3><p>{detail}</p></article>
+          ))}
+        </div>
+      </section>
+
+      <section className="orientation-next">
+        <div><span>READY?</span><h2>Build the smallest complete call next.</h2><p>Agent → browser voice test → number → route → Calls + AI Logs.</p></div>
+        <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>Launch the guided mission <ArrowRight /></Button>
       </section>
     </div>
   );
@@ -651,6 +769,7 @@ function LessonWorkspace({
   const lessonNarration = [
     lesson.title,
     lesson.objective,
+    lesson.architecture ? `Architecture: ${lesson.architecture.join(" to ")}.` : "",
     `Before you start: ${lesson.before.join(". ")}.`,
     ...lesson.actions.map((action, index) => `Step ${index + 1}. ${action.title}. ${action.instruction}`),
     `Success check: ${lesson.success.join(". ")}.`,
@@ -753,6 +872,17 @@ function LessonWorkspace({
             </div>
           </section>
 
+          {lesson.architecture && (
+            <section className="lesson-architecture" aria-label="Architecture for this lesson">
+              <span>WHAT CONNECTS TO WHAT</span>
+              <div>
+                {lesson.architecture.map((part, index) => (
+                  <span key={part}><strong>{part}</strong>{index < lesson.architecture!.length - 1 && <ArrowRight />}</span>
+                ))}
+              </div>
+            </section>
+          )}
+
           <section className="lesson-section before-section">
             <div className="lesson-section-title">
               <ListChecks />
@@ -806,6 +936,9 @@ function LessonWorkspace({
                 </div>
               ))}
             </div>
+            {lesson.commonMistake && (
+              <div className="common-mistake"><AlertTriangle /><div><strong>Common mistake</strong><p>{lesson.commonMistake}</p></div></div>
+            )}
           </section>
 
           <section className="lesson-section success-section">
@@ -911,7 +1044,7 @@ function TroubleshootingView({ goToDiagnosis }: { goToDiagnosis: () => void }) {
               <Play /> Learn the 23-minute method
             </Button>
             <Button asChild size="lg" variant="outline" className="secondary-cta">
-              <a href="https://techdocs.audiocodes.com/livehub/Content/LiveHub/managing_call_history_new.htm" target="_blank" rel="noreferrer">
+              <a href={TECH_DOCS.callHistory} target="_blank" rel="noreferrer">
                 Open Call History guide <ExternalLink />
               </a>
             </Button>
@@ -1080,7 +1213,7 @@ function TroubleshootingView({ goToDiagnosis }: { goToDiagnosis: () => void }) {
           <div><strong>AI agent logs</strong><p>Share account-wide under Settings → Advanced. Logs include transcripts.</p></div>
           <div><strong>Recordings</strong><p>No standing-access switch exists. Download and send only the recordings support needs.</p></div>
           <Button asChild variant="outline">
-            <a href="https://services.audiocodes.com/app/utils/login_form/redirect/tools/session/" target="_blank" rel="noreferrer">Premium Service Portal <ExternalLink /></a>
+            <a href={TECH_DOCS.support} target="_blank" rel="noreferrer">Support documentation <ExternalLink /></a>
           </Button>
         </div>
       </section>
@@ -1235,7 +1368,7 @@ function LibraryView() {
           <h2>Every Academy shortcut still leads back to the source of truth.</h2>
         </div>
         <Button asChild variant="outline">
-          <a href="https://techdocs.audiocodes.com/livehub/" target="_blank" rel="noreferrer">Browse all TechDocs <ExternalLink /></a>
+          <a href={TECH_DOCS.home} target="_blank" rel="noreferrer">Browse all TechDocs <ExternalLink /></a>
         </Button>
       </section>
     </div>
