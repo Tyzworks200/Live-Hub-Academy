@@ -7,10 +7,12 @@ Live version: https://live-hub-academy.audiocodes.chatgpt.site
 ## What is included
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
+- Three real starting paths: launch an AI Agent, connect SIP plus a Live Hub number, or connect Microsoft Teams plus SIP
 - Six guided missions with exact portal paths, architecture maps, numbered actions, common mistakes, success checks, official screenshots, video, and browser-based narration
-- Hands-on paths for launching and improving an AI Agent, connecting voice channels, Agent Assist, real-time translation, and diagnosing a failed call
+- A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
+- Focused paths for routing, account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
-- A centralized official-TechDocs link map used by every lesson and library card
+- A centralized official-TechDocs link map, checked against the supplied TechDocs menu, used by every lesson and library card
 - Support guidance covering documentation, chat, AI Assistant, ticket severity, transcript/log sharing, recordings, and retention
 - Developer compass for the Live Hub REST API versus Bot and speech provider APIs
 - Device-local progress tracking with no account or database required
@@ -76,7 +78,7 @@ The project keeps its existing Sites/Vinext configuration and adds a separate st
 ## Main files
 
 - `app/page.tsx` - application navigation and interactive views
-- `app/lesson-data.ts` - six detailed guided missions
+- `app/lesson-data.ts` - detailed lessons for every guided mission
 - `app/techdocs.ts` - centralized official documentation destinations
 - `app/troubleshooting-data.json` - 100 structured troubleshooting entries
 - `app/globals.css` - complete visual system and responsive layout

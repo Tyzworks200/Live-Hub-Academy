@@ -66,12 +66,12 @@ const OFFICIAL_VIDEO_PLAYLIST =
 const tracks: Track[] = [
   {
     id: "voice-agent",
-    eyebrow: "Recommended for every new user",
-    title: "Make Your First Live Hub Call",
+    eyebrow: "Promoted first path",
+    title: "Launch an AI Agent by Phone",
     description:
-      "Build one small AI Agent, give it voice, connect a number, route the call, and prove the result end to end.",
-    time: "34 min",
-    level: "Start here",
+      "Build one small native AI Agent, prove it in chat and voice, request a US or UK number, route it, and call it.",
+    time: "35 min + provisioning",
+    level: "Recommended",
     icon: Bot,
     color: "cyan",
     steps: lessonsByTrack["voice-agent"].map((lesson) => lesson.title),
@@ -79,16 +79,29 @@ const tracks: Track[] = [
   },
   {
     id: "sip-trunk",
-    eyebrow: "Telephony path",
-    title: "Connect a SIP Provider",
+    eyebrow: "Common first path",
+    title: "Connect SIP + a Live Hub Number",
     description:
-      "Choose a listed provider or the correct generic SIP, contact-center, or UC path, then prove a test call.",
-    time: "31 min",
+      "Choose listed or Generic SIP, prove the trunk, request a US or UK number, and join them with one exact route.",
+    time: "43 min + provisioning",
     level: "Technical",
     icon: Radio,
     color: "blue",
     steps: lessonsByTrack["sip-trunk"].map((lesson) => lesson.title),
-    phases: ["CHOOSE TYPE", "PREPARE", "CONNECT", "MATCH NUMBERS", "TEST + PROVE"],
+    phases: ["CHOOSE TYPE", "PREPARE", "CONNECT", "MATCH NUMBERS", "PROVE SIP", "GET NUMBER", "ROUTE + CALL"],
+  },
+  {
+    id: "teams-sip",
+    eyebrow: "Enterprise voice path",
+    title: "Connect Microsoft Teams + SIP",
+    description:
+      "Prepare the tenant, activate Teams, assign numbers, verify SIP, and create one route for each direction.",
+    time: "41 min + activation",
+    level: "Administrator",
+    icon: Network,
+    color: "pink",
+    steps: lessonsByTrack["teams-sip"].map((lesson) => lesson.title),
+    phases: ["PREPARE TENANT", "ACTIVATE TEAMS", "ASSIGN NUMBERS", "PROVE SIP", "ROUTE BOTH WAYS"],
   },
   {
     id: "routing",
@@ -114,7 +127,7 @@ const tracks: Track[] = [
     icon: Activity,
     color: "violet",
     steps: lessonsByTrack.operate.map((lesson) => lesson.title),
-    phases: ["DASHBOARD", "EVIDENCE", "BILLING", "ACCESS"],
+    phases: ["ACCOUNT", "DASHBOARD", "ALARMS", "EVIDENCE", "BILLING", "ACCESS"],
   },
   {
     id: "diagnose",
@@ -180,9 +193,11 @@ const docs: DocItem[] = [
   { title: "Test a bot connection", description: "Make a browser test call before introducing a phone number and routing rule.", category: "Build", time: "5 min", level: "Test", icon: PhoneCall, url: TECH_DOCS.botTest },
   { title: "Bot features and failover", description: "Configure transcript, recording, transfer, outbound calling, background music, and failover.", category: "Build", time: "13 min", level: "Guide", icon: SlidersHorizontal, url: TECH_DOCS.botFeatures },
   { title: "Voice channels overview", description: "Choose among numbers, SIP, Teams, WebRTC, WhatsApp, PBXs, and contact centers.", category: "Connect", time: "8 min", level: "Overview", icon: Network, url: TECH_DOCS.voiceChannels },
-  { title: "Phone numbers", description: "Purchase and manage a Live Hub number for a simple inbound or outbound path.", category: "Connect", time: "8 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.phoneNumbers },
-  { title: "Listed or Generic SIP", description: "Use a provider profile when available; otherwise configure a Generic SIP trunk, contact center, or UC connection.", category: "Connect", time: "14 min", level: "Technical", icon: Radio, url: TECH_DOCS.sipConnections },
+  { title: "Request a phone number", description: "Review country availability, fees, region, required forms or documents, and provisioning state before routing.", category: "Connect", time: "8 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.phoneNumberPurchase },
+  { title: "Listed or Generic SIP", description: "Use a provider profile when available; otherwise configure a Generic SIP trunk, contact center, or UC connection.", category: "Connect", time: "14 min", level: "Technical", icon: Radio, url: TECH_DOCS.genericSip },
   { title: "SIP Info and troubleshooting", description: "Find the connection FQDN, addresses, certificate, limits, REGISTER/OPTIONS tools, and SIP evidence.", category: "Connect", time: "10 min", level: "Technical", icon: Activity, url: TECH_DOCS.sipConnections },
+  { title: "Connect a Teams tenant", description: "Verify licenses, provision the service account, connect the tenant, and troubleshoot Microsoft prerequisites.", category: "Connect", time: "12 min", level: "Admin", icon: Network, url: TECH_DOCS.teamsTenant },
+  { title: "Route Microsoft Teams and SIP", description: "Create the Teams connection, assign numbers, and define separate routing rules for both directions.", category: "Route", time: "15 min", level: "Admin", icon: Route, url: TECH_DOCS.teamsRouting },
   { title: "WhatsApp voice calling", description: "Connect a verified WhatsApp Business number and route voice calls.", category: "Connect", time: "12 min", level: "Guide", icon: PhoneCall, url: TECH_DOCS.whatsapp },
   { title: "WebRTC Click-to-Call", description: "Add browser or mobile calling with the widget, SDK, and authentication code.", category: "Connect", time: "15 min", level: "Guide", icon: Code2, url: TECH_DOCS.clickToCall },
   { title: "Routing rules", description: "Match an origin, choose a destination, order rules, and attach call services.", category: "Route", time: "14 min", level: "Core", icon: Route, url: TECH_DOCS.routing },
@@ -193,9 +208,11 @@ const docs: DocItem[] = [
   { title: "Outbound automation", description: "Automate campaigns while controlling schedules, traffic, and results.", category: "Operate", time: "13 min", level: "Guide", icon: Activity, url: TECH_DOCS.outboundAutomation },
   { title: "Call History", description: "Inspect completion status, services, media, transcript, latency, and SIP evidence.", category: "Operate", time: "10 min", level: "Reference", icon: Activity, url: TECH_DOCS.callHistory },
   { title: "Dashboard statistics and alarms", description: "Monitor configured services, traffic, success, voice quality, and active alarm severity.", category: "Operate", time: "8 min", level: "Monitor", icon: Activity, url: TECH_DOCS.dashboard },
+  { title: "Alarm thresholds and notifications", description: "Configure email recipients, metric direction, severity thresholds, and Alarm History.", category: "Operate", time: "8 min", level: "Monitor", icon: AlertTriangle, url: TECH_DOCS.alarmThresholds },
   { title: "Call transcripts", description: "Enable, review, retain, download, and share transcripts safely.", category: "Operate", time: "8 min", level: "Policy", icon: FileText, url: TECH_DOCS.callTranscript },
   { title: "Call recordings", description: "Choose automatic or bot-controlled recording, test the result, and download recordings from Call History.", category: "Operate", time: "8 min", level: "Policy", icon: FileText, url: TECH_DOCS.callRecording },
   { title: "Billing and usage", description: "Understand balance, consumption, billing controls, and continuity risks.", category: "Operate", time: "9 min", level: "Admin", icon: Bookmark, url: TECH_DOCS.billing },
+  { title: "Account types and relationships", description: "Understand Standalone, Parent, and Subaccounts before changing billing or administration.", category: "Operate", time: "7 min", level: "Admin", icon: ShieldCheck, url: TECH_DOCS.accountTypes },
   { title: "Users, access, and API clients", description: "Manage people and system identities in IAM with the minimum required user group.", category: "Operate", time: "9 min", level: "Admin", icon: ShieldCheck, url: TECH_DOCS.userGroups },
   { title: "Live Hub REST API", description: "Manage and monitor Live Hub from your own system.", category: "Develop", time: "12 min", level: "API", icon: Code2, url: TECH_DOCS.restApi },
   { title: "REST API authentication", description: "Create an API client and obtain a bearer token with OAuth client credentials.", category: "Develop", time: "8 min", level: "API", icon: ShieldCheck, url: TECH_DOCS.restAuthentication },
@@ -218,6 +235,19 @@ const glossary = [
   { term: "PSTN", meaning: "The public telephone network that connects traditional and mobile phone numbers worldwide.", tag: "Channel" },
 ];
 
+function resetPagePosition() {
+  if (typeof window === "undefined") return;
+  window.requestAnimationFrame(() => {
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    window.requestAnimationFrame(() => {
+      root.style.scrollBehavior = previousBehavior;
+    });
+  });
+}
+
 export default function Home() {
   const [view, setView] = useState<View>("home");
   const [selectedTrack, setSelectedTrack] = useState<Track>(tracks[0]);
@@ -225,12 +255,18 @@ export default function Home() {
   const [completed, setCompleted] = useState<string[]>([]);
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem("live-hub-academy-progress");
-      if (saved) setCompleted(JSON.parse(saved));
-    } catch {
-      // Device-local progress is an enhancement; the Academy still works without it.
-    }
+    let active = true;
+    window.queueMicrotask(() => {
+      try {
+        const saved = window.localStorage.getItem("live-hub-academy-progress");
+        if (saved && active) setCompleted(JSON.parse(saved));
+      } catch {
+        // Device-local progress is an enhancement; the Academy still works without it.
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const toggleStep = (key: string) => {
@@ -247,11 +283,11 @@ export default function Home() {
     });
   };
 
-  const launchSteps = tracks[0].steps.length;
-  const launchCompleted = tracks[0].steps.filter((_, index) =>
-    completed.includes(`voice-agent:${index}`)
+  const currentSteps = selectedTrack.steps.length;
+  const currentCompleted = selectedTrack.steps.filter((_, index) =>
+    completed.includes(`${selectedTrack.id}:${index}`)
   ).length;
-  const progress = Math.round((launchCompleted / launchSteps) * 100);
+  const progress = currentSteps ? Math.round((currentCompleted / currentSteps) * 100) : 0;
 
   const selectedIndex = useMemo(
     () => tracks.findIndex((track) => track.id === selectedTrack.id),
@@ -263,11 +299,18 @@ export default function Home() {
     if (track) setSelectedTrack(track);
     setView("journeys");
     setMobileOpen(false);
+    resetPagePosition();
   };
 
   const goToView = (next: View) => {
     setView(next);
     setMobileOpen(false);
+    resetPagePosition();
+  };
+
+  const selectJourneyTrack = (track: Track) => {
+    setSelectedTrack(track);
+    resetPagePosition();
   };
 
   return (
@@ -319,11 +362,11 @@ export default function Home() {
 
         <div className="sidebar-progress-card">
           <div className="progress-card-head">
-            <span>Your first call</span>
+            <span>Current mission</span>
             <strong>{progress}%</strong>
           </div>
           <Progress value={progress} aria-label="Academy progress" />
-          <p>{launchCompleted ? `${launchCompleted} of ${launchSteps} launch steps complete.` : "Start one guided path. Ignore the rest for now."}</p>
+          <p>{currentCompleted ? `${currentCompleted} of ${currentSteps} lessons complete in ${selectedTrack.title}.` : `Ready to begin: ${selectedTrack.title}.`}</p>
         </div>
 
         <Button asChild variant="ghost" className="sidebar-help">
@@ -362,15 +405,15 @@ export default function Home() {
             goToTrack={goToTrack}
             goToOrientation={() => goToView("orientation")}
             goToJourneys={() => goToView("journeys")}
-            goToTroubleshooting={() => goToView("troubleshooting")}
           />
         )}
-        {view === "orientation" && <OrientationView goToTrack={goToTrack} />}
+        {view === "orientation" && <OrientationView goToJourneys={() => goToView("journeys")} />}
         {view === "journeys" && (
           <JourneysView
+            key={selectedTrack.id}
             selected={selectedTrack}
             selectedIndex={selectedIndex}
-            selectTrack={setSelectedTrack}
+            selectTrack={selectJourneyTrack}
             completed={completed}
             toggleStep={toggleStep}
           />
@@ -387,12 +430,10 @@ function HomeView({
   goToTrack,
   goToOrientation,
   goToJourneys,
-  goToTroubleshooting,
 }: {
   goToTrack: (id: string) => void;
   goToOrientation: () => void;
   goToJourneys: () => void;
-  goToTroubleshooting: () => void;
 }) {
   return (
     <div className="page home-page">
@@ -408,7 +449,7 @@ function HomeView({
           </p>
           <div className="academy-location">
             <span><BookOpen /></span>
-            <div><strong>You are in the Live Hub Academy.</strong><p>Your first goal is simple: make one real call reach one working AI Agent. We will explain every connection on the way.</p></div>
+            <div><strong>You are in the Live Hub Academy.</strong><p>Choose how your call starts. Every path meets at Routing, then ends with a real test and evidence in Calls.</p></div>
           </div>
           <div className="hero-actions">
             <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>
@@ -419,8 +460,8 @@ function HomeView({
             </Button>
           </div>
           <div className="trust-row">
-            <span><Check /> One ordered path</span>
-            <span><Clock3 /> About 34 minutes</span>
+            <span><Check /> Three clear starting paths</span>
+            <span><Route /> One shared routing model</span>
             <span><ShieldCheck /> Tested before advanced options</span>
           </div>
         </div>
@@ -459,24 +500,34 @@ function HomeView({
 
       <section className="start-choice-section">
         <div className="section-heading compact">
-          <div><span className="section-kicker">ALREADY STARTED?</span><h2>Use a different door only if you need it.</h2></div>
-          <p>New users should stay on the first-call path above.</p>
+          <div><span className="section-kicker">CHOOSE YOUR START</span><h2>Where does your first call begin?</h2></div>
+          <p>Pick one. The Academy hides the other product areas until this path reaches Routing.</p>
         </div>
-        <div className="start-choice-grid two-choice-grid">
-          <Button variant="ghost" className="start-choice-card" onClick={goToJourneys}>
-            <span className="choice-number">01</span><Route />
-            <span><small>I KNOW WHAT I NEED</small><strong>Open focused task guides</strong><em>Connect SIP, create routing, operate the service, or return to the first-call path.</em></span>
+        <div className="start-choice-grid">
+          <Button variant="ghost" className="start-choice-card recommended" onClick={() => goToTrack("voice-agent")}>
+            <span className="choice-number">01</span><Bot />
+            <span><small>RECOMMENDED</small><strong>Launch an AI Agent</strong><em>Build the agent, add voice, request a US or UK number, route it, and call it.</em></span>
             <ArrowRight />
           </Button>
-          <Button variant="ghost" className="start-choice-card" onClick={goToTroubleshooting}>
-            <span className="choice-number">02</span><AlertTriangle />
-            <span><small>SOMETHING FAILED</small><strong>Help me diagnose one call</strong><em>Start with the exact result, inspect the right layer, and change one thing.</em></span>
+          <Button variant="ghost" className="start-choice-card" onClick={() => goToTrack("sip-trunk")}>
+            <span className="choice-number">02</span><Radio />
+            <span><small>TELEPHONY FIRST</small><strong>Connect SIP + a number</strong><em>Prove listed or Generic SIP, request a US or UK number, then create one exact route.</em></span>
+            <ArrowRight />
+          </Button>
+          <Button variant="ghost" className="start-choice-card" onClick={() => goToTrack("teams-sip")}>
+            <span className="choice-number">03</span><Network />
+            <span><small>ENTERPRISE VOICE</small><strong>Connect Teams + SIP</strong><em>Prepare the tenant, assign numbers, prove SIP, then route and test both directions.</em></span>
             <ArrowRight />
           </Button>
         </div>
         <div className="official-video-strip">
+          <Route />
+          <div><strong>Already have part of the path?</strong><span>Open focused missions for Routing, operations, or diagnosis. If a call failed, start with the exact Call record.</span></div>
+          <Button variant="outline" onClick={goToJourneys}>Browse all missions <ArrowRight /></Button>
+        </div>
+        <div className="official-video-strip">
           <Play />
-          <div><strong>Prefer to watch?</strong><span>The official AudioCodes playlist is available, but the Academy keeps each video beside the lesson where it belongs.</span></div>
+          <div><strong>Prefer to watch?</strong><span>Use the official AudioCodes playlist for product demonstrations; the Academy keeps the tasks in a simpler working order.</span></div>
           <Button asChild variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer">Open video playlist <ExternalLink /></a></Button>
         </div>
       </section>
@@ -484,7 +535,7 @@ function HomeView({
   );
 }
 
-function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
+function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
   const landmarks = [
     { number: 1, title: "Current account", detail: "Check this before every edit. The right object in the wrong account still looks like it disappeared." },
     { number: 2, title: "Main menu", detail: "This is the map: build, connect, route, operate, and administer from the left side." },
@@ -503,7 +554,7 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
           <h1>Learn one model.<br /><span>Ignore the menu for now.</span></h1>
           <p>A working Live Hub service is a chain. Something enters, Live Hub routes it, something handles it, and the logs prove the result. You do not need to learn every product area first.</p>
           <div className="hero-actions">
-            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}><PhoneCall /> Start my first call</Button>
+            <Button size="lg" className="primary-cta" onClick={goToJourneys}><Route /> Choose my starting path</Button>
             <Button asChild size="lg" variant="outline" className="secondary-cta">
               <a href={TECH_DOCS.dashboard} target="_blank" rel="noreferrer">Open dashboard TechDocs <ExternalLink /></a>
             </Button>
@@ -555,8 +606,8 @@ function OrientationView({ goToTrack }: { goToTrack: (id: string) => void }) {
       </section>
 
       <section className="orientation-next">
-        <div><span>YOUR NEXT ACTION</span><h2>Build the smallest complete call.</h2><p>Agent → voice → number → route → real call → evidence.</p></div>
-        <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>Start step 1 <ArrowRight /></Button>
+        <div><span>YOUR NEXT ACTION</span><h2>Choose one origin and complete the chain.</h2><p>AI Agent, SIP + number, or Teams + SIP → Routing → real call → evidence.</p></div>
+        <Button size="lg" className="primary-cta" onClick={goToJourneys}>Choose a path <ArrowRight /></Button>
       </section>
     </div>
   );
@@ -590,7 +641,15 @@ function JourneysView({
   const lessons = lessonsByTrack[selected.id] ?? [];
   const missionComplete = selected.steps.filter((_, index) => completed.includes(`${selected.id}:${index}`)).length;
 
-  useEffect(() => setActiveLessonIndex(null), [selected.id]);
+  const openLesson = (index: number) => {
+    setActiveLessonIndex(index);
+    resetPagePosition();
+  };
+
+  const backToMission = () => {
+    setActiveLessonIndex(null);
+    resetPagePosition();
+  };
 
   if (activeLessonIndex !== null && lessons[activeLessonIndex]) {
     return (
@@ -600,8 +659,8 @@ function JourneysView({
         lessonIndex={activeLessonIndex}
         completed={completed}
         toggleStep={toggleStep}
-        onBack={() => setActiveLessonIndex(null)}
-        onSelectLesson={setActiveLessonIndex}
+        onBack={backToMission}
+        onSelectLesson={openLesson}
       />
     );
   }
@@ -611,11 +670,19 @@ function JourneysView({
     <div className="page journeys-page">
       <div className="journey-header">
         <div>
-          <span className="section-kicker">ONE RECOMMENDED START</span>
-          <h1>First make a call. Then go deeper.</h1>
-          <p>If you are new, choose the first mission and complete it in order. The other missions solve specific tasks after your first end-to-end call works.</p>
+          <span className="section-kicker">THREE WAYS TO BEGIN</span>
+          <h1>Choose the origin. Routing joins the path.</h1>
+          <p>Start with an AI Agent, SIP plus a Live Hub number, or Microsoft Teams plus SIP. Complete one path in order; use the focused missions only after its baseline call works.</p>
         </div>
-        <div className="journey-count"><strong>1</strong><span>recommended<br />starting path</span></div>
+        <div className="journey-count"><strong>3</strong><span>real starting<br />paths</span></div>
+      </div>
+
+      <div className="routing-heart" aria-label="Every starting path meets at routing">
+        <div className="routing-origins"><span><Bot /> AI Agent</span><span><Radio /> SIP + number</span><span><Network /> Teams + SIP</span></div>
+        <ArrowRight />
+        <div className="routing-center"><Route /><span><small>THE HEART</small><strong>Routing</strong></span></div>
+        <ArrowRight />
+        <div className="routing-proof"><CheckCircle2 /><span><small>FINISH</small><strong>Test + Calls evidence</strong></span></div>
       </div>
 
       <div className="journey-workspace">
@@ -624,8 +691,8 @@ function JourneysView({
             const TrackIcon = track.icon;
             return (
               <div key={track.id} className={index === 0 ? "journey-choice recommended-path" : "journey-choice"}>
-                {index === 0 && <span className="journey-group-label">START HERE</span>}
-                {index === 1 && <span className="journey-group-label secondary">AFTER YOUR FIRST CALL</span>}
+                {index === 0 && <span className="journey-group-label">START A SERVICE</span>}
+                {index === 3 && <span className="journey-group-label secondary">FOCUSED MISSIONS</span>}
                 <Button
                   variant="ghost"
                   role="tab"
@@ -635,7 +702,7 @@ function JourneysView({
                 >
                   <span className={`journey-tab-icon ${track.color}`}><TrackIcon /></span>
                   <span className="journey-tab-copy">
-                    <small>{index === 0 ? "RECOMMENDED" : `TASK 0${index}`} · {track.time}</small>
+                    <small>{index === 0 ? "PROMOTED START" : index < 3 ? `START 0${index + 1}` : `TASK 0${index - 2}`} · {track.time}</small>
                     <strong>{track.title}</strong>
                   </span>
                   <ChevronRight />
@@ -659,7 +726,7 @@ function JourneysView({
             <span><Zap /> {selected.level}</span>
             <span><Check /> Clear success check</span>
           </div>
-          <div className="mission-guardrail"><Lightbulb /><span><strong>{selected.id === "voice-agent" ? "Follow this in order:" : "Keep the scope small:"}</strong> {selected.id === "voice-agent" ? "each lesson produces the prerequisite for the next one. Do not skip from agent creation straight to routing." : "finish this mission’s success checks before adding another channel or optional service."}</span></div>
+          <div className="mission-guardrail"><Lightbulb /><span><strong>{["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "Follow this in order:" : "Keep the scope small:"}</strong> {["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "each lesson produces a prerequisite for the next. Routing comes only after the origin and destination are ready." : "finish this mission’s success checks before adding another channel or optional service."}</span></div>
           <div className="mission-steps">
             {selected.steps.map((step, index) => {
               const stepKey = `${selected.id}:${index}`;
@@ -670,7 +737,7 @@ function JourneysView({
                 id={`${selected.id}-step-${index}`}
                 className={done ? "mission-step done" : "mission-step"}
                 key={step}
-                onClick={() => setActiveLessonIndex(index)}
+                onClick={() => openLesson(index)}
               >
                 <span className="step-index">{done ? <Check /> : index + 1}</span>
                 <div>
@@ -689,7 +756,7 @@ function JourneysView({
             <Button
               size="lg"
               className="primary-cta"
-              onClick={() => setActiveLessonIndex(firstIncomplete)}
+              onClick={() => openLesson(firstIncomplete)}
             >
               {missionComplete ? "Continue mission" : selected.id === "voice-agent" ? "Start step 1" : "Begin mission"} <ArrowRight />
             </Button>
