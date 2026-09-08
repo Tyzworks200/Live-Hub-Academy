@@ -2,13 +2,14 @@
 
 An outcome-first learning and troubleshooting experience for AudioCodes Live Hub.
 
-Live version: https://live-hub-academy.audiocodes.chatgpt.site
-
 ## What is included
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
 - Three real starting paths: launch an AI Agent, connect SIP plus a Live Hub number, or connect Microsoft Teams plus SIP
+- A simpler, course-catalog homepage with larger type, one featured AI Agent path, and fewer choices at once
+- A stable homepage integration slot reserved for a future Intercom or other Academy AI assistant
 - Six guided missions with exact portal paths, architecture maps, numbered actions, common mistakes, success checks, official screenshots, video, and browser-based narration
+- A scored 12-question operational bootcamp knowledge check with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
 - Focused paths for routing, account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
@@ -79,6 +80,7 @@ The project keeps its existing Sites/Vinext configuration and adds a separate st
 
 - `app/page.tsx` - application navigation and interactive views
 - `app/lesson-data.ts` - detailed lessons for every guided mission
+- `app/quiz-data.ts` - customer-facing bootcamp questions, answers, explanations, and source links
 - `app/techdocs.ts` - centralized official documentation destinations
 - `app/troubleshooting-data.json` - 100 structured troubleshooting entries
 - `app/globals.css` - complete visual system and responsive layout

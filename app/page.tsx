@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Activity,
+  Award,
   BookOpen,
   Bookmark,
   Bot,
@@ -18,17 +19,20 @@ import {
   Code2,
   ExternalLink,
   FileText,
+  FolderOpen,
   Headphones,
   Languages,
   LibraryBig,
   Lightbulb,
   ListChecks,
   Menu,
+  MessageCircle,
   Network,
   PhoneCall,
   Play,
   Radio,
   Route,
+  RotateCcw,
   Search,
   ShieldCheck,
   SlidersHorizontal,
@@ -42,10 +46,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { lessonsByTrack, type Lesson } from "./lesson-data";
+import { knowledgeQuestions } from "./quiz-data";
 import { TECH_DOCS } from "./techdocs";
 import troubleshootingData from "./troubleshooting-data.json";
 
-type View = "home" | "orientation" | "journeys" | "troubleshooting" | "library" | "glossary";
+type View = "home" | "orientation" | "journeys" | "troubleshooting" | "quiz" | "library" | "glossary";
 
 type Track = {
   id: string;
@@ -147,9 +152,10 @@ const tracks: Track[] = [
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "home", label: "Academy home", icon: Sparkles },
   { id: "orientation", label: "Start here", icon: ListChecks },
-  { id: "journeys", label: "Learning journeys", icon: Route },
+  { id: "journeys", label: "Course catalog", icon: FolderOpen },
   { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
-  { id: "library", label: "Doc library", icon: LibraryBig },
+  { id: "quiz", label: "Knowledge check", icon: Award },
+  { id: "library", label: "Official docs", icon: LibraryBig },
   { id: "glossary", label: "Voice glossary", icon: Code2 },
 ];
 
@@ -419,6 +425,7 @@ export default function Home() {
           />
         )}
         {view === "troubleshooting" && <TroubleshootingView goToDiagnosis={() => goToTrack("diagnose")} />}
+        {view === "quiz" && <KnowledgeCheckView />}
         {view === "library" && <LibraryView />}
         {view === "glossary" && <GlossaryView />}
       </section>
@@ -435,101 +442,230 @@ function HomeView({
   goToOrientation: () => void;
   goToJourneys: () => void;
 }) {
+  const [courseQuery, setCourseQuery] = useState("");
+  const normalizedQuery = courseQuery.trim().toLowerCase();
+  const matchingTracks = normalizedQuery
+    ? tracks.filter((track) => `${track.title} ${track.description} ${track.level}`.toLowerCase().includes(normalizedQuery))
+    : tracks.slice(0, 3);
+
   return (
-    <div className="page home-page">
-      <section className="hero-grid">
-        <div className="hero-copy">
-          <div className="eyebrow"><Sparkles /> WELCOME TO THE LIVE HUB ACADEMY</div>
-          <h1>
-            Your practical guide to AudioCodes Live Hub.
-            <span>Learn it by building.</span>
-          </h1>
-          <p className="hero-lead">
-            Live Hub is AudioCodes&apos; enterprise Voice AI platform. It connects AI agents, bots, phone numbers, SIP providers, and other voice channels—then routes and operates every call in one place.
+    <div className="page home-page simplified-home">
+      <section className="academy-welcome">
+        <div>
+          <span className="section-kicker"><Sparkles /> WELCOME TO THE LIVE HUB ACADEMY</span>
+          <h1>What do you want to make work today?</h1>
+          <p>
+            Live Hub is AudioCodes&apos; enterprise platform for building Voice AI and connecting it to real voice channels. The Academy turns that platform into short, ordered courses that finish with a working call.
           </p>
-          <div className="academy-location">
-            <span><BookOpen /></span>
-            <div><strong>You are in the Live Hub Academy.</strong><p>Choose how your call starts. Every path meets at Routing, then ends with a real test and evidence in Calls.</p></div>
+        </div>
+        <Button variant="outline" className="welcome-tour-button" onClick={goToOrientation}>
+          <Play /> New here? Take the 3-minute tour
+        </Button>
+      </section>
+
+      <section className="course-search" aria-label="Find a Live Hub course">
+        <Search />
+        <Input
+          value={courseQuery}
+          onChange={(event) => setCourseQuery(event.target.value)}
+          placeholder="Search a goal: AI Agent, SIP, Teams, routing, calls…"
+          aria-label="Search Academy courses"
+        />
+        {courseQuery && <Button variant="ghost" onClick={() => setCourseQuery("")} aria-label="Clear course search"><X /></Button>}
+      </section>
+
+      {!normalizedQuery && (
+        <section className="home-feature-grid">
+          <article className="featured-course">
+            <div className="featured-course-copy">
+              <span className="featured-label"><Bot /> FEATURED FIRST COURSE</span>
+              <h2>Launch a Live Hub AI Agent by phone</h2>
+              <p>Build one focused agent, prove its logic, add speech, connect a number, route the call, and inspect the result.</p>
+              <div className="featured-outcomes">
+                <span><Check /> Guided from blank agent to real call</span>
+                <span><Check /> 6 short lessons</span>
+                <span><Check /> 35 minutes plus number provisioning</span>
+              </div>
+              <Button size="lg" onClick={() => goToTrack("voice-agent")}>Start the AI Agent course <ArrowRight /></Button>
+            </div>
+            <div className="featured-call-path" aria-label="AI Agent course path">
+              <span><small>01</small><strong>Build</strong></span>
+              <ArrowRight />
+              <span><small>02</small><strong>Add voice</strong></span>
+              <ArrowRight />
+              <span><small>03</small><strong>Route</strong></span>
+              <ArrowRight />
+              <span><small>04</small><strong>Call</strong></span>
+            </div>
+          </article>
+
+          {/* Future Intercom or another Academy AI agent can mount into this stable slot. */}
+          <article
+            id="livehub-academy-assistant"
+            className="assistant-space"
+            data-integration-slot="intercom"
+          >
+            <span className="assistant-status"><span /> RESERVED ASSISTANT SPACE</span>
+            <div className="assistant-icon"><MessageCircle /></div>
+            <h2>Ask the Live Hub Academy</h2>
+            <p>This space is reserved for your future AI guide. It can answer questions and send learners to the exact course or TechDocs topic.</p>
+            <div className="assistant-input-preview" aria-label="AI Assistant integration placeholder">
+              <span>Ask how to route a call…</span>
+              <Button disabled aria-label="AI Assistant coming soon"><Bot /> Soon</Button>
+            </div>
+            <small>Integration-ready placeholder · no assistant is connected yet</small>
+          </article>
+        </section>
+      )}
+
+      <section className="catalog-section">
+        <div className="catalog-heading">
+          <div>
+            <span className="section-kicker">{normalizedQuery ? "SEARCH RESULTS" : "CHOOSE ONE STARTING PATH"}</span>
+            <h2>{normalizedQuery ? `${matchingTracks.length} matching courses` : "Start with the call you need"}</h2>
           </div>
-          <div className="hero-actions">
-            <Button size="lg" className="primary-cta" onClick={() => goToTrack("voice-agent")}>
-              <PhoneCall /> Start my first call
-            </Button>
-            <Button size="lg" variant="outline" className="secondary-cta" onClick={goToOrientation}>
-              <Play /> Take the 3-minute tour
-            </Button>
-          </div>
-          <div className="trust-row">
-            <span><Check /> Three clear starting paths</span>
-            <span><Route /> One shared routing model</span>
-            <span><ShieldCheck /> Tested before advanced options</span>
-          </div>
+          {!normalizedQuery && <p>Do not learn the whole platform at once. Pick one origin; Routing joins it to a destination.</p>}
         </div>
 
-        <div className="voice-console" aria-label="Your first Live Hub call path">
-          <div className="console-topline">
-            <span className="live-dot" /> YOUR FIRST FINISH LINE
-            <span className="console-id">6 STEPS</span>
+        {matchingTracks.length ? (
+          <div className="simple-course-list">
+            {matchingTracks.map((track, index) => {
+              const Icon = track.icon;
+              return (
+                <button key={track.id} className="simple-course-card" onClick={() => goToTrack(track.id)}>
+                  <span className={`simple-course-icon ${track.color}`}><Icon /></span>
+                  <span className="simple-course-copy">
+                    <small>{index === 0 && !normalizedQuery ? "RECOMMENDED · " : ""}{track.level}</small>
+                    <strong>{track.title}</strong>
+                    <em>{track.description}</em>
+                  </span>
+                  <span className="simple-course-meta"><Clock3 /> {track.time}</span>
+                  <ArrowRight />
+                </button>
+              );
+            })}
           </div>
-          <div className="waveform" aria-hidden="true">
-            {[19, 35, 56, 31, 72, 44, 86, 52, 28, 61, 93, 46, 66, 36, 76, 50, 26, 58, 39, 70, 30, 48].map((height, index) => (
-              <span key={index} style={{ height: `${height}%`, animationDelay: `${index * 40}ms` }} />
-            ))}
-          </div>
-          <div className="flow-map">
-            <FlowNode icon={PhoneCall} label="Phone number" sublabel="Call enters" active />
-            <div className="flow-connector"><span /></div>
-            <FlowNode icon={Route} label="Routing rule" sublabel="Live Hub decides" active />
-            <div className="flow-connector"><span /></div>
-            <FlowNode icon={Bot} label="AI Agent" sublabel="Conversation starts" active />
-          </div>
-          <div className="console-result">
-            <span><Check /></span>
-            <div>
-              <strong>A real caller reaches the correct agent</strong>
-              <small>Then Calls + AI Logs prove what happened</small>
-            </div>
-          </div>
-          <div className="first-call-phases" aria-label="First call phases">
-            {['Build', 'Voice', 'Number', 'Route', 'Call', 'Observe'].map((phase, index) => (
-              <span key={phase}><small>{index + 1}</small>{phase}</span>
-            ))}
-          </div>
+        ) : (
+          <section className="empty-results course-empty">
+            <Search />
+            <h2>No exact course yet.</h2>
+            <p>Try “SIP”, “AI Agent”, “routing”, “monitor”, or “failed call”.</p>
+            <Button variant="outline" onClick={() => setCourseQuery("")}>Show starting paths</Button>
+          </section>
+        )}
+      </section>
+
+      {!normalizedQuery && (
+        <section className="home-next-row">
+          <button onClick={() => goToTrack("routing")}><span><Route /></span><div><small>CORE SKILL</small><strong>Understand Routing</strong><p>Match one origin to one destination.</p></div><ArrowRight /></button>
+          <button onClick={() => goToTrack("operate")}><span><Activity /></span><div><small>AFTER GO-LIVE</small><strong>Monitor and operate</strong><p>Read Calls, alarms, billing, and access.</p></div><ArrowRight /></button>
+          <button onClick={() => goToTrack("diagnose")}><span><AlertTriangle /></span><div><small>WHEN IT FAILS</small><strong>Diagnose a call</strong><p>Find the first failing layer and collect proof.</p></div><ArrowRight /></button>
+        </section>
+      )}
+
+      {!normalizedQuery && (
+        <section className="home-resource-bar">
+          <div><Play /><span><strong>Prefer to watch?</strong><small>Use the official AudioCodes Live Hub playlist alongside the ordered lessons.</small></span></div>
+          <Button asChild variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer">Video playlist <ExternalLink /></a></Button>
+          <Button variant="outline" onClick={goToJourneys}>All courses <FolderOpen /></Button>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function KnowledgeCheckView() {
+  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const answeredCount = Object.keys(answers).length;
+  const score = knowledgeQuestions.filter((question) => answers[question.id] === question.correctIndex).length;
+
+  const selectAnswer = (questionId: string, answerIndex: number) => {
+    if (submitted) return;
+    setAnswers((current) => ({ ...current, [questionId]: answerIndex }));
+  };
+
+  const resetQuiz = () => {
+    setAnswers({});
+    setSubmitted(false);
+    resetPagePosition();
+  };
+
+  return (
+    <div className="page quiz-page">
+      <section className="quiz-hero">
+        <div>
+          <span className="section-kicker"><Award /> LIVE HUB BOOTCAMP</span>
+          <h1>Can you make the right next move?</h1>
+          <p>Twelve practical questions from the supplied bootcamp material. This check focuses on stable product workflows; changing commercial terms are kept out of the score.</p>
+        </div>
+        <div className="quiz-progress-card">
+          <span>YOUR PROGRESS</span>
+          <strong>{answeredCount}<small> / {knowledgeQuestions.length}</small></strong>
+          <Progress value={(answeredCount / knowledgeQuestions.length) * 100} aria-label={`${answeredCount} of ${knowledgeQuestions.length} questions answered`} />
         </div>
       </section>
 
-      <section className="start-choice-section">
-        <div className="section-heading compact">
-          <div><span className="section-kicker">CHOOSE YOUR START</span><h2>Where does your first call begin?</h2></div>
-          <p>Pick one. The Academy hides the other product areas until this path reaches Routing.</p>
-        </div>
-        <div className="start-choice-grid">
-          <Button variant="ghost" className="start-choice-card recommended" onClick={() => goToTrack("voice-agent")}>
-            <span className="choice-number">01</span><Bot />
-            <span><small>RECOMMENDED</small><strong>Launch an AI Agent</strong><em>Build the agent, add voice, request a US or UK number, route it, and call it.</em></span>
-            <ArrowRight />
-          </Button>
-          <Button variant="ghost" className="start-choice-card" onClick={() => goToTrack("sip-trunk")}>
-            <span className="choice-number">02</span><Radio />
-            <span><small>TELEPHONY FIRST</small><strong>Connect SIP + a number</strong><em>Prove listed or Generic SIP, request a US or UK number, then create one exact route.</em></span>
-            <ArrowRight />
-          </Button>
-          <Button variant="ghost" className="start-choice-card" onClick={() => goToTrack("teams-sip")}>
-            <span className="choice-number">03</span><Network />
-            <span><small>ENTERPRISE VOICE</small><strong>Connect Teams + SIP</strong><em>Prepare the tenant, assign numbers, prove SIP, then route and test both directions.</em></span>
-            <ArrowRight />
-          </Button>
-        </div>
-        <div className="official-video-strip">
-          <Route />
-          <div><strong>Already have part of the path?</strong><span>Open focused missions for Routing, operations, or diagnosis. If a call failed, start with the exact Call record.</span></div>
-          <Button variant="outline" onClick={goToJourneys}>Browse all missions <ArrowRight /></Button>
-        </div>
-        <div className="official-video-strip">
-          <Play />
-          <div><strong>Prefer to watch?</strong><span>Use the official AudioCodes playlist for product demonstrations; the Academy keeps the tasks in a simpler working order.</span></div>
-          <Button asChild variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer">Open video playlist <ExternalLink /></a></Button>
-        </div>
+      <section className="quiz-list">
+        {knowledgeQuestions.map((question, questionIndex) => {
+          const selectedAnswer = answers[question.id];
+          const isCorrect = selectedAnswer === question.correctIndex;
+          return (
+            <article className="quiz-question" key={question.id}>
+              <header><span>{String(questionIndex + 1).padStart(2, "0")}</span><h2>{question.question}</h2></header>
+              <div className="quiz-options" role="radiogroup" aria-label={question.question}>
+                {question.options.map((option, optionIndex) => {
+                  const selected = selectedAnswer === optionIndex;
+                  const stateClass = submitted
+                    ? optionIndex === question.correctIndex
+                      ? "correct"
+                      : selected
+                        ? "incorrect"
+                        : ""
+                    : selected
+                      ? "selected"
+                      : "";
+                  return (
+                    <label key={option} className={`quiz-option ${stateClass}`}>
+                      <input
+                        type="radio"
+                        name={question.id}
+                        checked={selected}
+                        onChange={() => selectAnswer(question.id, optionIndex)}
+                        disabled={submitted}
+                      />
+                      <span>{String.fromCharCode(65 + optionIndex)}</span>
+                      <strong>{option}</strong>
+                      {submitted && optionIndex === question.correctIndex && <CheckCircle2 />}
+                      {submitted && selected && !isCorrect && <X />}
+                    </label>
+                  );
+                })}
+              </div>
+              {submitted && (
+                <div className={isCorrect ? "quiz-explanation correct" : "quiz-explanation"}>
+                  <span>{isCorrect ? <CheckCircle2 /> : <Lightbulb />}</span>
+                  <p><strong>{isCorrect ? "Correct." : "Best answer:"}</strong> {question.explanation}</p>
+                  <a href={question.sourceUrl} target="_blank" rel="noreferrer">Open the official guide <ExternalLink /></a>
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </section>
+
+      <section className="quiz-submit-bar">
+        {submitted ? (
+          <>
+            <div><Award /><span><small>YOUR SCORE</small><strong>{score} / {knowledgeQuestions.length}</strong><p>{score >= 10 ? "Strong operational judgment." : "Review the explanations, then try again."}</p></span></div>
+            <Button size="lg" variant="outline" onClick={resetQuiz}><RotateCcw /> Try again</Button>
+          </>
+        ) : (
+          <>
+            <div><ListChecks /><span><small>READY TO CHECK?</small><strong>{answeredCount} of {knowledgeQuestions.length} answered</strong><p>Answer every question to reveal the explanations and source links.</p></span></div>
+            <Button size="lg" className="primary-cta" disabled={answeredCount !== knowledgeQuestions.length} onClick={() => { setSubmitted(true); resetPagePosition(); }}>Check my answers <ArrowRight /></Button>
+          </>
+        )}
       </section>
     </div>
   );
@@ -609,16 +745,6 @@ function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
         <div><span>YOUR NEXT ACTION</span><h2>Choose one origin and complete the chain.</h2><p>AI Agent, SIP + number, or Teams + SIP → Routing → real call → evidence.</p></div>
         <Button size="lg" className="primary-cta" onClick={goToJourneys}>Choose a path <ArrowRight /></Button>
       </section>
-    </div>
-  );
-}
-
-function FlowNode({ icon: Icon, label, sublabel, active }: { icon: typeof Bot; label: string; sublabel: string; active?: boolean }) {
-  return (
-    <div className={`flow-node ${active ? "active" : ""}`}>
-      <span><Icon /></span>
-      <strong>{label}</strong>
-      <small>{sublabel}</small>
     </div>
   );
 }

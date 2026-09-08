@@ -6,7 +6,7 @@ const TECHDOCS_BASE = "https://techdocs.audiocodes.com/livehub";
  * Help Center, staging, or placeholder pages.
  */
 export const TECH_DOCS = {
-  home: `${TECHDOCS_BASE}/`,
+  home: `${TECHDOCS_BASE}/#LiveHub/AudioCodes%20Live%20Hub.htm?TocPath=_____1`,
   signIn: `${TECHDOCS_BASE}/#LiveHub/signing-into-livehub.htm?TocPath=_____3`,
   userInterface: `${TECHDOCS_BASE}/#LiveHub/User-Interface.htm?TocPath=_____4`,
   accountPlans: `${TECHDOCS_BASE}/Content/LiveHub/User%20Account%20Plans.htm`,
@@ -42,7 +42,7 @@ export const TECH_DOCS = {
   translationDynamic: `${TECHDOCS_BASE}/Content/LiveHub/Configure-dynamic-translation.htm`,
   outboundCalling: `${TECHDOCS_BASE}/Content/LiveHub/byoc_Outbound%20Call.htm`,
   outboundAutomation: `${TECHDOCS_BASE}/Content/LiveHub/Campaign-Dialer.htm`,
-  callHistory: `${TECHDOCS_BASE}/#LiveHub/Calls.htm?TocPath=Calls%257C_____0`,
+  callHistory: `${TECHDOCS_BASE}/Content/LiveHub/Calls.htm`,
   callTranscript: `${TECHDOCS_BASE}/#LiveHub/byoc_Call%20Transcript.htm?TocPath=Bot%2520connectivity%257CManage%2520%2520features%257C_____1`,
   callRecording: `${TECHDOCS_BASE}/#LiveHub/Call-Recording-workflow.htm?TocPath=_____22`,
   callTransfer: `${TECHDOCS_BASE}/#LiveHub/byoc_Call%20Transfer.htm?TocPath=Bot%2520connectivity%257CManage%2520%2520features%257C_____5`,
