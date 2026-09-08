@@ -5,6 +5,7 @@ import test from "node:test";
 const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const lessonSource = await readFile(new URL("../app/lesson-data.ts", import.meta.url), "utf8");
 const docsSource = await readFile(new URL("../app/techdocs.ts", import.meta.url), "utf8");
+const quizSource = await readFile(new URL("../app/quiz-data.ts", import.meta.url), "utf8");
 
 test("offers the three approved first-run paths", () => {
   assert.match(pageSource, /Launch an AI Agent by Phone/);
@@ -36,4 +37,21 @@ test("turns the supplied SIP training into actionable checks", () => {
   assert.match(lessonSource, /FQDN \(Request-URI\)/);
   assert.match(lessonSource, /REGISTER or OPTIONS/);
   assert.match(lessonSource, /Teams-to-SIP and SIP-to-Teams need separate rules/);
+});
+
+test("home keeps a stable integration slot for the future Academy assistant", () => {
+  assert.match(pageSource, /id="livehub-academy-assistant"/);
+  assert.match(pageSource, /data-integration-slot="intercom"/);
+  assert.match(pageSource, /no assistant is connected yet/);
+});
+
+test("bootcamp knowledge check links explanations to official TechDocs", () => {
+  assert.match(pageSource, /function KnowledgeCheckView/);
+  assert.match(quizSource, /knowledgeQuestions/);
+  assert.match(quizSource, /sourceUrl: TECH_DOCS\./);
+  assert.doesNotMatch(quizSource, /\$750|\$500|MOQ|Azure Marketplace/);
+});
+
+test("uses the improved Live Hub documentation entry point", () => {
+  assert.match(docsSource, /AudioCodes%20Live%20Hub\.htm\?TocPath=_____1/);
 });
