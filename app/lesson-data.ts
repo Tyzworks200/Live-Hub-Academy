@@ -61,7 +61,7 @@ const images = {
 
 const firstRunNumberLesson: Lesson = {
   id: "request-first-number",
-  title: "Request a US or UK phone number",
+  title: "Give customers a real US or UK number",
   objective: "Create a controlled public entry point without assuming that number provisioning is instant.",
   duration: "6 min + provisioning",
   path: ["Voice channels", "Phone numbers", "Add new phone number"],
@@ -97,10 +97,11 @@ const firstRunNumberLesson: Lesson = {
 };
 
 export const lessonsByTrack: Record<string, Lesson[]> = {
+  "phone-number": [firstRunNumberLesson],
   "voice-agent": [
     {
       id: "create-agent",
-      title: "Create one small AI Agent",
+      title: "Teach your receptionist one job",
       objective: "Create the smallest useful agent: one name, one job, one welcome message, and one short set of instructions.",
       duration: "5 min",
       path: ["AI Agents", "Agents", "Add new agent"],
@@ -127,7 +128,7 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     },
     {
       id: "prompt-and-chat",
-      title: "Prove it with three chat tests",
+      title: "Make it answer a real customer",
       objective: "Make the agent reliable in text before adding speech or telephony variables.",
       duration: "7 min",
       path: ["AI Agents", "Agents", "Edit agent", "Instructions and chat test"],
@@ -150,7 +151,7 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     },
     {
       id: "enable-voice",
-      title: "Turn on voice and create its connection",
+      title: "Give your receptionist a voice",
       objective: "Turn the working agent into a callable voice endpoint using the current Live Hub workflow.",
       duration: "6 min",
       path: ["AI Agents", "Agents", "Edit agent", "Speech and Telephony"],
@@ -176,7 +177,7 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     },
     {
       id: "voice-test",
-      title: "Prove voice with a browser call",
+      title: "Hear it answer in the browser",
       objective: "Prove the complete agent-and-speech experience before adding phone numbers or routing.",
       duration: "5 min",
       path: ["Bot connections", "Your AI agent connection", "Phone icon"],
@@ -202,7 +203,7 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     firstRunNumberLesson,
     {
       id: "route-call-observe",
-      title: "Route it, call it, and read the evidence",
+      title: "Call your AI from a real phone",
       objective: "Complete a real phone call and prove both the telephony path and AI behavior.",
       duration: "6 min",
       path: ["Routing", "Routing Rules", "Add new routing rule"],

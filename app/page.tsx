@@ -43,6 +43,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { lessonsByTrack, type Lesson } from "./lesson-data";
@@ -57,6 +58,11 @@ type Track = {
   eyebrow: string;
   title: string;
   description: string;
+  role: string;
+  scenario: string;
+  outcome: string;
+  evidence: string;
+  reward: string;
   time: string;
   level: string;
   icon: typeof Bot;
@@ -71,10 +77,15 @@ const OFFICIAL_VIDEO_PLAYLIST =
 const tracks: Track[] = [
   {
     id: "voice-agent",
-    eyebrow: "Promoted first path",
-    title: "Launch an AI Agent by Phone",
+    eyebrow: "Best first win",
+    title: "First Successful AI Call",
     description:
-      "Build one small native AI Agent, prove it in chat and voice, request a US or UK number, route it, and call it.",
+      "Build a useful AI receptionist, make it speak, connect a real number, and call it from your phone.",
+    role: "New Live Hub users and AI builders",
+    scenario: "Your company needs an AI receptionist that can answer one real customer question: “What are your opening hours?”",
+    outcome: "A mobile caller reaches your AI Agent and receives the correct spoken answer.",
+    evidence: "A successful Call History record plus the expected answer in the transcript.",
+    reward: "Live Hub Explorer",
     time: "35 min + provisioning",
     level: "Recommended",
     icon: Bot,
@@ -84,10 +95,15 @@ const tracks: Track[] = [
   },
   {
     id: "sip-trunk",
-    eyebrow: "Common first path",
-    title: "Connect SIP + a Live Hub Number",
+    eyebrow: "Telephony path",
+    title: "Bring Your Own SIP",
     description:
-      "Choose listed or Generic SIP, prove the trunk, request a US or UK number, and join them with one exact route.",
+      "Connect a listed or Generic SIP provider, prove signaling, add a number, and complete a real call.",
+    role: "Telephony and contact-center administrators",
+    scenario: "Your voice provider already carries the company’s calls. Your job is to connect that provider to Live Hub without disrupting existing traffic.",
+    outcome: "A controlled test call crosses your SIP trunk and completes through the intended route.",
+    evidence: "Connected status or a successful test call, SIP Ladder, and Call ID.",
+    reward: "SIP Pathfinder",
     time: "43 min + provisioning",
     level: "Technical",
     icon: Radio,
@@ -97,10 +113,15 @@ const tracks: Track[] = [
   },
   {
     id: "teams-sip",
-    eyebrow: "Enterprise voice path",
-    title: "Connect Microsoft Teams + SIP",
+    eyebrow: "Enterprise path",
+    title: "Connect Microsoft Teams",
     description:
-      "Prepare the tenant, activate Teams, assign numbers, verify SIP, and create one route for each direction.",
+      "Prepare the tenant, activate Teams, assign numbers, prove SIP, and route both directions.",
+    role: "Microsoft Teams voice administrators",
+    scenario: "Your Teams users need Live Hub voice connectivity while the existing SIP provider remains the public call path.",
+    outcome: "A Teams user can make and receive a controlled external call through Live Hub.",
+    evidence: "One successful Teams-to-SIP call and one successful SIP-to-Teams call.",
+    reward: "Teams Connector",
     time: "41 min + activation",
     level: "Administrator",
     icon: Network,
@@ -109,11 +130,33 @@ const tracks: Track[] = [
     phases: ["PREPARE TENANT", "ACTIVATE TEAMS", "ASSIGN NUMBERS", "PROVE SIP", "ROUTE BOTH WAYS"],
   },
   {
+    id: "phone-number",
+    eyebrow: "Channel win",
+    title: "Get a Real Phone Number",
+    description: "Request a first US or UK number, complete the form, and wait for it to be ready before routing.",
+    role: "Account owners and service builders",
+    scenario: "Your new service needs a public entry point that a customer can call from a normal phone.",
+    outcome: "A provisioned US or UK number is visible and ready to use in a routing rule.",
+    evidence: "The provisioned number, exact E.164 format, and Live Hub region.",
+    reward: "Channel Starter",
+    time: "6 min + provisioning",
+    level: "Beginner",
+    icon: PhoneCall,
+    color: "pink",
+    steps: lessonsByTrack["phone-number"].map((lesson) => lesson.title),
+    phases: ["REQUEST + PROVE"],
+  },
+  {
     id: "routing",
     eyebrow: "Live Hub core",
-    title: "Route and Test a Call",
+    title: "Route Calls Intelligently",
     description:
-      "Connect one origin to one destination, test the basic route, then add only the services you need.",
+      "Connect one ready origin to one destination, prove the baseline, then add only the services you need.",
+    role: "Every Live Hub implementer",
+    scenario: "Your channel and service are both ready, but callers still need an exact rule that decides where each call goes.",
+    outcome: "The right call reaches the right destination and the matching rule is clear in Call History.",
+    evidence: "A successful Call ID and the exact routing rule that matched it.",
+    reward: "Routing Navigator",
     time: "17 min",
     level: "Beginner",
     icon: Route,
@@ -122,11 +165,33 @@ const tracks: Track[] = [
     phases: ["UNDERSTAND", "CREATE", "TEST", "ADD ONE OPTION"],
   },
   {
+    id: "agent-builder",
+    eyebrow: "AI builder path",
+    title: "Build Production AI Agents",
+    description: "Ground the agent, add one useful tool, test behavior, and read the logs before production.",
+    role: "AI Agent designers and developers",
+    scenario: "Your prototype can answer, but it now needs trusted knowledge, one real action, and repeatable tests before customers rely on it.",
+    outcome: "The agent answers from approved knowledge, completes one tool action, and passes its test set.",
+    evidence: "A passing test suite plus a log showing the expected document or tool activity.",
+    reward: "AI Agent Builder",
+    time: "34 min",
+    level: "Intermediate",
+    icon: Bot,
+    color: "cyan",
+    steps: lessonsByTrack["agent-builder"].map((lesson) => lesson.title),
+    phases: ["GROUND", "ACT", "ANALYZE", "TEST", "CHOOSE"],
+  },
+  {
     id: "operate",
-    eyebrow: "Run the service",
-    title: "Monitor and Operate Live Hub",
+    eyebrow: "Production path",
+    title: "Monitor Production Traffic",
     description:
-      "Read calls and alarms, enable evidence, understand billing, and manage access safely.",
+      "Read calls and alarms, preserve evidence, understand usage, and manage access safely.",
+    role: "Service owners and operations teams",
+    scenario: "Your first call works. Now you are responsible for spotting service risk before customers report it.",
+    outcome: "You can prove service health, find a call, read an alarm, and identify usage and access owners.",
+    evidence: "A health review containing one call, one alarm check, usage status, and owner.",
+    reward: "Production Operator",
     time: "24 min",
     level: "All users",
     icon: Activity,
@@ -136,10 +201,15 @@ const tracks: Track[] = [
   },
   {
     id: "diagnose",
-    eyebrow: "Operator essential",
-    title: "Diagnose a Failed Call",
+    eyebrow: "Support path",
+    title: "Troubleshoot Live Traffic",
     description:
-      "Find the exact call, isolate the failing layer, test one fix, and build a support-ready case.",
+      "Find the exact call, isolate the failing layer, test one change, and build a support-ready case.",
+    role: "Support engineers and advanced operators",
+    scenario: "A customer says, “the call failed.” You need to replace guesswork with one exact Call ID and one evidence-backed finding.",
+    outcome: "You identify the first failing layer, test one reversible fix, and prove the new result.",
+    evidence: "Before-and-after Call IDs, exact status, and one evidence sentence.",
+    reward: "Live Traffic Investigator",
     time: "23 min",
     level: "All levels",
     icon: AlertTriangle,
@@ -164,9 +234,9 @@ function guideLearner(question: string): AcademyGuideResult {
     return {
       eyebrow: "WHEN SOMETHING FAILED",
       title: "Start with the exact call—not a guess.",
-      answer: "Open the Diagnose a Failed Call mission. It takes you from Call History to the first failing layer, then helps you collect a support-ready evidence pack.",
+      answer: "Open Troubleshoot Live Traffic. It takes you from Call History to the first failing layer, then helps you collect a support-ready evidence pack.",
       trackId: "diagnose",
-      action: "Open diagnosis mission",
+      action: "Start troubleshooting path",
     };
   }
 
@@ -174,9 +244,9 @@ function guideLearner(question: string): AcademyGuideResult {
     return {
       eyebrow: "MICROSOFT TEAMS PATH",
       title: "Prepare Teams, prove SIP, then route both ways.",
-      answer: "Use the Teams + SIP course. It keeps tenant activation, number assignment, SIP validation, and the two required routing directions in the correct order.",
+      answer: "Use the Connect Microsoft Teams path. It keeps tenant activation, number assignment, SIP validation, and the two required routing directions in the correct order.",
       trackId: "teams-sip",
-      action: "Open Teams + SIP course",
+      action: "Start the Teams path",
     };
   }
 
@@ -184,9 +254,9 @@ function guideLearner(question: string): AcademyGuideResult {
     return {
       eyebrow: "SIP PATH",
       title: "Choose listed or Generic SIP before configuring fields.",
-      answer: "Use the SIP + Live Hub Number course. It gathers provider details first, explains the Generic SIP choice, proves the connection, then adds the number and route.",
+      answer: "Use Bring Your Own SIP. It gathers provider details first, explains the Generic SIP choice, proves the connection, then adds the number and route.",
       trackId: "sip-trunk",
-      action: "Open SIP course",
+      action: "Start the SIP path",
     };
   }
 
@@ -194,17 +264,37 @@ function guideLearner(question: string): AcademyGuideResult {
     return {
       eyebrow: "LIVE HUB CORE",
       title: "Routing joins one ready origin to one destination.",
-      answer: "Open Route and Test a Call. Start with a basic rule and a real test; add recording, transfer, or other services only after the baseline call works.",
+      answer: "Open Route Calls Intelligently. Start with a basic rule and a real test; add recording, transfer, or other services only after the baseline call works.",
       trackId: "routing",
       action: "Open routing mission",
+    };
+  }
+
+  if (/number|phone number|did|e\.164|provision/.test(prompt)) {
+    return {
+      eyebrow: "PHONE NUMBER PATH",
+      title: "Request the number before you build its route.",
+      answer: "Use Get a Real Phone Number. For the first Academy run, request a US or UK number, complete the required form, and wait until provisioning is complete.",
+      trackId: "phone-number",
+      action: "Start number path",
+    };
+  }
+
+  if (/tool|document|knowledge|test suite|production agent/.test(prompt)) {
+    return {
+      eyebrow: "PRODUCTION AI PATH",
+      title: "Move from a speaking prototype to a tested agent.",
+      answer: "Use Build Production AI Agents to add trusted knowledge, one focused tool, test scenarios, and log-based proof.",
+      trackId: "agent-builder",
+      action: "Start production AI path",
     };
   }
 
   if (/bill|usage|balance|user|access|iam|record|transcript|monitor/.test(prompt)) {
     return {
       eyebrow: "OPERATIONS PATH",
-      title: "Use one mission for day-two operations.",
-      answer: "Open Monitor and Operate Live Hub for dashboard signals, alarms, evidence, billing, transcripts, recordings, and access control.",
+      title: "Use one path for day-two operations.",
+      answer: "Open Monitor Production Traffic for dashboard signals, alarms, evidence, billing, transcripts, recordings, and access control.",
       trackId: "operate",
       action: "Open operations mission",
     };
@@ -212,20 +302,20 @@ function guideLearner(question: string): AcademyGuideResult {
 
   return {
     eyebrow: "RECOMMENDED FIRST WIN",
-    title: "Launch one small AI Agent by phone.",
-    answer: "This is the promoted starting path: build a focused native agent, prove it in chat and voice, add a number, route it, and inspect the first real call.",
+    title: "Create your first successful AI call.",
+    answer: "This is the recommended first win: build a focused native agent, prove it in chat and voice, add a number, route it, and inspect the first real call.",
     trackId: "voice-agent",
-    action: "Open AI Agent course",
+    action: "Start the AI call path",
   };
 }
 
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "home", label: "Academy home", icon: Sparkles },
-  { id: "orientation", label: "Start here", icon: ListChecks },
-  { id: "journeys", label: "Course catalog", icon: FolderOpen },
-  { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
-  { id: "quiz", label: "Knowledge check", icon: Award },
-  { id: "library", label: "Official docs", icon: LibraryBig },
+  { id: "orientation", label: "Your first win", icon: ListChecks },
+  { id: "journeys", label: "Learning paths", icon: FolderOpen },
+  { id: "troubleshooting", label: "Troubleshoot traffic", icon: AlertTriangle },
+  { id: "quiz", label: "Live Hub certification", icon: Award },
+  { id: "library", label: "Expert reference", icon: LibraryBig },
   { id: "glossary", label: "Voice glossary", icon: Code2 },
 ];
 
@@ -259,7 +349,7 @@ type TroubleshootingIssue = {
 const troubleshootingIssues = troubleshootingData as TroubleshootingIssue[];
 
 const docs: DocItem[] = [
-  { title: "Official Live Hub video playlist", description: "Watch the AudioCodes walkthrough that matches your current lesson. Use the Academy for the ordered steps and the playlist for visual confirmation.", category: "Watch", time: "Video", level: "Official", icon: Play, url: OFFICIAL_VIDEO_PLAYLIST },
+  { title: "Official Live Hub video playlist", description: "Watch the AudioCodes walkthrough that matches your current mission. Use the Academy for the challenge and the playlist for visual confirmation.", category: "Watch", time: "Video", level: "Official", icon: Play, url: OFFICIAL_VIDEO_PLAYLIST },
   { title: "Start with Live Hub", description: "Sign in, learn the product model, and choose the shortest path to a first call.", category: "Get started", time: "5 min", level: "Start", icon: Sparkles, url: TECH_DOCS.home },
   { title: "Tour the dashboard", description: "Learn the navigation, account selector, usage, Help Center, wizard, and monitoring cards.", category: "Get started", time: "6 min", level: "Tour", icon: ListChecks, url: TECH_DOCS.dashboard },
   { title: "Quick setup wizard", description: "Use Live Hub's guided configuration when you need help creating a common first call path.", category: "Get started", time: "6 min", level: "Wizard", icon: ListChecks, url: TECH_DOCS.quickSetupWizard },
@@ -324,6 +414,15 @@ function resetPagePosition() {
   });
 }
 
+function missionProgressKey(track: Track, index: number) {
+  const missionId = lessonsByTrack[track.id]?.[index]?.id ?? `${track.id}-${index}`;
+  return `mission:${missionId}`;
+}
+
+function missionIsComplete(track: Track, index: number, completed: string[]) {
+  return completed.includes(missionProgressKey(track, index)) || completed.includes(`${track.id}:${index}`);
+}
+
 export default function Home() {
   const [view, setView] = useState<View>("home");
   const [selectedTrack, setSelectedTrack] = useState<Track>(tracks[0]);
@@ -361,7 +460,7 @@ export default function Home() {
 
   const currentSteps = selectedTrack.steps.length;
   const currentCompleted = selectedTrack.steps.filter((_, index) =>
-    completed.includes(`${selectedTrack.id}:${index}`)
+    missionIsComplete(selectedTrack, index, completed)
   ).length;
   const progress = currentSteps ? Math.round((currentCompleted / currentSteps) * 100) : 0;
 
@@ -442,7 +541,7 @@ export default function Home() {
             <strong>{progress}%</strong>
           </div>
           <Progress value={progress} aria-label="Academy progress" />
-          <p>{currentCompleted ? `${currentCompleted} of ${currentSteps} lessons complete in ${selectedTrack.title}.` : `Ready to begin: ${selectedTrack.title}.`}</p>
+          <p>{currentCompleted ? `${currentCompleted} of ${currentSteps} missions complete in ${selectedTrack.title}.` : `Ready to begin: ${selectedTrack.title}.`}</p>
         </div>
 
         <Button asChild variant="ghost" className="sidebar-help">
@@ -481,6 +580,8 @@ export default function Home() {
             goToTrack={goToTrack}
             goToOrientation={() => goToView("orientation")}
             goToJourneys={() => goToView("journeys")}
+            goToCertification={() => goToView("quiz")}
+            completed={completed}
           />
         )}
         {view === "orientation" && <OrientationView goToJourneys={() => goToView("journeys")} />}
@@ -504,7 +605,7 @@ export default function Home() {
   );
 }
 
-function HomeView({
+function LegacyHomeView({
   goToTrack,
   goToOrientation,
   goToJourneys,
@@ -692,6 +793,147 @@ function HomeView({
   );
 }
 
+function HomeView({
+  goToTrack,
+  goToOrientation,
+  goToJourneys,
+  goToCertification,
+  completed,
+}: {
+  goToTrack: (id: string) => void;
+  goToOrientation: () => void;
+  goToJourneys: () => void;
+  goToCertification: () => void;
+  completed: string[];
+}) {
+  const [assistantQuery, setAssistantQuery] = useState("");
+  const [assistantPrompt, setAssistantPrompt] = useState("");
+  const assistantResult = assistantPrompt ? guideLearner(assistantPrompt) : null;
+  const primaryPaths = tracks.slice(0, 3);
+  const focusedPaths = tracks.slice(3);
+  const startedPath = tracks.find((track) =>
+    track.steps.some((_, index) => missionIsComplete(track, index, completed))
+  ) ?? tracks[0];
+  const completedInStartedPath = startedPath.steps.filter((_, index) =>
+    missionIsComplete(startedPath, index, completed)
+  ).length;
+  const pathProgress = startedPath.steps.length
+    ? Math.round((completedInStartedPath / startedPath.steps.length) * 100)
+    : 0;
+
+  const askAcademy = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (assistantQuery.trim()) setAssistantPrompt(assistantQuery);
+  };
+
+  return (
+    <div className="page outcome-home">
+      <section className="outcome-hero">
+        <div className="outcome-hero-copy">
+          <span className="section-kicker"><Sparkles /> WELCOME TO LIVE HUB ACADEMY</span>
+          <h1>What will you<br /><span>make work?</span></h1>
+          <p>
+            Live Hub connects Voice AI to real phone systems, numbers, Microsoft Teams, and customer conversations. This Academy does not ask you to memorize the platform. It helps you achieve one working outcome at a time.
+          </p>
+          <div className="outcome-hero-actions">
+            <Button size="lg" onClick={() => goToTrack("voice-agent")}>Make my first AI call <ArrowRight /></Button>
+            <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See how missions work</Button>
+          </div>
+          <div className="academy-method" aria-label="How learning works">
+            <span><strong>01</strong><small>MISSION</small><em>Build a real result</em></span>
+            <ChevronRight />
+            <span><strong>02</strong><small>EVIDENCE</small><em>Prove it worked</em></span>
+            <ChevronRight />
+            <span><strong>03</strong><small>REWARD</small><em>Earn your badge</em></span>
+          </div>
+        </div>
+
+        <aside className="continue-card">
+          <div className="continue-card-art" aria-hidden="true"><img src="livehub-brand-wave.webp" alt="" /></div>
+          <div className="continue-card-copy">
+            <span>{completedInStartedPath ? "CONTINUE YOUR PATH" : "RECOMMENDED FIRST WIN"}</span>
+            <h2>{startedPath.title}</h2>
+            <p>{startedPath.outcome}</p>
+            <div className="continue-progress">
+              <div><span>{pathProgress}% complete</span><span>{completedInStartedPath}/{startedPath.steps.length} missions</span></div>
+              <Progress value={pathProgress} aria-label={`${startedPath.title} progress`} />
+            </div>
+            <div className="continue-reward"><Award /><span><small>PATH REWARD</small><strong>{startedPath.reward} badge</strong></span></div>
+            <Button size="lg" onClick={() => goToTrack(startedPath.id)}>{completedInStartedPath ? "Continue path" : "Start mission 1"} <ArrowRight /></Button>
+          </div>
+        </aside>
+      </section>
+
+      <section className="path-section start-paths">
+        <div className="path-heading">
+          <div><span className="section-kicker">START WITH YOUR REAL-WORLD GOAL</span><h2>Choose one first win.</h2></div>
+          <p>Most learners should begin with one of these three paths. Each ends with a working call and evidence—not a completed reading list.</p>
+        </div>
+        <div className="primary-path-grid">
+          {primaryPaths.map((track, index) => {
+            const Icon = track.icon;
+            const count = track.steps.filter((_, stepIndex) => missionIsComplete(track, stepIndex, completed)).length;
+            return (
+              <button key={track.id} className={`outcome-path-card ${index === 0 ? "recommended" : ""}`} onClick={() => goToTrack(track.id)}>
+                <span className={`path-card-icon ${track.color}`}><Icon /></span>
+                <span className="path-card-number">PATH 0{index + 1}</span>
+                {index === 0 && <span className="recommended-pill">BEST FIRST PATH</span>}
+                <h3>{track.title}</h3>
+                <p>{track.outcome}</p>
+                <span className="path-card-role">FOR · {track.role}</span>
+                <span className="path-card-footer"><span><Clock3 /> {track.time}</span><span>{count ? `${count}/${track.steps.length} done` : `${track.steps.length} missions`}</span><ArrowRight /></span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="path-section focused-paths">
+        <div className="path-heading compact">
+          <div><span className="section-kicker">OR SOLVE ONE SPECIFIC NEED</span><h2>Focused learning paths</h2></div>
+          <Button variant="ghost" onClick={goToJourneys}>Explore every path <ArrowRight /></Button>
+        </div>
+        <div className="focused-path-grid">
+          {focusedPaths.map((track) => {
+            const Icon = track.icon;
+            return (
+              <button key={track.id} className="focused-path-card" onClick={() => goToTrack(track.id)}>
+                <span className={`focused-path-icon ${track.color}`}><Icon /></span>
+                <span><small>{track.reward.toUpperCase()} BADGE</small><strong>{track.title}</strong><em>{track.description}</em></span>
+                <ArrowRight />
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="livehub-academy-assistant" className="guide-strip" data-integration-slot="intercom">
+        <div className="guide-strip-intro"><span className="guide-live"><span /> ACADEMY GUIDE</span><h2>Not sure which win comes first?</h2><p>Describe the outcome or problem. The guide finds the shortest verified path.</p></div>
+        <div className="guide-strip-action">
+          <form onSubmit={askAcademy}>
+            <Input value={assistantQuery} onChange={(event) => setAssistantQuery(event.target.value)} placeholder="Example: My SIP trunk is disconnected" aria-label="Ask the Academy guide" />
+            <Button type="submit"><Bot /> Guide me</Button>
+          </form>
+          {assistantResult && (
+            <div className="guide-result" aria-live="polite">
+              <span><small>{assistantResult.eyebrow}</small><strong>{assistantResult.title}</strong><p>{assistantResult.answer}</p></span>
+              <Button variant="outline" onClick={() => goToTrack(assistantResult.trackId)}>{assistantResult.action} <ArrowRight /></Button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="certification-banner">
+        <div><Award /><span><small>FINAL DESTINATION</small><h2>Live Hub Certification</h2><p>Finish your paths, then prove you can choose the right next move in real Live Hub scenarios.</p></span></div>
+        <div className="certification-actions">
+          <Button size="lg" onClick={goToCertification}>Open certification checkpoint <ArrowRight /></Button>
+          <Button asChild size="lg" variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer"><Play /> Official video library</a></Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function KnowledgeCheckView() {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -713,9 +955,9 @@ function KnowledgeCheckView() {
     <div className="page quiz-page">
       <section className="quiz-hero">
         <div>
-          <span className="section-kicker"><Award /> LIVE HUB BOOTCAMP</span>
-          <h1>Can you make the right next move?</h1>
-          <p>Twelve practical questions from the supplied bootcamp material. This check focuses on stable product workflows; changing commercial terms are kept out of the score.</p>
+          <span className="section-kicker"><Award /> LIVE HUB CERTIFICATION · FINAL CHECKPOINT</span>
+          <h1>Prove you can make the right next move.</h1>
+          <p>Twelve practical scenarios from the supplied bootcamp material. Pass by applying stable Live Hub judgment—not by memorizing changing commercial terms.</p>
         </div>
         <div className="quiz-progress-card">
           <span>YOUR PROGRESS</span>
@@ -781,7 +1023,7 @@ function KnowledgeCheckView() {
         ) : (
           <>
             <div><ListChecks /><span><small>READY TO CHECK?</small><strong>{answeredCount} of {knowledgeQuestions.length} answered</strong><p>Answer every question to reveal the explanations and source links.</p></span></div>
-            <Button size="lg" className="primary-cta" disabled={answeredCount !== knowledgeQuestions.length} onClick={() => { setSubmitted(true); resetPagePosition(); }}>Check my answers <ArrowRight /></Button>
+            <Button size="lg" className="primary-cta" disabled={answeredCount !== knowledgeQuestions.length} onClick={() => { setSubmitted(true); resetPagePosition(); }}>Submit certification checkpoint <ArrowRight /></Button>
           </>
         )}
       </section>
@@ -824,7 +1066,7 @@ function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
       <section className="orientation-model">
         <div className="section-heading compact">
           <div><span className="section-kicker">THE ONLY MODEL TO REMEMBER</span><h2>Build → Connect → Route → Test → Observe</h2></div>
-          <p>Every lesson tells you which part of this chain you are changing.</p>
+          <p>Every mission tells you which part of this chain you are changing.</p>
         </div>
         <div className="learning-loop">
           {[
@@ -843,7 +1085,7 @@ function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
       <section className="portal-tour">
         <div className="portal-tour-head">
           <div><span className="section-kicker">WHEN YOU OPEN LIVE HUB</span><h2>Seven landmarks—nothing more.</h2></div>
-          <p>Use this map only when a lesson tells you to open a specific area.</p>
+          <p>Use this map only when a mission tells you to open a specific area.</p>
         </div>
         <div className="portal-shot">
           <img src="live-hub-dashboard.png" alt="Live Hub dashboard with navigation, account, usage, Help Center, wizard, and support assistant" />
@@ -886,7 +1128,7 @@ function JourneysView({
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const lessons = lessonsByTrack[selected.id] ?? [];
-  const missionComplete = selected.steps.filter((_, index) => completed.includes(`${selected.id}:${index}`)).length;
+  const missionComplete = selected.steps.filter((_, index) => missionIsComplete(selected, index, completed)).length;
   const isMissionComplete = missionComplete === selected.steps.length;
 
   const openLesson = (index: number) => {
@@ -927,6 +1169,7 @@ function JourneysView({
   if (activeLessonIndex !== null && lessons[activeLessonIndex]) {
     return (
       <LessonWorkspace
+        key={`${selected.id}:${activeLessonIndex}`}
         track={selected}
         lessons={lessons}
         lessonIndex={activeLessonIndex}
@@ -939,21 +1182,21 @@ function JourneysView({
     );
   }
 
-  const missingIndex = selected.steps.findIndex((_, index) => !completed.includes(`${selected.id}:${index}`));
+  const missingIndex = selected.steps.findIndex((_, index) => !missionIsComplete(selected, index, completed));
   const firstIncomplete = missingIndex === -1 ? selected.steps.length - 1 : missingIndex;
   return (
     <div className="page journeys-page">
       <div className="journey-header">
         <div>
-          <span className="section-kicker">THREE WAYS TO BEGIN</span>
-          <h1>Choose the origin. Routing joins the path.</h1>
-          <p>Start with an AI Agent, SIP plus a Live Hub number, or Microsoft Teams plus SIP. Complete one path in order; use the focused missions only after its baseline call works.</p>
+          <span className="section-kicker">LEARNING PATHS · OUTCOMES, NOT FEATURES</span>
+          <h1>Choose the win you need.</h1>
+          <p>Start with an AI Agent, your own SIP, or Microsoft Teams. Every certification path tells a real-world story and ends with evidence that the outcome works.</p>
         </div>
-        <div className="journey-count"><strong>3</strong><span>real starting<br />paths</span></div>
+        <div className="journey-count"><strong>{tracks.length}</strong><span>outcome-based<br />paths</span></div>
       </div>
 
       <div className="routing-heart" aria-label="Every starting path meets at routing">
-        <div className="routing-origins"><span><Bot /> AI Agent</span><span><Radio /> SIP + number</span><span><Network /> Teams + SIP</span></div>
+          <div className="routing-origins"><span><Bot /> AI Agent</span><span><Radio /> Your SIP</span><span><Network /> Teams</span></div>
         <ArrowRight />
         <div className="routing-center"><Route /><span><small>THE HEART</small><strong>Routing</strong></span></div>
         <ArrowRight />
@@ -961,13 +1204,13 @@ function JourneysView({
       </div>
 
       <div className="journey-workspace">
-        <div className="journey-selector" role="tablist" aria-label="Learning journeys">
+        <div className="journey-selector" role="tablist" aria-label="Certification paths">
           {tracks.map((track, index) => {
             const TrackIcon = track.icon;
             return (
               <div key={track.id} className={index === 0 ? "journey-choice recommended-path" : "journey-choice"}>
-                {index === 0 && <span className="journey-group-label">START A SERVICE</span>}
-                {index === 3 && <span className="journey-group-label secondary">FOCUSED MISSIONS</span>}
+                {index === 0 && <span className="journey-group-label">START WITH A WORKING CALL</span>}
+                {index === 3 && <span className="journey-group-label secondary">FOCUSED OUTCOMES</span>}
                 <Button
                   variant="ghost"
                   role="tab"
@@ -977,7 +1220,7 @@ function JourneysView({
                 >
                   <span className={`journey-tab-icon ${track.color}`}><TrackIcon /></span>
                   <span className="journey-tab-copy">
-                    <small>{index === 0 ? "PROMOTED START" : index < 3 ? `START 0${index + 1}` : `TASK 0${index - 2}`} · {track.time}</small>
+                    <small>{index === 0 ? "RECOMMENDED" : index < 3 ? `START 0${index + 1}` : `PATH 0${index + 1}`} · {track.time}</small>
                     <strong>{track.title}</strong>
                   </span>
                   <ChevronRight />
@@ -999,24 +1242,30 @@ function JourneysView({
           <div className="mission-meta-row">
             <span><Clock3 /> {selected.time}</span>
             <span><Zap /> {selected.level}</span>
-            <span><Check /> Clear success check</span>
+            <span><Award /> {selected.reward} badge</span>
           </div>
-          <div className="mission-guardrail"><Lightbulb /><span><strong>{["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "Follow this in order:" : "Keep the scope small:"}</strong> {["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "each lesson produces a prerequisite for the next. Routing comes only after the origin and destination are ready." : "finish this mission’s success checks before adding another channel or optional service."}</span></div>
+          <div className="path-story-grid">
+            <article><span>YOUR SCENARIO</span><p>{selected.scenario}</p></article>
+            <article><span>THE WIN</span><p>{selected.outcome}</p></article>
+            <article><span>EVIDENCE REQUIRED</span><p>{selected.evidence}</p></article>
+          </div>
+          <div className="mission-guardrail"><Lightbulb /><span><strong>{["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "Complete the story in order:" : "Keep this challenge focused:"}</strong> {["voice-agent", "sip-trunk", "teams-sip"].includes(selected.id) ? "each mission produces a prerequisite for the next. Routing comes only after the origin and destination are ready." : "prove every success criterion before you move to another channel or optional service."}</span></div>
           <div className="mission-steps">
             {selected.steps.map((step, index) => {
-              const stepKey = `${selected.id}:${index}`;
-              const done = completed.includes(stepKey);
+              const done = missionIsComplete(selected, index, completed);
+              const unlocked = index === 0 || done || missionIsComplete(selected, index - 1, completed);
               return (
               <Button
                 variant="ghost"
                 id={`${selected.id}-step-${index}`}
-                className={done ? "mission-step done" : "mission-step"}
+                className={done ? "mission-step done" : unlocked ? "mission-step" : "mission-step locked"}
                 key={step}
+                disabled={!unlocked}
                 onClick={() => openLesson(index)}
               >
                 <span className="step-index">{done ? <Check /> : index + 1}</span>
                 <div>
-                  <small>{done ? "LESSON COMPLETE" : `OPEN LESSON ${index + 1}`}</small>
+                  <small>{done ? "MISSION COMPLETE" : unlocked ? `OPEN MISSION ${index + 1}` : `LOCKED · FINISH MISSION ${index}`}</small>
                   <strong><em>{selected.phases[index]}</em>{step}</strong>
                 </div>
                 <ChevronRight />
@@ -1025,15 +1274,15 @@ function JourneysView({
           </div>
           <div className="mission-footer">
             <div>
-              <span>{isMissionComplete ? "ACHIEVEMENT UNLOCKED" : `Mission 0${selectedIndex + 1} · ${missionComplete}/${selected.steps.length} complete`}</span>
-              <p>{isMissionComplete ? "Your result and progress are saved on this device." : "Open each lesson, complete the action, and prove the success check."}</p>
+              <span>{isMissionComplete ? `${selected.reward.toUpperCase()} BADGE UNLOCKED` : `Certification path 0${selectedIndex + 1} · ${missionComplete}/${selected.steps.length} missions`}</span>
+              <p>{isMissionComplete ? "Your evidence and progress are saved on this device." : "Complete each challenge and check every required piece of evidence."}</p>
             </div>
             <Button
               size="lg"
               className="primary-cta"
               onClick={() => isMissionComplete ? setCelebrating(true) : openLesson(firstIncomplete)}
             >
-              {isMissionComplete ? "View achievement" : missionComplete ? "Continue mission" : selected.id === "voice-agent" ? "Start step 1" : "Begin mission"} <ArrowRight />
+              {isMissionComplete ? "View earned badge" : missionComplete ? "Continue path" : "Start mission 1"} <ArrowRight />
             </Button>
           </div>
         </section>
@@ -1064,22 +1313,22 @@ function MissionCompleteView({
           <img src="livehub-brand-wave.webp" alt="" />
         </div>
         <div className="mission-complete-copy">
-          <span className="completion-kicker"><Award /> MISSION COMPLETE</span>
-          <h1>You made it work.</h1>
+          <span className="completion-kicker"><Award /> CERTIFICATION PATH COMPLETE</span>
+          <h1>{track.reward}<br />unlocked.</h1>
           <p>
-            You completed <strong>{track.title}</strong>. More importantly, you followed the full chain and checked the result instead of stopping at configuration.
+            You achieved <strong>{track.title}</strong>. You did not just read the steps—you completed the challenge and verified the result with evidence.
           </p>
           <div className="completion-proof">
-            <span><CheckCircle2 /><strong>{lessonCount}/{lessonCount}</strong><small>lessons completed</small></span>
-            <span><Route /><strong>1</strong><small>end-to-end path</small></span>
-            <span><Activity /><strong>✓</strong><small>result verified</small></span>
+            <span><CheckCircle2 /><strong>{lessonCount}/{lessonCount}</strong><small>missions completed</small></span>
+            <span><Award /><strong>1</strong><small>path badge earned</small></span>
+            <span><Activity /><strong>✓</strong><small>evidence verified</small></span>
           </div>
           <div className="completion-actions">
-            <Button size="lg" onClick={onKnowledgeCheck}>Test what you learned <ArrowRight /></Button>
+            <Button size="lg" onClick={onKnowledgeCheck}>Take certification checkpoint <ArrowRight /></Button>
             <Button size="lg" variant="outline" onClick={onNext}>Next: {nextTrack.title}</Button>
-            <Button variant="ghost" onClick={onReview}>Review this mission</Button>
+            <Button variant="ghost" onClick={onReview}>Review this path</Button>
           </div>
-          <small className="completion-saved"><Check /> Achievement saved on this device</small>
+          <small className="completion-saved"><Check /> {track.reward} badge saved on this device</small>
         </div>
       </section>
     </div>
@@ -1106,10 +1355,13 @@ function LessonWorkspace({
   onMissionComplete: () => void;
 }) {
   const lesson = lessons[lessonIndex];
-  const lessonKey = `${track.id}:${lessonIndex}`;
-  const done = completed.includes(lessonKey);
-  const completedInTrack = lessons.filter((_, index) => completed.includes(`${track.id}:${index}`)).length;
+  const lessonKey = missionProgressKey(track, lessonIndex);
+  const done = missionIsComplete(track, lessonIndex, completed);
+  const completedInTrack = lessons.filter((_, index) => missionIsComplete(track, index, completed)).length;
   const [speaking, setSpeaking] = useState(false);
+  const [verifiedCriteria, setVerifiedCriteria] = useState<number[]>(done ? lesson.success.map((_, index) => index) : []);
+  const [evidenceNote, setEvidenceNote] = useState("");
+  const allEvidenceVerified = verifiedCriteria.length === lesson.success.length;
 
   useEffect(() => {
     return () => {
@@ -1119,15 +1371,14 @@ function LessonWorkspace({
     };
   }, [lesson.id]);
 
-  const lessonNarration = [
-    lesson.title,
-    lesson.objective,
-    lesson.decision ? `${lesson.decision.question}. ${lesson.decision.options.map((option) => `${option.title}: ${option.chooseWhen} ${option.next}`).join(" ")}` : "",
-    lesson.architecture ? `Architecture: ${lesson.architecture.join(" to ")}.` : "",
-    `Before you start: ${lesson.before.join(". ")}.`,
-    lesson.skipForNow ? `Ignore these for now: ${lesson.skipForNow.join(", ")}.` : "",
-    ...lesson.actions.map((action, index) => `Step ${index + 1}. ${action.title}. ${action.instruction}`),
-    `Success check: ${lesson.success.join(". ")}.`,
+  const coachingScript = [
+    `Here’s your mission: ${lesson.title}.`,
+    track.scenario,
+    `Why it matters: ${track.outcome}`,
+    `Begin with ${lesson.actions.slice(0, 2).map((action) => action.title.toLowerCase()).join(", then ")}.`,
+    `Your checkpoint is simple: ${lesson.success.slice(0, 2).join(" And ")}.`,
+    lesson.commonMistake ? `One warning: ${lesson.commonMistake}` : "Change one thing at a time, then verify the result.",
+    "When you can see the evidence, check it off here and move to the next challenge.",
   ].join(" ");
 
   const toggleListening = () => {
@@ -1138,7 +1389,7 @@ function LessonWorkspace({
       return;
     }
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(lessonNarration);
+    const utterance = new SpeechSynthesisUtterance(coachingScript);
     utterance.rate = 0.94;
     utterance.pitch = 1;
     utterance.onend = () => setSpeaking(false);
@@ -1148,19 +1399,26 @@ function LessonWorkspace({
   };
 
   const completeAndContinue = () => {
+    if (!done && !allEvidenceVerified) return;
     if (!done) toggleStep(lessonKey);
     if (lessonIndex < lessons.length - 1) onSelectLesson(lessonIndex + 1);
     else onMissionComplete();
+  };
+
+  const toggleEvidence = (index: number) => {
+    setVerifiedCriteria((current) => current.includes(index)
+      ? current.filter((item) => item !== index)
+      : [...current, index]);
   };
 
   return (
     <div className="page lesson-page">
       <div className="lesson-topline">
         <Button variant="ghost" className="lesson-back" onClick={onBack}>
-          <ArrowLeft /> Back to mission
+          <ArrowLeft /> Back to certification path
         </Button>
         <div className="lesson-progress-summary">
-          <span>{completedInTrack}/{lessons.length} lessons complete</span>
+          <span>{completedInTrack}/{lessons.length} missions complete</span>
           <Progress value={(completedInTrack / lessons.length) * 100} aria-label={`${track.title} progress`} />
         </div>
       </div>
@@ -1168,18 +1426,20 @@ function LessonWorkspace({
       <div className="lesson-layout">
         <aside className="lesson-outline">
           <div className="lesson-outline-head">
-            <span>MISSION</span>
+            <span>CERTIFICATION PATH</span>
             <h2>{track.title}</h2>
-            <p>{track.time} · {lessons.length} guided lessons</p>
+            <p>{track.time} · {lessons.length} outcome missions</p>
           </div>
           <div className="lesson-outline-list">
             {lessons.map((item, index) => {
-              const itemDone = completed.includes(`${track.id}:${index}`);
+              const itemDone = missionIsComplete(track, index, completed);
+              const itemUnlocked = index === 0 || itemDone || missionIsComplete(track, index - 1, completed);
               return (
                 <Button
                   key={item.id}
                   variant="ghost"
-                  className={index === lessonIndex ? "outline-lesson active" : "outline-lesson"}
+                  className={index === lessonIndex ? "outline-lesson active" : itemUnlocked ? "outline-lesson" : "outline-lesson locked"}
+                  disabled={!itemUnlocked}
                   onClick={() => onSelectLesson(index)}
                 >
                   <span className={itemDone ? "outline-number done" : "outline-number"}>
@@ -1195,14 +1455,14 @@ function LessonWorkspace({
           </div>
           <div className="outline-tip">
             <Lightbulb />
-            <p>Complete the action in Live Hub first—then mark the lesson done.</p>
+            <p>Do the work in Live Hub. The next mission unlocks only after you confirm the evidence.</p>
           </div>
         </aside>
 
         <article className="lesson-content">
           <header className="lesson-header">
             <div className="lesson-header-meta">
-              <span>LESSON {lessonIndex + 1} OF {lessons.length}</span>
+              <span>MISSION {lessonIndex + 1} OF {lessons.length}</span>
               <span><Clock3 /> {lesson.duration}</span>
             </div>
             <h1>{lesson.title}</h1>
@@ -1210,13 +1470,23 @@ function LessonWorkspace({
             <div className="lesson-header-actions">
               <Button variant="outline" onClick={toggleListening} className={speaking ? "listen-button active" : "listen-button"}>
                 {speaking ? <Square /> : <Volume2 />}
-                {speaking ? "Stop listening" : "Listen to this lesson"}
+                {speaking ? "Stop coach" : "Coach me · under 90 sec"}
               </Button>
               <Button asChild variant="ghost" className="official-guide-button">
-                <a href={lesson.docUrl} target="_blank" rel="noreferrer">Open official guide <ExternalLink /></a>
+                <a href={lesson.docUrl} target="_blank" rel="noreferrer">Expert reference <ExternalLink /></a>
               </Button>
             </div>
+            <details className="coach-transcript">
+              <summary>Read the coaching summary</summary>
+              <p>{coachingScript}</p>
+            </details>
           </header>
+
+          <section className="mission-brief">
+            <div><span>YOUR SCENARIO</span><p>{track.scenario}</p></div>
+            <div><span>WHY THIS MATTERS</span><p>{track.outcome}</p></div>
+            <div><span>MISSION</span><p>{lesson.objective}</p></div>
+          </section>
 
           <section className="click-path" aria-label="Live Hub navigation path">
             <span>GO HERE</span>
@@ -1247,8 +1517,8 @@ function LessonWorkspace({
           )}
 
           {lesson.architecture && (
-            <section className="lesson-architecture" aria-label="Architecture for this lesson">
-              <span>WHAT CONNECTS TO WHAT</span>
+            <section className="lesson-architecture" aria-label="Architecture for this mission">
+              <span>VISUAL EXPLANATION · WHAT CONNECTS TO WHAT</span>
               <div>
                 {lesson.architecture.map((part, index) => (
                   <span key={part}><strong>{part}</strong>{index < lesson.architecture!.length - 1 && <ArrowRight />}</span>
@@ -1260,7 +1530,7 @@ function LessonWorkspace({
           <section className="lesson-section before-section">
             <div className="lesson-section-title">
               <ListChecks />
-              <div><span>01</span><h2>Before you start</h2></div>
+              <div><span>PREPARE</span><h2>Get ready for the challenge</h2></div>
             </div>
             <div className="before-grid">
               {lesson.before.map((item) => <div key={item}><Check /> {item}</div>)}
@@ -1280,7 +1550,7 @@ function LessonWorkspace({
           <section className="lesson-section actions-section">
             <div className="lesson-section-title">
               <Play />
-              <div><span>02 · YOUR TASK NOW</span><h2>Do this in Live Hub</h2></div>
+              <div><span>DO · HANDS-ON CHALLENGE</span><h2>Make the outcome happen</h2></div>
             </div>
             <div className="action-list">
               {lesson.actions.map((action, index) => (
@@ -1301,13 +1571,13 @@ function LessonWorkspace({
 
           {(lesson.image || lesson.videoId) && (
             <details className="lesson-support-details">
-              <summary><Play /><span><strong>Need a visual?</strong><small>Open the official screen or video for this exact lesson.</small></span><ChevronRight /></summary>
+              <summary><Play /><span><strong>Need visual help?</strong><small>Open the official screen or video for this exact mission.</small></span><ChevronRight /></summary>
               <section className="lesson-media-grid">
                 {lesson.image && (
                   <figure className="lesson-visual">
                     <div className="visual-label"><span /> OFFICIAL LIVE HUB SCREEN</div>
-                    <img src={lesson.image} alt={lesson.imageAlt ?? "Live Hub screen for this lesson"} loading="lazy" />
-                    <figcaption>Use the labels in the lesson; the portal may evolve slightly between releases.</figcaption>
+                    <img src={lesson.image} alt={lesson.imageAlt ?? "Live Hub screen for this mission"} loading="lazy" />
+                    <figcaption>Use the mission labels; the portal may evolve slightly between releases.</figcaption>
                   </figure>
                 )}
                 {lesson.videoId && (
@@ -1328,18 +1598,36 @@ function LessonWorkspace({
             </details>
           )}
 
-          <section className="lesson-section success-section">
+          <section className="lesson-section evidence-section">
             <div className="lesson-section-title">
               <CircleCheckBig />
-              <div><span>03</span><h2>You’re done when…</h2></div>
+              <div><span>VERIFY · EVIDENCE CHECKPOINT</span><h2>Prove the mission worked</h2></div>
             </div>
-            <div className="success-grid">
-              {lesson.success.map((item) => <div key={item}><CheckCircle2 /> {item}</div>)}
+            <p className="evidence-intro">Check only what you can see in Live Hub. Every criterion is required before this mission is complete.</p>
+            <div className="evidence-checklist">
+              {lesson.success.map((item, index) => {
+                const checked = verifiedCriteria.includes(index);
+                return (
+                  <label key={item} className={checked ? "evidence-item checked" : "evidence-item"}>
+                    <Checkbox checked={checked} onCheckedChange={() => toggleEvidence(index)} aria-label={item} />
+                    <span><small>EVIDENCE {String(index + 1).padStart(2, "0")}</small><strong>{item}</strong></span>
+                  </label>
+                );
+              })}
+            </div>
+            <div className="evidence-note">
+              <label htmlFor={`evidence-${lesson.id}`}>Evidence note <span>optional</span></label>
+              <Input id={`evidence-${lesson.id}`} value={evidenceNote} onChange={(event) => setEvidenceNote(event.target.value)} placeholder="Call ID, screenshot filename, or short result note" />
+              <small>Keep sensitive data and credentials out of this field. This note is temporary and is not submitted.</small>
+            </div>
+            <div className={allEvidenceVerified ? "evidence-status ready" : "evidence-status"}>
+              {allEvidenceVerified ? <CheckCircle2 /> : <CircleHelp />}
+              <span><strong>{allEvidenceVerified ? "Checkpoint passed" : `${verifiedCriteria.length} of ${lesson.success.length} verified`}</strong><small>{allEvidenceVerified ? "You can complete this mission." : "Finish the real task, then confirm each result."}</small></span>
             </div>
           </section>
 
           <details className="lesson-troubleshooting-details">
-            <summary><AlertTriangle /><span><strong>If it doesn’t work</strong><small>Open only after you have tried the steps once.</small></span><ChevronRight /></summary>
+            <summary><AlertTriangle /><span><strong>Troubleshoot this mission</strong><small>Open only after you have tried the challenge once.</small></span><ChevronRight /></summary>
             <div className="troubleshooting-list">
               {lesson.troubleshooting.map((item) => (
                 <div className="troubleshooting-item" key={item.problem}>
@@ -1350,16 +1638,25 @@ function LessonWorkspace({
             </div>
           </details>
 
+          <section className="next-challenge">
+            <span>NEXT CHALLENGE</span>
+            <div>
+              <strong>{lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].title : `Earn the ${track.reward} badge`}</strong>
+              <p>{lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].objective : `Complete this final evidence checkpoint to finish ${track.title}.`}</p>
+            </div>
+            <ArrowRight />
+          </section>
+
           <footer className="lesson-footer-actions">
             <div>
-              <span>{done ? <CheckCircle2 /> : <CircleHelp />}</span>
+              <span>{done || allEvidenceVerified ? <CheckCircle2 /> : <CircleHelp />}</span>
               <div>
-                <strong>{done ? "Lesson completed" : "Did the result match the success check?"}</strong>
-                <p>{done ? "You can review it anytime." : "Only continue after you have tried the steps in Live Hub."}</p>
+                <strong>{done ? "Mission completed" : allEvidenceVerified ? "Evidence confirmed" : "Complete the evidence checkpoint"}</strong>
+                <p>{done ? "You can review it anytime." : allEvidenceVerified ? "Your next challenge is ready." : "This is an achievement, not a reading checkbox."}</p>
               </div>
             </div>
-            <Button size="lg" className="primary-cta" onClick={completeAndContinue}>
-              {lessonIndex === lessons.length - 1 ? "Complete mission" : done ? "Next lesson" : "Mark complete & continue"}
+            <Button size="lg" className="primary-cta" disabled={!done && !allEvidenceVerified} onClick={completeAndContinue}>
+              {lessonIndex === lessons.length - 1 ? "Complete path" : done ? "Next mission" : "Complete mission & continue"}
               <ArrowRight />
             </Button>
           </footer>
@@ -1628,14 +1925,14 @@ function LibraryView() {
     <div className="page library-page">
       <section className="library-hero">
         <div>
-          <span className="section-kicker">LIVE HUB REFERENCE</span>
-          <h1>One library.<br /><span>No treasure hunt.</span></h1>
-          <p>Search by what you are trying to do, then jump into the exact official guide when you need the full detail.</p>
+          <span className="section-kicker">EXPERT REFERENCE · USE WHEN NEEDED</span>
+          <h1>Deep detail.<br /><span>Outside the mission flow.</span></h1>
+          <p>Search by what you are trying to do, then open the exact official guide only when your mission needs the full technical detail.</p>
         </div>
         <div className="library-stat-panel">
           <div><strong>{docs.length}</strong><span>curated<br />starting points</span></div>
           <div><strong>15</strong><span>documentation<br />domains</span></div>
-          <div><strong>{tracks.length}</strong><span>guided<br />missions</span></div>
+          <div><strong>{tracks.length}</strong><span>certification<br />paths</span></div>
         </div>
       </section>
 
