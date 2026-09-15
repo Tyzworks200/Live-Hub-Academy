@@ -1,19 +1,20 @@
 # Live Hub Academy
 
-An outcome-first learning and troubleshooting experience for AudioCodes Live Hub.
+The official outcome-first success experience for AudioCodes Live Hub: the fastest path from zero to a working Voice AI deployment.
 
 ## What is included
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
-- Three primary outcome paths: complete a first AI call, bring your own SIP, or connect Microsoft Teams
-- Five focused paths for a real phone number, intelligent routing, production AI Agents, production monitoring, and live-traffic troubleshooting
+- A five-level go-live journey: first successful call, connect telephony, route intelligently, operate production, and production readiness
+- Eight working-outcome paths covering an AI call, SIP, Microsoft Teams, phone numbers, routing, production AI Agents, monitoring, and troubleshooting
 - A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
-- A calm, product-launch-style homepage that asks learners to choose one real win instead of browsing product categories
-- A working lightweight Academy Guide that routes natural-language questions to the shortest verified certification path, while preserving a stable Intercom integration slot
-- Mission stories, hands-on challenges, required evidence checkpoints, cross-path credit, earned badges, and a certification destination
-- Every mission follows Why → Visual → Do → Verify → Troubleshoot → Next, with exact portal paths, official screenshots, and optional video
+- A calm, product-launch-style homepage that asks customers to choose one real win instead of browsing product categories
+- A working lightweight Academy Guide that routes natural-language questions to the shortest verified outcome, while preserving a stable Intercom integration slot
+- The core Live Hub operating model—Origin → Route → Destination → Proof—at the center of the experience
+- Story-first missions that show the working result before explanation, reveal one action at a time, and unlock the success check only at the final action
+- Exact portal paths, official screenshots, optional video, collapsed preparation, and on-demand troubleshooting without a documentation wall
 - Short browser-based coaching summaries that prepare learners for action instead of narrating the full text
-- A scored 12-question certification checkpoint with explanations and official documentation links
+- An optional 12-question production-readiness checkpoint with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
 - Supporting mission content for account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
