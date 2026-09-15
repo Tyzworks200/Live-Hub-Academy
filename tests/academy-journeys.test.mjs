@@ -12,7 +12,7 @@ test("offers the three approved outcome-first paths", () => {
   assert.match(pageSource, /First Successful AI Call/);
   assert.match(pageSource, /Bring Your Own SIP/);
   assert.match(pageSource, /Connect Microsoft Teams/);
-  assert.match(pageSource, /THE HEART/);
+  assert.match(pageSource, /ALREADY HAVE A TELEPHONY START/);
 });
 
 test("frames the Academy as a five-level customer success journey", () => {
@@ -24,6 +24,18 @@ test("frames the Academy as a five-level customer success journey", () => {
   assert.match(pageSource, /Origin/);
   assert.match(pageSource, /Destination/);
   assert.match(pageSource, /Proof/);
+  assert.match(pageSource, /LEVEL \{activeLevel\.number\} OF \{successLevels\.length\}/);
+});
+
+test("uses one progress hierarchy and teaches the call model only once", () => {
+  assert.match(pageSource, /HOW ONE CALL MOVES · CONCEPT ONLY/);
+  assert.match(pageSource, /This is the Live Hub mental model—not a course progress tracker/);
+  assert.doesNotMatch(pageSource, /className="academy-method"/);
+  assert.doesNotMatch(pageSource, /className="operating-model"/);
+  assert.doesNotMatch(pageSource, /className="mini-result-flow"/);
+  assert.doesNotMatch(pageSource, /className="mission-result-flow"/);
+  assert.match(pageSource, /className="lesson-location"/);
+  assert.match(pageSource, /LEVEL \{currentLevel\.number\} OF \{successLevels\.length\}/);
 });
 
 test("covers the full 2.19.2 product map as focused outcome courses", () => {
@@ -41,7 +53,8 @@ test("covers the full 2.19.2 product map as focused outcome courses", () => {
     "translation",
   ]) assert.match(pageSource, new RegExp(`id: "${track}"`));
   assert.match(pageSource, /complete outcome courses/);
-  assert.match(pageSource, /CHOOSE ONE OUTCOME/);
+  assert.match(pageSource, /CHOOSE YOUR ROUTE THROUGH THIS LEVEL/);
+  assert.match(pageSource, /Complete one route—not both/);
 });
 
 test("keeps current authentication and account rules accurate", () => {
