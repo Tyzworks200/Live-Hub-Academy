@@ -14,12 +14,24 @@ test("offers the three approved outcome-first paths", () => {
   assert.match(pageSource, /THE HEART/);
 });
 
-test("frames the Academy as missions, evidence, rewards, and certification paths", () => {
+test("frames the Academy as a five-level customer success journey", () => {
+  assert.match(pageSource, /First successful call/);
+  assert.match(pageSource, /Connect my telephony/);
+  assert.match(pageSource, /Route intelligently/);
+  assert.match(pageSource, /Operate production/);
+  assert.match(pageSource, /Production readiness/);
+  assert.match(pageSource, /Origin/);
+  assert.match(pageSource, /Destination/);
+  assert.match(pageSource, /Proof/);
+});
+
+test("missions require actions and visible evidence instead of reading completion", () => {
   assert.match(pageSource, /MISSION/);
   assert.match(pageSource, /EVIDENCE/);
-  assert.match(pageSource, /REWARD/);
-  assert.match(pageSource, /CERTIFICATION PATH/);
   assert.match(pageSource, /Prove the mission worked/);
+  assert.match(pageSource, /One action at a time/);
+  assert.match(pageSource, /Success check locked/);
+  assert.match(pageSource, /challengeReady/);
   assert.match(pageSource, /allEvidenceVerified/);
   assert.match(pageSource, /Checkbox/);
 });
@@ -63,11 +75,13 @@ test("home provides a useful guide and keeps a stable Intercom integration slot"
   assert.doesNotMatch(pageSource, /AI Assistant coming soon/);
 });
 
-test("finishing the last mission creates a badge achievement moment", () => {
+test("finishing the last mission celebrates a working outcome", () => {
   assert.match(pageSource, /function MissionCompleteView/);
-  assert.match(pageSource, /CERTIFICATION PATH COMPLETE/);
-  assert.match(pageSource, /Take certification checkpoint/);
-  assert.match(pageSource, /badge saved on this device/);
+  assert.match(pageSource, /WORKING OUTCOME ACHIEVED/);
+  assert.match(pageSource, /You made it/);
+  assert.match(pageSource, /Continue toward production/);
+  assert.match(pageSource, /Optional knowledge checkpoint/);
+  assert.match(pageSource, /Progress and evidence saved on this device/);
   assert.match(pageSource, /onMissionComplete\(\)/);
 });
 

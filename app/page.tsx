@@ -25,6 +25,7 @@ import {
   LibraryBig,
   Lightbulb,
   ListChecks,
+  LockKeyhole,
   Menu,
   MessageCircle,
   Network,
@@ -219,6 +220,52 @@ const tracks: Track[] = [
   },
 ];
 
+type SuccessLevel = {
+  number: number;
+  title: string;
+  promise: string;
+  question: string;
+  trackIds: string[];
+};
+
+const successLevels: SuccessLevel[] = [
+  {
+    number: 1,
+    title: "First successful call",
+    promise: "A real phone call reaches an AI and receives the correct answer.",
+    question: "Can one customer call one AI receptionist successfully?",
+    trackIds: ["voice-agent"],
+  },
+  {
+    number: 2,
+    title: "Connect my telephony",
+    promise: "Your existing voice environment reaches Live Hub.",
+    question: "Which real voice channel must connect next?",
+    trackIds: ["sip-trunk", "teams-sip", "phone-number"],
+  },
+  {
+    number: 3,
+    title: "Route intelligently",
+    promise: "The right call reaches the right destination.",
+    question: "What should happen when this specific call arrives?",
+    trackIds: ["routing"],
+  },
+  {
+    number: 4,
+    title: "Operate production",
+    promise: "You can see what happened and fix the first failing layer.",
+    question: "Can your team explain every important call from evidence?",
+    trackIds: ["operate", "diagnose"],
+  },
+  {
+    number: 5,
+    title: "Production readiness",
+    promise: "Your AI behavior is grounded, tested, and observable before launch.",
+    question: "Can you prove this deployment is safe to put in front of customers?",
+    trackIds: ["agent-builder"],
+  },
+];
+
 type AcademyGuideResult = {
   eyebrow: string;
   title: string;
@@ -310,13 +357,11 @@ function guideLearner(question: string): AcademyGuideResult {
 }
 
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
-  { id: "home", label: "Academy home", icon: Sparkles },
-  { id: "orientation", label: "Your first win", icon: ListChecks },
-  { id: "journeys", label: "Learning paths", icon: FolderOpen },
-  { id: "troubleshooting", label: "Troubleshoot traffic", icon: AlertTriangle },
-  { id: "quiz", label: "Live Hub certification", icon: Award },
+  { id: "home", label: "Success home", icon: Sparkles },
+  { id: "journeys", label: "Go-live journey", icon: Route },
+  { id: "troubleshooting", label: "Fix a failed call", icon: AlertTriangle },
   { id: "library", label: "Expert reference", icon: LibraryBig },
-  { id: "glossary", label: "Voice glossary", icon: Code2 },
+  { id: "glossary", label: "Voice terms", icon: Code2 },
 ];
 
 type DocItem = {
@@ -426,6 +471,7 @@ function missionIsComplete(track: Track, index: number, completed: string[]) {
 export default function Home() {
   const [view, setView] = useState<View>("home");
   const [selectedTrack, setSelectedTrack] = useState<Track>(tracks[0]);
+  const [startSelectedTrack, setStartSelectedTrack] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
 
@@ -472,19 +518,16 @@ export default function Home() {
   const goToTrack = (id: string) => {
     const track = tracks.find((item) => item.id === id);
     if (track) setSelectedTrack(track);
+    setStartSelectedTrack(true);
     setView("journeys");
     setMobileOpen(false);
     resetPagePosition();
   };
 
   const goToView = (next: View) => {
+    setStartSelectedTrack(false);
     setView(next);
     setMobileOpen(false);
-    resetPagePosition();
-  };
-
-  const selectJourneyTrack = (track: Track) => {
-    setSelectedTrack(track);
     resetPagePosition();
   };
 
@@ -565,7 +608,7 @@ export default function Home() {
           </div>
           <div className="topbar-actions">
             <Button variant="ghost" className="top-link" onClick={() => goToView("library")}>
-              <Search /> Search docs
+              <Search /> Expert reference
             </Button>
             <Button asChild className="portal-button">
               <a href="https://livehub.audiocodes.io/login" target="_blank" rel="noreferrer">
@@ -590,7 +633,8 @@ export default function Home() {
             key={selectedTrack.id}
             selected={selectedTrack}
             selectedIndex={selectedIndex}
-            selectTrack={selectJourneyTrack}
+            startImmediately={startSelectedTrack}
+            launchTrack={goToTrack}
             completed={completed}
             toggleStep={toggleStep}
             onKnowledgeCheck={() => goToView("quiz")}
@@ -833,18 +877,18 @@ function HomeView({
           <span className="section-kicker"><Sparkles /> WELCOME TO LIVE HUB ACADEMY</span>
           <h1>What will you<br /><span>make work?</span></h1>
           <p>
-            Live Hub connects Voice AI to real phone systems, numbers, Microsoft Teams, and customer conversations. This Academy does not ask you to memorize the platform. It helps you achieve one working outcome at a time.
+            Live Hub connects Voice AI to real phone systems, numbers, Microsoft Teams, and customer conversations. This is your fastest path from zero to a working, production-ready deployment.
           </p>
           <div className="outcome-hero-actions">
             <Button size="lg" onClick={() => goToTrack("voice-agent")}>Make my first AI call <ArrowRight /></Button>
-            <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See how missions work</Button>
+            <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See Live Hub in 3 minutes</Button>
           </div>
-          <div className="academy-method" aria-label="How learning works">
-            <span><strong>01</strong><small>MISSION</small><em>Build a real result</em></span>
+          <div className="academy-method" aria-label="The Live Hub operating model">
+            <span><strong>01</strong><small>ORIGIN</small><em>A real call enters</em></span>
             <ChevronRight />
-            <span><strong>02</strong><small>EVIDENCE</small><em>Prove it worked</em></span>
+            <span><strong>02</strong><small>ROUTE</small><em>Live Hub decides</em></span>
             <ChevronRight />
-            <span><strong>03</strong><small>REWARD</small><em>Earn your badge</em></span>
+            <span><strong>03</strong><small>PROOF</small><em>Evidence confirms it</em></span>
           </div>
         </div>
 
@@ -858,7 +902,7 @@ function HomeView({
               <div><span>{pathProgress}% complete</span><span>{completedInStartedPath}/{startedPath.steps.length} missions</span></div>
               <Progress value={pathProgress} aria-label={`${startedPath.title} progress`} />
             </div>
-            <div className="continue-reward"><Award /><span><small>PATH REWARD</small><strong>{startedPath.reward} badge</strong></span></div>
+            <div className="continue-reward"><Activity /><span><small>FINISH LINE</small><strong>{startedPath.evidence}</strong></span></div>
             <Button size="lg" onClick={() => goToTrack(startedPath.id)}>{completedInStartedPath ? "Continue path" : "Start mission 1"} <ArrowRight /></Button>
           </div>
         </aside>
@@ -867,7 +911,7 @@ function HomeView({
       <section className="path-section start-paths">
         <div className="path-heading">
           <div><span className="section-kicker">START WITH YOUR REAL-WORLD GOAL</span><h2>Choose one first win.</h2></div>
-          <p>Most learners should begin with one of these three paths. Each ends with a working call and evidence—not a completed reading list.</p>
+          <p>Begin with the result your business needs. Each path ends with a working call and visible evidence.</p>
         </div>
         <div className="primary-path-grid">
           {primaryPaths.map((track, index) => {
@@ -890,7 +934,7 @@ function HomeView({
 
       <section className="path-section focused-paths">
         <div className="path-heading compact">
-          <div><span className="section-kicker">OR SOLVE ONE SPECIFIC NEED</span><h2>Focused learning paths</h2></div>
+          <div><span className="section-kicker">OR SOLVE ONE SPECIFIC NEED</span><h2>Focused outcomes</h2></div>
           <Button variant="ghost" onClick={goToJourneys}>Explore every path <ArrowRight /></Button>
         </div>
         <div className="focused-path-grid">
@@ -899,7 +943,7 @@ function HomeView({
             return (
               <button key={track.id} className="focused-path-card" onClick={() => goToTrack(track.id)}>
                 <span className={`focused-path-icon ${track.color}`}><Icon /></span>
-                <span><small>{track.reward.toUpperCase()} BADGE</small><strong>{track.title}</strong><em>{track.description}</em></span>
+                <span><small>WORKING RESULT</small><strong>{track.title}</strong><em>{track.outcome}</em></span>
                 <ArrowRight />
               </button>
             );
@@ -924,9 +968,9 @@ function HomeView({
       </section>
 
       <section className="certification-banner">
-        <div><Award /><span><small>FINAL DESTINATION</small><h2>Live Hub Certification</h2><p>Finish your paths, then prove you can choose the right next move in real Live Hub scenarios.</p></span></div>
+        <div><ShieldCheck /><span><small>BEFORE CUSTOMERS CALL</small><h2>Run a production readiness check</h2><p>Review resilience, evidence, access, and the next move in real Live Hub scenarios.</p></span></div>
         <div className="certification-actions">
-          <Button size="lg" onClick={goToCertification}>Open certification checkpoint <ArrowRight /></Button>
+          <Button size="lg" onClick={goToCertification}>Open readiness checkpoint <ArrowRight /></Button>
           <Button asChild size="lg" variant="outline"><a href={OFFICIAL_VIDEO_PLAYLIST} target="_blank" rel="noreferrer"><Play /> Official video library</a></Button>
         </div>
       </section>
@@ -955,8 +999,8 @@ function KnowledgeCheckView() {
     <div className="page quiz-page">
       <section className="quiz-hero">
         <div>
-          <span className="section-kicker"><Award /> LIVE HUB CERTIFICATION · FINAL CHECKPOINT</span>
-          <h1>Prove you can make the right next move.</h1>
+          <span className="section-kicker"><ShieldCheck /> PRODUCTION READINESS · OPTIONAL CHECKPOINT</span>
+          <h1>Can you make the right next move?</h1>
           <p>Twelve practical scenarios from the supplied bootcamp material. Pass by applying stable Live Hub judgment—not by memorizing changing commercial terms.</p>
         </div>
         <div className="quiz-progress-card">
@@ -1023,7 +1067,7 @@ function KnowledgeCheckView() {
         ) : (
           <>
             <div><ListChecks /><span><small>READY TO CHECK?</small><strong>{answeredCount} of {knowledgeQuestions.length} answered</strong><p>Answer every question to reveal the explanations and source links.</p></span></div>
-            <Button size="lg" className="primary-cta" disabled={answeredCount !== knowledgeQuestions.length} onClick={() => { setSubmitted(true); resetPagePosition(); }}>Submit certification checkpoint <ArrowRight /></Button>
+            <Button size="lg" className="primary-cta" disabled={answeredCount !== knowledgeQuestions.length} onClick={() => { setSubmitted(true); resetPagePosition(); }}>Check production readiness <ArrowRight /></Button>
           </>
         )}
       </section>
@@ -1109,7 +1153,7 @@ function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
   );
 }
 
-function JourneysView({
+function LegacyJourneysView({
   selected,
   selectedIndex,
   selectTrack,
@@ -1291,6 +1335,178 @@ function JourneysView({
   );
 }
 
+function JourneysView({
+  selected,
+  selectedIndex,
+  startImmediately,
+  launchTrack,
+  completed,
+  toggleStep,
+  onKnowledgeCheck,
+}: {
+  selected: Track;
+  selectedIndex: number;
+  startImmediately: boolean;
+  launchTrack: (id: string) => void;
+  completed: string[];
+  toggleStep: (key: string) => void;
+  onKnowledgeCheck: () => void;
+}) {
+  const lessons = lessonsByTrack[selected.id] ?? [];
+  const completedCount = lessons.filter((_, index) => missionIsComplete(selected, index, completed)).length;
+  const missingIndex = lessons.findIndex((_, index) => !missionIsComplete(selected, index, completed));
+  const firstIncomplete = missingIndex === -1 ? Math.max(0, lessons.length - 1) : missingIndex;
+  const selectedLevel = successLevels.findIndex((level) => level.trackIds.includes(selected.id));
+  const [expandedLevel, setExpandedLevel] = useState(selectedLevel >= 0 ? selectedLevel : 0);
+  const [activeMissionIndex, setActiveMissionIndex] = useState<number | null>(startImmediately ? firstIncomplete : null);
+  const [celebrating, setCelebrating] = useState(false);
+
+  const openMission = (index: number) => {
+    setActiveMissionIndex(index);
+    resetPagePosition();
+  };
+
+  const startOutcome = (track: Track) => {
+    if (track.id !== selected.id) {
+      launchTrack(track.id);
+      return;
+    }
+    const trackLessons = lessonsByTrack[track.id] ?? [];
+    const missing = trackLessons.findIndex((_, index) => !missionIsComplete(track, index, completed));
+    openMission(missing === -1 ? Math.max(0, trackLessons.length - 1) : missing);
+  };
+
+  const finishPath = () => {
+    setActiveMissionIndex(null);
+    setCelebrating(true);
+    resetPagePosition();
+  };
+
+  if (celebrating) {
+    return (
+      <MissionCompleteView
+        track={selected}
+        lessonCount={lessons.length}
+        nextTrack={tracks[(selectedIndex + 1) % tracks.length]}
+        onReview={() => setCelebrating(false)}
+        onNext={() => launchTrack(tracks[(selectedIndex + 1) % tracks.length].id)}
+        onKnowledgeCheck={onKnowledgeCheck}
+      />
+    );
+  }
+
+  if (activeMissionIndex !== null && lessons[activeMissionIndex]) {
+    return (
+      <LessonWorkspace
+        key={`${selected.id}:${activeMissionIndex}`}
+        track={selected}
+        lessons={lessons}
+        lessonIndex={activeMissionIndex}
+        completed={completed}
+        toggleStep={toggleStep}
+        onBack={() => { setActiveMissionIndex(null); resetPagePosition(); }}
+        onSelectLesson={openMission}
+        onMissionComplete={finishPath}
+      />
+    );
+  }
+
+  const activeLevel = successLevels[expandedLevel];
+  const activeTracks = activeLevel.trackIds
+    .map((id) => tracks.find((track) => track.id === id))
+    .filter((track): track is Track => Boolean(track));
+
+  return (
+    <div className="page success-roadmap-page">
+      <header className="success-roadmap-head">
+        <div>
+          <span className="section-kicker"><Zap /> LIVE HUB SUCCESS PATH</span>
+          <h1>From zero to a working<br /><span>Voice AI deployment.</span></h1>
+          <p>Do not learn the whole platform. Start with the working result you need today; the next decision appears only when it matters.</p>
+        </div>
+        <aside>
+          <span>YOUR FASTEST FIRST WIN</span>
+          <strong>A real caller reaches an AI</strong>
+          <small>About 35 minutes, plus number provisioning</small>
+          <Button onClick={() => startOutcome(tracks.find((track) => track.id === "voice-agent")!)}>Build the first call <ArrowRight /></Button>
+        </aside>
+      </header>
+
+      <section className="operating-model" aria-label="The Live Hub operating model">
+        <div className="operating-model-title"><small>THE WHOLE PLATFORM IN ONE LINE</small><strong>Every successful Live Hub experience follows this pattern.</strong></div>
+        <div className="operating-model-flow">
+          {[
+            ["01", "Origin", "Something enters"],
+            ["02", "Route", "Live Hub decides"],
+            ["03", "Destination", "Something handles it"],
+            ["04", "Proof", "Evidence shows what happened"],
+          ].map(([number, title, detail], index) => (
+            <div key={title} className="operating-node">
+              <span>{number}</span><strong>{title}</strong><small>{detail}</small>
+              {index < 3 && <ArrowRight />}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="success-levels">
+        <div className="level-rail" role="tablist" aria-label="Go-live levels">
+          <div className="level-rail-title"><span>GO-LIVE JOURNEY</span><strong>Start where you are.</strong></div>
+          {successLevels.map((level, index) => {
+            const levelTracks = level.trackIds.map((id) => tracks.find((track) => track.id === id)).filter((track): track is Track => Boolean(track));
+            const done = levelTracks.length > 0 && levelTracks.every((track) => track.steps.every((_, stepIndex) => missionIsComplete(track, stepIndex, completed)));
+            return (
+              <Button key={level.number} variant="ghost" role="tab" aria-selected={expandedLevel === index} className={expandedLevel === index ? "level-button active" : "level-button"} onClick={() => setExpandedLevel(index)}>
+                <span className={done ? "level-number done" : "level-number"}>{done ? <Check /> : level.number}</span>
+                <span><small>{done ? "OUTCOME ACHIEVED" : `LEVEL ${level.number}`}</small><strong>{level.title}</strong></span>
+                <ChevronRight />
+              </Button>
+            );
+          })}
+        </div>
+
+        <div className="level-focus" role="tabpanel">
+          <div className="level-focus-head">
+            <span>LEVEL {activeLevel.number}</span>
+            <h2>{activeLevel.title}</h2>
+            <p>{activeLevel.promise}</p>
+          </div>
+          <div className="level-question"><CircleHelp /><span><small>THE ONLY QUESTION FOR THIS LEVEL</small><strong>{activeLevel.question}</strong></span></div>
+
+          <div className="level-paths">
+            {activeTracks.map((track) => {
+              const Icon = track.icon;
+              const done = track.steps.filter((_, index) => missionIsComplete(track, index, completed)).length;
+              const percentage = track.steps.length ? Math.round((done / track.steps.length) * 100) : 0;
+              return (
+                <article key={track.id} className="level-path">
+                  <div className="level-path-top">
+                    <span className={`level-path-icon ${track.color}`}><Icon /></span>
+                    <span><small>{done ? `${percentage}% COMPLETE` : "WORKING OUTCOME"}</small><h3>{track.title}</h3></span>
+                  </div>
+                  <p>{track.outcome}</p>
+                  <div className="mini-result-flow" aria-label={`Result flow for ${track.title}`}>
+                    <span>Origin</span><ArrowRight /><span>Route</span><ArrowRight /><span>Result</span><ArrowRight /><span>Proof</span>
+                  </div>
+                  <div className="level-path-action">
+                    <span><Clock3 /> {track.time}</span>
+                    <Button onClick={() => startOutcome(track)}>{done ? "Continue" : "Start this outcome"} <ArrowRight /></Button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <footer className="level-focus-footer">
+            <Lightbulb />
+            <p>Technical background, optional settings, and edge cases stay in <strong>Expert Reference</strong> until a mission needs them.</p>
+          </footer>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function MissionCompleteView({
   track,
   lessonCount,
@@ -1313,22 +1529,22 @@ function MissionCompleteView({
           <img src="livehub-brand-wave.webp" alt="" />
         </div>
         <div className="mission-complete-copy">
-          <span className="completion-kicker"><Award /> CERTIFICATION PATH COMPLETE</span>
-          <h1>{track.reward}<br />unlocked.</h1>
+          <span className="completion-kicker"><Award /> WORKING OUTCOME ACHIEVED</span>
+          <h1>You made it<br />work.</h1>
           <p>
-            You achieved <strong>{track.title}</strong>. You did not just read the steps—you completed the challenge and verified the result with evidence.
+            <strong>{track.outcome}</strong> You did not just read about Live Hub—you produced and verified a real result.
           </p>
           <div className="completion-proof">
             <span><CheckCircle2 /><strong>{lessonCount}/{lessonCount}</strong><small>missions completed</small></span>
-            <span><Award /><strong>1</strong><small>path badge earned</small></span>
+            <span><Zap /><strong>1</strong><small>working outcome</small></span>
             <span><Activity /><strong>✓</strong><small>evidence verified</small></span>
           </div>
           <div className="completion-actions">
-            <Button size="lg" onClick={onKnowledgeCheck}>Take certification checkpoint <ArrowRight /></Button>
-            <Button size="lg" variant="outline" onClick={onNext}>Next: {nextTrack.title}</Button>
+            <Button size="lg" onClick={onNext}>Continue toward production <ArrowRight /></Button>
+            <Button size="lg" variant="outline" onClick={onKnowledgeCheck}>Optional knowledge checkpoint</Button>
             <Button variant="ghost" onClick={onReview}>Review this path</Button>
           </div>
-          <small className="completion-saved"><Check /> {track.reward} badge saved on this device</small>
+          <small className="completion-saved"><Check /> Progress and evidence saved on this device · Next: {nextTrack.title}</small>
         </div>
       </section>
     </div>
@@ -1361,6 +1577,9 @@ function LessonWorkspace({
   const [speaking, setSpeaking] = useState(false);
   const [verifiedCriteria, setVerifiedCriteria] = useState<number[]>(done ? lesson.success.map((_, index) => index) : []);
   const [evidenceNote, setEvidenceNote] = useState("");
+  const [actionIndex, setActionIndex] = useState(done ? Math.max(0, lesson.actions.length - 1) : 0);
+  const [furthestActionIndex, setFurthestActionIndex] = useState(done ? Math.max(0, lesson.actions.length - 1) : 0);
+  const challengeReady = done || furthestActionIndex === Math.max(0, lesson.actions.length - 1);
   const allEvidenceVerified = verifiedCriteria.length === lesson.success.length;
 
   useEffect(() => {
@@ -1406,16 +1625,20 @@ function LessonWorkspace({
   };
 
   const toggleEvidence = (index: number) => {
+    if (!challengeReady) return;
     setVerifiedCriteria((current) => current.includes(index)
       ? current.filter((item) => item !== index)
       : [...current, index]);
   };
 
+  const resultFlow = lesson.architecture ?? ["Origin", "Live Hub", "Destination", "Proof"];
+  const activeAction = lesson.actions[actionIndex];
+
   return (
     <div className="page lesson-page">
       <div className="lesson-topline">
         <Button variant="ghost" className="lesson-back" onClick={onBack}>
-          <ArrowLeft /> Back to certification path
+          <ArrowLeft /> Back to go-live journey
         </Button>
         <div className="lesson-progress-summary">
           <span>{completedInTrack}/{lessons.length} missions complete</span>
@@ -1426,9 +1649,9 @@ function LessonWorkspace({
       <div className="lesson-layout">
         <aside className="lesson-outline">
           <div className="lesson-outline-head">
-            <span>CERTIFICATION PATH</span>
+            <span>WORKING OUTCOME</span>
             <h2>{track.title}</h2>
-            <p>{track.time} · {lessons.length} outcome missions</p>
+            <p>{track.time} · {lessons.length} focused missions</p>
           </div>
           <div className="lesson-outline-list">
             {lessons.map((item, index) => {
@@ -1466,7 +1689,16 @@ function LessonWorkspace({
               <span><Clock3 /> {lesson.duration}</span>
             </div>
             <h1>{lesson.title}</h1>
-            <p>{lesson.objective}</p>
+            <section className="mission-result-first" aria-label="Working result for this mission">
+              <div className="mission-result-label"><span>WORKING RESULT</span><strong>Build this, then prove it.</strong></div>
+              <div className="mission-result-flow">
+                {resultFlow.map((part, index) => (
+                  <span key={`${part}-${index}`}><strong>{part}</strong>{index < resultFlow.length - 1 && <ArrowRight />}</span>
+                ))}
+              </div>
+              <div className="mission-result-proof"><CheckCircle2 /><span><small>SUCCESS LOOKS LIKE</small><strong>{lesson.success[0]}</strong></span></div>
+            </section>
+            <p className="mission-objective">{lesson.objective}</p>
             <div className="lesson-header-actions">
               <Button variant="outline" onClick={toggleListening} className={speaking ? "listen-button active" : "listen-button"}>
                 {speaking ? <Square /> : <Volume2 />}
@@ -1482,10 +1714,9 @@ function LessonWorkspace({
             </details>
           </header>
 
-          <section className="mission-brief">
-            <div><span>YOUR SCENARIO</span><p>{track.scenario}</p></div>
-            <div><span>WHY THIS MATTERS</span><p>{track.outcome}</p></div>
-            <div><span>MISSION</span><p>{lesson.objective}</p></div>
+          <section className="mission-story">
+            <div><span>THE STORY</span><p>{track.scenario}</p></div>
+            <div><span>WHAT YOU WILL HAVE</span><strong>{track.outcome}</strong></div>
           </section>
 
           <section className="click-path" aria-label="Live Hub navigation path">
@@ -1516,53 +1747,53 @@ function LessonWorkspace({
             </section>
           )}
 
-          {lesson.architecture && (
-            <section className="lesson-architecture" aria-label="Architecture for this mission">
-              <span>VISUAL EXPLANATION · WHAT CONNECTS TO WHAT</span>
-              <div>
-                {lesson.architecture.map((part, index) => (
-                  <span key={part}><strong>{part}</strong>{index < lesson.architecture!.length - 1 && <ArrowRight />}</span>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section className="lesson-section before-section">
-            <div className="lesson-section-title">
-              <ListChecks />
-              <div><span>PREPARE</span><h2>Get ready for the challenge</h2></div>
-            </div>
+          <details className="mission-prep">
+            <summary><ListChecks /><span><strong>Before you start</strong><small>{lesson.before.length} things to have ready</small></span><ChevronRight /></summary>
             <div className="before-grid">
               {lesson.before.map((item) => <div key={item}><Check /> {item}</div>)}
             </div>
-          </section>
-
-          {lesson.skipForNow && (
-            <section className="skip-for-now">
-              <Lightbulb />
-              <div>
-                <strong>Ignore these for now</strong>
-                <p>{lesson.skipForNow.join(" · ")}</p>
+            {lesson.skipForNow && (
+              <div className="skip-for-now">
+                <Lightbulb />
+                <div><strong>Ignore these for now</strong><p>{lesson.skipForNow.join(" · ")}</p></div>
               </div>
-            </section>
-          )}
+            )}
+          </details>
 
-          <section className="lesson-section actions-section">
+          <section className="lesson-section actions-section challenge-stage">
             <div className="lesson-section-title">
               <Play />
-              <div><span>DO · HANDS-ON CHALLENGE</span><h2>Make the outcome happen</h2></div>
+              <div><span>DO NOW · HANDS-ON</span><h2>One action at a time</h2></div>
             </div>
-            <div className="action-list">
-              {lesson.actions.map((action, index) => (
-                <div className="action-row" key={`${action.title}-${index}`}>
-                  <span className="action-number">{String(index + 1).padStart(2, "0")}</span>
-                  <div className="action-copy">
-                    <h3>{action.title}</h3>
-                    <p>{action.instruction}</p>
-                    {action.note && <div className="action-note"><Lightbulb /> {action.note}</div>}
-                  </div>
-                </div>
+            <div className="action-stepper" aria-label={`Action ${actionIndex + 1} of ${lesson.actions.length}`}>
+              {lesson.actions.map((_, index) => (
+                <Button key={index} variant="ghost" className={index === actionIndex ? "active" : index < furthestActionIndex ? "passed" : ""} disabled={index > furthestActionIndex} onClick={() => setActionIndex(index)} aria-label={`Show action ${index + 1}`}>
+                  {index < furthestActionIndex ? <Check /> : index + 1}
+                </Button>
               ))}
+            </div>
+            {activeAction && (
+              <article className="single-action">
+                <span className="action-number">{String(actionIndex + 1).padStart(2, "0")}</span>
+                <div className="action-copy">
+                  <small>ACTION {actionIndex + 1} OF {lesson.actions.length}</small>
+                  <h3>{activeAction.title}</h3>
+                  <p>{activeAction.instruction}</p>
+                  {activeAction.note && <div className="action-note"><Lightbulb /> {activeAction.note}</div>}
+                </div>
+              </article>
+            )}
+            <div className="challenge-controls">
+              <Button variant="outline" disabled={actionIndex === 0} onClick={() => setActionIndex((current) => Math.max(0, current - 1))}><ArrowLeft /> Previous</Button>
+              {actionIndex < lesson.actions.length - 1 ? (
+                <Button onClick={() => {
+                  const next = Math.min(lesson.actions.length - 1, actionIndex + 1);
+                  setActionIndex(next);
+                  setFurthestActionIndex((current) => Math.max(current, next));
+                }}>I did this · next action <ArrowRight /></Button>
+              ) : (
+                <Button onClick={() => document.querySelector(".evidence-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Open the success check <CheckCircle2 /></Button>
+              )}
             </div>
             {lesson.commonMistake && (
               <div className="common-mistake"><AlertTriangle /><div><strong>Common mistake</strong><p>{lesson.commonMistake}</p></div></div>
@@ -1598,18 +1829,18 @@ function LessonWorkspace({
             </details>
           )}
 
-          <section className="lesson-section evidence-section">
+          <section className={challengeReady ? "lesson-section evidence-section" : "lesson-section evidence-section locked"}>
             <div className="lesson-section-title">
               <CircleCheckBig />
               <div><span>VERIFY · EVIDENCE CHECKPOINT</span><h2>Prove the mission worked</h2></div>
             </div>
-            <p className="evidence-intro">Check only what you can see in Live Hub. Every criterion is required before this mission is complete.</p>
+            <p className="evidence-intro">{challengeReady ? "Check only what you can see in Live Hub. Every criterion is required before this mission is complete." : "Finish the hands-on actions above. Your success check unlocks on the final action."}</p>
             <div className="evidence-checklist">
               {lesson.success.map((item, index) => {
                 const checked = verifiedCriteria.includes(index);
                 return (
                   <label key={item} className={checked ? "evidence-item checked" : "evidence-item"}>
-                    <Checkbox checked={checked} onCheckedChange={() => toggleEvidence(index)} aria-label={item} />
+                    <Checkbox checked={checked} disabled={!challengeReady} onCheckedChange={() => toggleEvidence(index)} aria-label={item} />
                     <span><small>EVIDENCE {String(index + 1).padStart(2, "0")}</small><strong>{item}</strong></span>
                   </label>
                 );
@@ -1621,8 +1852,8 @@ function LessonWorkspace({
               <small>Keep sensitive data and credentials out of this field. This note is temporary and is not submitted.</small>
             </div>
             <div className={allEvidenceVerified ? "evidence-status ready" : "evidence-status"}>
-              {allEvidenceVerified ? <CheckCircle2 /> : <CircleHelp />}
-              <span><strong>{allEvidenceVerified ? "Checkpoint passed" : `${verifiedCriteria.length} of ${lesson.success.length} verified`}</strong><small>{allEvidenceVerified ? "You can complete this mission." : "Finish the real task, then confirm each result."}</small></span>
+              {allEvidenceVerified ? <CheckCircle2 /> : challengeReady ? <CircleHelp /> : <LockKeyhole />}
+              <span><strong>{allEvidenceVerified ? "Success proved" : challengeReady ? `${verifiedCriteria.length} of ${lesson.success.length} verified` : "Success check locked"}</strong><small>{allEvidenceVerified ? "You can complete this mission." : challengeReady ? "Confirm only the result you can see." : `Complete action ${lesson.actions.length} to unlock it.`}</small></span>
             </div>
           </section>
 
@@ -1641,7 +1872,7 @@ function LessonWorkspace({
           <section className="next-challenge">
             <span>NEXT CHALLENGE</span>
             <div>
-              <strong>{lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].title : `Earn the ${track.reward} badge`}</strong>
+              <strong>{lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].title : "Put this working outcome to use"}</strong>
               <p>{lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1].objective : `Complete this final evidence checkpoint to finish ${track.title}.`}</p>
             </div>
             <ArrowRight />
@@ -1652,11 +1883,11 @@ function LessonWorkspace({
               <span>{done || allEvidenceVerified ? <CheckCircle2 /> : <CircleHelp />}</span>
               <div>
                 <strong>{done ? "Mission completed" : allEvidenceVerified ? "Evidence confirmed" : "Complete the evidence checkpoint"}</strong>
-                <p>{done ? "You can review it anytime." : allEvidenceVerified ? "Your next challenge is ready." : "This is an achievement, not a reading checkbox."}</p>
+                <p>{done ? "You can review it anytime." : allEvidenceVerified ? "Your next mission is ready." : "Completion means visible proof, not reading."}</p>
               </div>
             </div>
             <Button size="lg" className="primary-cta" disabled={!done && !allEvidenceVerified} onClick={completeAndContinue}>
-              {lessonIndex === lessons.length - 1 ? "Complete path" : done ? "Next mission" : "Complete mission & continue"}
+              {lessonIndex === lessons.length - 1 ? "Confirm working outcome" : done ? "Next mission" : "Complete mission & continue"}
               <ArrowRight />
             </Button>
           </footer>
