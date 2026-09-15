@@ -5,15 +5,17 @@ An outcome-first learning and troubleshooting experience for AudioCodes Live Hub
 ## What is included
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
-- Three real starting paths: launch an AI Agent, connect SIP plus a Live Hub number, or connect Microsoft Teams plus SIP
+- Three primary outcome paths: complete a first AI call, bring your own SIP, or connect Microsoft Teams
+- Five focused paths for a real phone number, intelligent routing, production AI Agents, production monitoring, and live-traffic troubleshooting
 - A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
-- A product-launch-style homepage with one featured AI Agent path, larger type, and fewer choices at once
-- A working lightweight Academy Guide that routes natural-language questions to the shortest verified course, while preserving a stable Intercom integration slot
-- A real mission-completion achievement screen with next-course and knowledge-check actions
-- Six guided missions with exact portal paths, architecture maps, numbered actions, common mistakes, success checks, official screenshots, video, and browser-based narration
-- A scored 12-question operational bootcamp knowledge check with explanations and official documentation links
+- A calm, product-launch-style homepage that asks learners to choose one real win instead of browsing product categories
+- A working lightweight Academy Guide that routes natural-language questions to the shortest verified certification path, while preserving a stable Intercom integration slot
+- Mission stories, hands-on challenges, required evidence checkpoints, cross-path credit, earned badges, and a certification destination
+- Every mission follows Why → Visual → Do → Verify → Troubleshoot → Next, with exact portal paths, official screenshots, and optional video
+- Short browser-based coaching summaries that prepare learners for action instead of narrating the full text
+- A scored 12-question certification checkpoint with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
-- Focused paths for routing, account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
+- Supporting mission content for account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
 - A centralized official-TechDocs link map, checked against the supplied TechDocs menu, used by every lesson and library card
 - Support guidance covering documentation, chat, AI Assistant, ticket severity, transcript/log sharing, recordings, and retention
@@ -81,7 +83,7 @@ The project keeps its existing Sites/Vinext configuration and adds a separate st
 ## Main files
 
 - `app/page.tsx` - application navigation and interactive views
-- `app/lesson-data.ts` - detailed lessons for every guided mission
+- `app/lesson-data.ts` - verified challenge and evidence content for every mission
 - `app/quiz-data.ts` - customer-facing bootcamp questions, answers, explanations, and source links
 - `app/techdocs.ts` - centralized official documentation destinations
 - `app/troubleshooting-data.json` - 100 structured troubleshooting entries
