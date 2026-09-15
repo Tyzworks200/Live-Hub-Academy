@@ -39,10 +39,19 @@ test("turns the supplied SIP training into actionable checks", () => {
   assert.match(lessonSource, /Teams-to-SIP and SIP-to-Teams need separate rules/);
 });
 
-test("home keeps a stable integration slot for the future Academy assistant", () => {
+test("home provides a useful guide and keeps a stable Intercom integration slot", () => {
   assert.match(pageSource, /id="livehub-academy-assistant"/);
   assert.match(pageSource, /data-integration-slot="intercom"/);
-  assert.match(pageSource, /no assistant is connected yet/);
+  assert.match(pageSource, /function guideLearner/);
+  assert.match(pageSource, /ACADEMY GUIDE · READY/);
+  assert.doesNotMatch(pageSource, /AI Assistant coming soon/);
+});
+
+test("finishing the last lesson creates a mission achievement moment", () => {
+  assert.match(pageSource, /function MissionCompleteView/);
+  assert.match(pageSource, /MISSION COMPLETE/);
+  assert.match(pageSource, /Test what you learned/);
+  assert.match(pageSource, /onMissionComplete\(\)/);
 });
 
 test("bootcamp knowledge check links explanations to official TechDocs", () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -148,6 +148,76 @@ const tracks: Track[] = [
     phases: ["CAPTURE", "READ RESULT", "FIND LAYER", "RETEST", "ESCALATE"],
   },
 ];
+
+type AcademyGuideResult = {
+  eyebrow: string;
+  title: string;
+  answer: string;
+  trackId: string;
+  action: string;
+};
+
+function guideLearner(question: string): AcademyGuideResult {
+  const prompt = question.trim().toLowerCase();
+
+  if (/fail|error|debug|disconnect|alarm|log|ladder|not work|troubleshoot/.test(prompt)) {
+    return {
+      eyebrow: "WHEN SOMETHING FAILED",
+      title: "Start with the exact call—not a guess.",
+      answer: "Open the Diagnose a Failed Call mission. It takes you from Call History to the first failing layer, then helps you collect a support-ready evidence pack.",
+      trackId: "diagnose",
+      action: "Open diagnosis mission",
+    };
+  }
+
+  if (/team|tenant|direct routing/.test(prompt)) {
+    return {
+      eyebrow: "MICROSOFT TEAMS PATH",
+      title: "Prepare Teams, prove SIP, then route both ways.",
+      answer: "Use the Teams + SIP course. It keeps tenant activation, number assignment, SIP validation, and the two required routing directions in the correct order.",
+      trackId: "teams-sip",
+      action: "Open Teams + SIP course",
+    };
+  }
+
+  if (/sip|trunk|contact center|provider|fqdn|registration|keep alive/.test(prompt)) {
+    return {
+      eyebrow: "SIP PATH",
+      title: "Choose listed or Generic SIP before configuring fields.",
+      answer: "Use the SIP + Live Hub Number course. It gathers provider details first, explains the Generic SIP choice, proves the connection, then adds the number and route.",
+      trackId: "sip-trunk",
+      action: "Open SIP course",
+    };
+  }
+
+  if (/route|routing|origin|destination|called number|calling number/.test(prompt)) {
+    return {
+      eyebrow: "LIVE HUB CORE",
+      title: "Routing joins one ready origin to one destination.",
+      answer: "Open Route and Test a Call. Start with a basic rule and a real test; add recording, transfer, or other services only after the baseline call works.",
+      trackId: "routing",
+      action: "Open routing mission",
+    };
+  }
+
+  if (/bill|usage|balance|user|access|iam|record|transcript|monitor/.test(prompt)) {
+    return {
+      eyebrow: "OPERATIONS PATH",
+      title: "Use one mission for day-two operations.",
+      answer: "Open Monitor and Operate Live Hub for dashboard signals, alarms, evidence, billing, transcripts, recordings, and access control.",
+      trackId: "operate",
+      action: "Open operations mission",
+    };
+  }
+
+  return {
+    eyebrow: "RECOMMENDED FIRST WIN",
+    title: "Launch one small AI Agent by phone.",
+    answer: "This is the promoted starting path: build a focused native agent, prove it in chat and voice, add a number, route it, and inspect the first real call.",
+    trackId: "voice-agent",
+    action: "Open AI Agent course",
+  };
+}
 
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "home", label: "Academy home", icon: Sparkles },
@@ -422,6 +492,7 @@ export default function Home() {
             selectTrack={selectJourneyTrack}
             completed={completed}
             toggleStep={toggleStep}
+            onKnowledgeCheck={() => goToView("quiz")}
           />
         )}
         {view === "troubleshooting" && <TroubleshootingView goToDiagnosis={() => goToTrack("diagnose")} />}
@@ -443,24 +514,50 @@ function HomeView({
   goToJourneys: () => void;
 }) {
   const [courseQuery, setCourseQuery] = useState("");
+  const [assistantQuery, setAssistantQuery] = useState("");
+  const [assistantPrompt, setAssistantPrompt] = useState("");
   const normalizedQuery = courseQuery.trim().toLowerCase();
   const matchingTracks = normalizedQuery
     ? tracks.filter((track) => `${track.title} ${track.description} ${track.level}`.toLowerCase().includes(normalizedQuery))
     : tracks.slice(0, 3);
+  const assistantResult = assistantPrompt ? guideLearner(assistantPrompt) : null;
+
+  const askAcademy = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!assistantQuery.trim()) return;
+    setAssistantPrompt(assistantQuery);
+  };
+
+  const applyGuidePrompt = (prompt: string) => {
+    setAssistantQuery(prompt);
+    setAssistantPrompt(prompt);
+  };
 
   return (
     <div className="page home-page simplified-home">
-      <section className="academy-welcome">
-        <div>
+      <section className="academy-welcome brand-hero">
+        <div className="brand-hero-copy">
           <span className="section-kicker"><Sparkles /> WELCOME TO THE LIVE HUB ACADEMY</span>
-          <h1>What do you want to make work today?</h1>
+          <h1>Make Voice AI<br /><span>work in the real world.</span></h1>
           <p>
-            Live Hub is AudioCodes&apos; enterprise platform for building Voice AI and connecting it to real voice channels. The Academy turns that platform into short, ordered courses that finish with a working call.
+            Live Hub is AudioCodes&apos; enterprise platform for building Voice AI and connecting it to real voice channels. Here, you learn it through short missions that end with a working call—not another page of theory.
           </p>
+          <div className="brand-hero-actions">
+            <Button size="lg" onClick={() => goToTrack("voice-agent")}>Start the AI Agent course <ArrowRight /></Button>
+            <Button variant="outline" className="welcome-tour-button" onClick={goToOrientation}>
+              <Play /> Take the 3-minute tour
+            </Button>
+          </div>
+          <div className="brand-hero-promise" aria-label="Academy learning promise">
+            <span><CheckCircle2 /> One goal at a time</span>
+            <span><Route /> Routing made visual</span>
+            <span><Activity /> Every mission ends with proof</span>
+          </div>
         </div>
-        <Button variant="outline" className="welcome-tour-button" onClick={goToOrientation}>
-          <Play /> New here? Take the 3-minute tour
-        </Button>
+        <div className="brand-hero-art" aria-hidden="true">
+          <img src="livehub-brand-wave.webp" alt="" />
+          <span className="brand-hero-art-label"><small>VOICE AI · CONNECTIVITY · ORCHESTRATION</small><strong>LIVE HUB</strong></span>
+        </div>
       </section>
 
       <section className="course-search" aria-label="Find a Live Hub course">
@@ -499,21 +596,42 @@ function HomeView({
             </div>
           </article>
 
-          {/* Future Intercom or another Academy AI agent can mount into this stable slot. */}
+          {/* This useful local guide can be replaced by Intercom at the same stable mount point. */}
           <article
             id="livehub-academy-assistant"
             className="assistant-space"
             data-integration-slot="intercom"
           >
-            <span className="assistant-status"><span /> RESERVED ASSISTANT SPACE</span>
+            <span className="assistant-status"><span /> ACADEMY GUIDE · READY</span>
             <div className="assistant-icon"><MessageCircle /></div>
-            <h2>Ask the Live Hub Academy</h2>
-            <p>This space is reserved for your future AI guide. It can answer questions and send learners to the exact course or TechDocs topic.</p>
-            <div className="assistant-input-preview" aria-label="AI Assistant integration placeholder">
-              <span>Ask how to route a call…</span>
-              <Button disabled aria-label="AI Assistant coming soon"><Bot /> Soon</Button>
+            <h2>Tell me what you need to make work.</h2>
+            <p>I&apos;ll point you to the shortest verified Academy path. This guide uses the existing courses today and keeps the same slot ready for Intercom later.</p>
+            <div className="assistant-quick-prompts" aria-label="Common Academy questions">
+              {[
+                "My SIP trunk is disconnected",
+                "I need to route a call",
+                "I want to build an AI Agent",
+              ].map((prompt) => <button key={prompt} onClick={() => applyGuidePrompt(prompt)}>{prompt}</button>)}
             </div>
-            <small>Integration-ready placeholder · no assistant is connected yet</small>
+            <form className="assistant-input-preview" onSubmit={askAcademy}>
+              <Input
+                value={assistantQuery}
+                onChange={(event) => setAssistantQuery(event.target.value)}
+                placeholder="Ask about SIP, routing, calls…"
+                aria-label="Ask the Academy guide"
+              />
+              <Button type="submit" aria-label="Find my Academy path"><Bot /> Guide me</Button>
+            </form>
+            {assistantResult && (
+              <div className="assistant-result" aria-live="polite">
+                <small>{assistantResult.eyebrow}</small>
+                <strong>{assistantResult.title}</strong>
+                <p>{assistantResult.answer}</p>
+                <Button variant="ghost" onClick={() => goToTrack(assistantResult.trackId)}>
+                  {assistantResult.action} <ArrowRight />
+                </Button>
+              </div>
+            )}
           </article>
         </section>
       )}
@@ -755,17 +873,21 @@ function JourneysView({
   selectTrack,
   completed,
   toggleStep,
+  onKnowledgeCheck,
 }: {
   selected: Track;
   selectedIndex: number;
   selectTrack: (track: Track) => void;
   completed: string[];
   toggleStep: (key: string) => void;
+  onKnowledgeCheck: () => void;
 }) {
   const Icon = selected.icon;
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
+  const [celebrating, setCelebrating] = useState(false);
   const lessons = lessonsByTrack[selected.id] ?? [];
   const missionComplete = selected.steps.filter((_, index) => completed.includes(`${selected.id}:${index}`)).length;
+  const isMissionComplete = missionComplete === selected.steps.length;
 
   const openLesson = (index: number) => {
     setActiveLessonIndex(index);
@@ -777,6 +899,31 @@ function JourneysView({
     resetPagePosition();
   };
 
+  const finishMission = () => {
+    setActiveLessonIndex(null);
+    setCelebrating(true);
+    resetPagePosition();
+  };
+
+  const chooseNextMission = () => {
+    const nextTrack = tracks[(selectedIndex + 1) % tracks.length];
+    setCelebrating(false);
+    selectTrack(nextTrack);
+  };
+
+  if (celebrating) {
+    return (
+      <MissionCompleteView
+        track={selected}
+        lessonCount={lessons.length}
+        nextTrack={tracks[(selectedIndex + 1) % tracks.length]}
+        onReview={() => setCelebrating(false)}
+        onNext={chooseNextMission}
+        onKnowledgeCheck={onKnowledgeCheck}
+      />
+    );
+  }
+
   if (activeLessonIndex !== null && lessons[activeLessonIndex]) {
     return (
       <LessonWorkspace
@@ -787,11 +934,13 @@ function JourneysView({
         toggleStep={toggleStep}
         onBack={backToMission}
         onSelectLesson={openLesson}
+        onMissionComplete={finishMission}
       />
     );
   }
 
-  const firstIncomplete = Math.max(0, selected.steps.findIndex((_, index) => !completed.includes(`${selected.id}:${index}`)));
+  const missingIndex = selected.steps.findIndex((_, index) => !completed.includes(`${selected.id}:${index}`));
+  const firstIncomplete = missingIndex === -1 ? selected.steps.length - 1 : missingIndex;
   return (
     <div className="page journeys-page">
       <div className="journey-header">
@@ -876,19 +1025,63 @@ function JourneysView({
           </div>
           <div className="mission-footer">
             <div>
-              <span>Mission 0{selectedIndex + 1} · {missionComplete}/{selected.steps.length} complete</span>
-              <p>Tap each step as you finish. Progress saves on this device.</p>
+              <span>{isMissionComplete ? "ACHIEVEMENT UNLOCKED" : `Mission 0${selectedIndex + 1} · ${missionComplete}/${selected.steps.length} complete`}</span>
+              <p>{isMissionComplete ? "Your result and progress are saved on this device." : "Open each lesson, complete the action, and prove the success check."}</p>
             </div>
             <Button
               size="lg"
               className="primary-cta"
-              onClick={() => openLesson(firstIncomplete)}
+              onClick={() => isMissionComplete ? setCelebrating(true) : openLesson(firstIncomplete)}
             >
-              {missionComplete ? "Continue mission" : selected.id === "voice-agent" ? "Start step 1" : "Begin mission"} <ArrowRight />
+              {isMissionComplete ? "View achievement" : missionComplete ? "Continue mission" : selected.id === "voice-agent" ? "Start step 1" : "Begin mission"} <ArrowRight />
             </Button>
           </div>
         </section>
       </div>
+    </div>
+  );
+}
+
+function MissionCompleteView({
+  track,
+  lessonCount,
+  nextTrack,
+  onReview,
+  onNext,
+  onKnowledgeCheck,
+}: {
+  track: Track;
+  lessonCount: number;
+  nextTrack: Track;
+  onReview: () => void;
+  onNext: () => void;
+  onKnowledgeCheck: () => void;
+}) {
+  return (
+    <div className="page mission-complete-page">
+      <section className="mission-complete-card">
+        <div className="mission-complete-art" aria-hidden="true">
+          <img src="livehub-brand-wave.webp" alt="" />
+        </div>
+        <div className="mission-complete-copy">
+          <span className="completion-kicker"><Award /> MISSION COMPLETE</span>
+          <h1>You made it work.</h1>
+          <p>
+            You completed <strong>{track.title}</strong>. More importantly, you followed the full chain and checked the result instead of stopping at configuration.
+          </p>
+          <div className="completion-proof">
+            <span><CheckCircle2 /><strong>{lessonCount}/{lessonCount}</strong><small>lessons completed</small></span>
+            <span><Route /><strong>1</strong><small>end-to-end path</small></span>
+            <span><Activity /><strong>✓</strong><small>result verified</small></span>
+          </div>
+          <div className="completion-actions">
+            <Button size="lg" onClick={onKnowledgeCheck}>Test what you learned <ArrowRight /></Button>
+            <Button size="lg" variant="outline" onClick={onNext}>Next: {nextTrack.title}</Button>
+            <Button variant="ghost" onClick={onReview}>Review this mission</Button>
+          </div>
+          <small className="completion-saved"><Check /> Achievement saved on this device</small>
+        </div>
+      </section>
     </div>
   );
 }
@@ -901,6 +1094,7 @@ function LessonWorkspace({
   toggleStep,
   onBack,
   onSelectLesson,
+  onMissionComplete,
 }: {
   track: Track;
   lessons: Lesson[];
@@ -909,6 +1103,7 @@ function LessonWorkspace({
   toggleStep: (key: string) => void;
   onBack: () => void;
   onSelectLesson: (index: number) => void;
+  onMissionComplete: () => void;
 }) {
   const lesson = lessons[lessonIndex];
   const lessonKey = `${track.id}:${lessonIndex}`;
@@ -955,7 +1150,7 @@ function LessonWorkspace({
   const completeAndContinue = () => {
     if (!done) toggleStep(lessonKey);
     if (lessonIndex < lessons.length - 1) onSelectLesson(lessonIndex + 1);
-    else onBack();
+    else onMissionComplete();
   };
 
   return (

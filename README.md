@@ -6,8 +6,10 @@ An outcome-first learning and troubleshooting experience for AudioCodes Live Hub
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
 - Three real starting paths: launch an AI Agent, connect SIP plus a Live Hub number, or connect Microsoft Teams plus SIP
-- A simpler, course-catalog homepage with larger type, one featured AI Agent path, and fewer choices at once
-- A stable homepage integration slot reserved for a future Intercom or other Academy AI assistant
+- A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
+- A product-launch-style homepage with one featured AI Agent path, larger type, and fewer choices at once
+- A working lightweight Academy Guide that routes natural-language questions to the shortest verified course, while preserving a stable Intercom integration slot
+- A real mission-completion achievement screen with next-course and knowledge-check actions
 - Six guided missions with exact portal paths, architecture maps, numbered actions, common mistakes, success checks, official screenshots, video, and browser-based narration
 - A scored 12-question operational bootcamp knowledge check with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
