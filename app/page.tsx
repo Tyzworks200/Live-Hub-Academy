@@ -435,6 +435,7 @@ type SuccessLevel = {
   title: string;
   promise: string;
   question: string;
+  choiceNote: string;
   trackIds: string[];
 };
 
@@ -444,6 +445,7 @@ const successLevels: SuccessLevel[] = [
     title: "First successful call",
     promise: "A real phone call reaches an AI and receives the correct answer.",
     question: "Can one customer call one AI receptionist successfully?",
+    choiceNote: "New to Live Hub? Start with First Successful AI Call. Choose Connect an Existing Bot only when you already have a working bot outside Live Hub. Complete one route—not both.",
     trackIds: ["voice-agent", "bot-connect"],
   },
   {
@@ -451,6 +453,7 @@ const successLevels: SuccessLevel[] = [
     title: "Connect my telephony",
     promise: "Your existing voice environment reaches Live Hub.",
     question: "Which real voice channel must connect next?",
+    choiceNote: "Pick the one channel your deployment needs now. The other channels remain available later and are not required to complete this level.",
     trackIds: ["voice-channel", "phone-number", "sip-trunk", "teams-sip", "click-to-call", "whatsapp", "speech-provider"],
   },
   {
@@ -458,6 +461,7 @@ const successLevels: SuccessLevel[] = [
     title: "Route intelligently",
     promise: "The right call reaches the right destination.",
     question: "What should happen when this specific call arrives?",
+    choiceNote: "Start with the routing outcome blocking your launch. Add transfer, translation, outbound, or campaign behavior only when the basic call already works.",
     trackIds: ["routing", "call-features", "agent-assist", "translation", "outbound", "campaigns"],
   },
   {
@@ -465,6 +469,7 @@ const successLevels: SuccessLevel[] = [
     title: "Operate production",
     promise: "You can see what happened and fix the first failing layer.",
     question: "Can your team explain every important call from evidence?",
+    choiceNote: "Choose Operations for daily visibility, Diagnosis for a failing call, or the API when another system must retrieve the evidence.",
     trackIds: ["operate", "diagnose", "platform-api"],
   },
   {
@@ -472,6 +477,7 @@ const successLevels: SuccessLevel[] = [
     title: "Production readiness",
     promise: "Your AI behavior is grounded, tested, and observable before launch.",
     question: "Can you prove this deployment is safe to put in front of customers?",
+    choiceNote: "Choose the readiness route you own: AI behavior for builders, or account governance for owners and administrators. Production teams may complete both.",
     trackIds: ["agent-builder", "account-admin"],
   },
 ];
@@ -1163,7 +1169,7 @@ function HomeView({
   const [assistantQuery, setAssistantQuery] = useState("");
   const [assistantPrompt, setAssistantPrompt] = useState("");
   const assistantResult = assistantPrompt ? guideLearner(assistantPrompt) : null;
-  const primaryPaths = tracks.slice(0, 3);
+  const alternateStarts = tracks.slice(1, 3);
   const startedPath = tracks.find((track) =>
     track.steps.some((_, index) => missionIsComplete(track, index, completed))
   ) ?? tracks[0];
@@ -1192,13 +1198,6 @@ function HomeView({
             <Button size="lg" onClick={() => goToTrack("voice-agent")}>Make my first AI call <ArrowRight /></Button>
             <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See Live Hub in 3 minutes</Button>
           </div>
-          <div className="academy-method" aria-label="The Live Hub operating model">
-            <span><strong>01</strong><small>ORIGIN</small><em>A real call enters</em></span>
-            <ChevronRight />
-            <span><strong>02</strong><small>ROUTE</small><em>Live Hub decides</em></span>
-            <ChevronRight />
-            <span><strong>03</strong><small>PROOF</small><em>Evidence confirms it</em></span>
-          </div>
         </div>
 
         <aside className="continue-card">
@@ -1219,18 +1218,17 @@ function HomeView({
 
       <section className="path-section start-paths">
         <div className="path-heading">
-          <div><span className="section-kicker">START WITH YOUR REAL-WORLD GOAL</span><h2>Choose one first win.</h2></div>
-          <p>Begin with the result your business needs. Each path ends with a working call and visible evidence.</p>
+          <div><span className="section-kicker">ALREADY HAVE A TELEPHONY START?</span><h2>Choose an alternate entry.</h2></div>
+          <p>The AI call above is the recommended start. Use one of these only when SIP or Teams is already the system you need to connect.</p>
         </div>
         <div className="primary-path-grid">
-          {primaryPaths.map((track, index) => {
+          {alternateStarts.map((track) => {
             const Icon = track.icon;
             const count = track.steps.filter((_, stepIndex) => missionIsComplete(track, stepIndex, completed)).length;
             return (
-              <button key={track.id} className={`outcome-path-card ${index === 0 ? "recommended" : ""}`} onClick={() => goToTrack(track.id)}>
+              <button key={track.id} className="outcome-path-card" onClick={() => goToTrack(track.id)}>
                 <span className={`path-card-icon ${track.color}`}><Icon /></span>
-                <span className="path-card-number">PATH 0{index + 1}</span>
-                {index === 0 && <span className="recommended-pill">BEST FIRST PATH</span>}
+                <span className="alternate-pill">ALTERNATE START</span>
                 <h3>{track.title}</h3>
                 <p>{track.outcome}</p>
                 <span className="path-card-role">FOR · {track.role}</span>
@@ -1404,21 +1402,19 @@ function OrientationView({ goToJourneys }: { goToJourneys: () => void }) {
 
       <section className="orientation-model">
         <div className="section-heading compact">
-          <div><span className="section-kicker">THE ONLY MODEL TO REMEMBER</span><h2>Build → Connect → Route → Test → Observe</h2></div>
-          <p>Every mission tells you which part of this chain you are changing.</p>
+          <div><span className="section-kicker">HOW ONE CALL MOVES · CONCEPT ONLY</span><h2>Origin → Route → Destination → Proof</h2></div>
+          <p>This is the Live Hub mental model—not a course progress tracker.</p>
         </div>
-        <div className="learning-loop">
-          {[
-            ["01", "Build", "Create one agent or connect one bot"],
-            ["02", "Connect", "Give it speech and a voice channel"],
-            ["03", "Route", "Send one origin to one destination"],
-            ["04", "Test", "Make the smallest real call"],
-            ["05", "Observe", "Use Calls and AI Logs as proof"],
-          ].map(([number, title, detail]) => (
-            <article key={number}><span>{number}</span><div><strong>{title}</strong><p>{detail}</p></div></article>
-          ))}
+        <div className="call-concept" aria-label="A call enters from an origin, Live Hub routes it to a destination, and evidence proves the result">
+          <article><small>ORIGIN</small><strong>A call enters</strong><p>A number, SIP trunk, Teams user, browser, or WhatsApp caller.</p></article>
+          <ArrowRight aria-hidden="true" />
+          <article><small>ROUTE</small><strong>Live Hub decides</strong><p>Conditions select the correct destination and optional services.</p></article>
+          <ArrowRight aria-hidden="true" />
+          <article><small>DESTINATION</small><strong>Something answers</strong><p>An AI Agent, connected bot, SIP service, Teams user, or phone number.</p></article>
+          <ArrowRight aria-hidden="true" />
+          <article><small>PROOF</small><strong>Evidence confirms it</strong><p>Call History, transcript, logs, and SIP ladder show what happened.</p></article>
         </div>
-        <p className="advanced-later"><Lightbulb /> Transfers, recordings, translation, Agent Assist, campaigns, headers, and APIs come after this chain works.</p>
+        <p className="call-concept-note"><CircleHelp /> Academy progress appears only as Levels 1–5. This call map appears only here because it explains the product—not your position in the course.</p>
       </section>
 
       <section className="portal-tour">
@@ -1716,6 +1712,12 @@ function JourneysView({
     .map((id) => tracks.find((track) => track.id === id))
     .filter((track): track is Track => Boolean(track));
   const focusedTrack = activeTracks.find((track) => track.id === focusedTrackId) ?? activeTracks[0];
+  const focusedCompleted = focusedTrack
+    ? focusedTrack.steps.filter((_, index) => missionIsComplete(focusedTrack, index, completed)).length
+    : 0;
+  const focusedPercentage = focusedTrack?.steps.length
+    ? Math.round((focusedCompleted / focusedTrack.steps.length) * 100)
+    : 0;
 
   return (
     <div className="page success-roadmap-page">
@@ -1732,23 +1734,6 @@ function JourneysView({
           <Button onClick={() => startOutcome(tracks.find((track) => track.id === "voice-agent")!)}>Build the first call <ArrowRight /></Button>
         </aside>
       </header>
-
-      <section className="operating-model" aria-label="The Live Hub operating model">
-        <div className="operating-model-title"><small>THE WHOLE PLATFORM IN ONE LINE</small><strong>Every successful Live Hub experience follows this pattern.</strong></div>
-        <div className="operating-model-flow">
-          {[
-            ["01", "Origin", "Something enters"],
-            ["02", "Route", "Live Hub decides"],
-            ["03", "Destination", "Something handles it"],
-            ["04", "Proof", "Evidence shows what happened"],
-          ].map(([number, title, detail], index) => (
-            <div key={title} className="operating-node">
-              <span>{number}</span><strong>{title}</strong><small>{detail}</small>
-              {index < 3 && <ArrowRight />}
-            </div>
-          ))}
-        </div>
-      </section>
 
       <section className="success-levels">
         <div className="level-rail" role="tablist" aria-label="Go-live levels">
@@ -1768,7 +1753,7 @@ function JourneysView({
 
         <div className="level-focus" role="tabpanel">
           <div className="level-focus-head">
-            <span>LEVEL {activeLevel.number}</span>
+            <span>LEVEL {activeLevel.number} OF {successLevels.length}</span>
             <h2>{activeLevel.title}</h2>
             <p>{activeLevel.promise}</p>
           </div>
@@ -1776,7 +1761,10 @@ function JourneysView({
 
           {activeTracks.length > 1 && (
             <div className="level-course-picker" aria-label={`Choose an outcome in ${activeLevel.title}`}>
-              <span>CHOOSE ONE OUTCOME</span>
+              <div className="level-choice-explanation">
+                <span>CHOOSE YOUR ROUTE THROUGH THIS LEVEL</span>
+                <p>{activeLevel.choiceNote}</p>
+              </div>
               <div>
                 {activeTracks.map((track) => (
                   <Button key={track.id} variant="outline" className={focusedTrack?.id === track.id ? "active" : ""} onClick={() => setFocusedTrackId(track.id)}>{track.title}</Button>
@@ -1785,30 +1773,34 @@ function JourneysView({
             </div>
           )}
 
-          <div className="level-paths">
-            {focusedTrack && [focusedTrack].map((track) => {
-              const Icon = track.icon;
-              const done = track.steps.filter((_, index) => missionIsComplete(track, index, completed)).length;
-              const percentage = track.steps.length ? Math.round((done / track.steps.length) * 100) : 0;
-              const previewFlow = lessonsByTrack[track.id]?.[0]?.architecture ?? ["Origin", "Route", "Result", "Proof"];
-              return (
-                <article key={track.id} className="level-path">
-                  <div className="level-path-top">
-                    <span className={`level-path-icon ${track.color}`}><Icon /></span>
-                    <span><small>{done ? `${percentage}% COMPLETE` : "WORKING OUTCOME"}</small><h3>{track.title}</h3></span>
+          {focusedTrack && (() => {
+            const Icon = focusedTrack.icon;
+            return (
+              <article className="level-outcome-focus">
+                <header className="level-outcome-head">
+                  <span className={`level-path-icon ${focusedTrack.color}`}><Icon /></span>
+                  <div className="level-outcome-title">
+                    <small>{activeLevel.number === 1 && focusedTrack.id === "voice-agent" ? "RECOMMENDED START" : "SELECTED OUTCOME"}</small>
+                    <h3>{focusedTrack.title}</h3>
+                    <p>{focusedTrack.outcome}</p>
                   </div>
-                  <p>{track.outcome}</p>
-                  <div className="mini-result-flow" aria-label={`Result flow for ${track.title}`}>
-                    {previewFlow.slice(0, 4).map((part, index) => <span key={`${part}-${index}`}><strong>{part}</strong>{index < Math.min(previewFlow.length, 4) - 1 && <ArrowRight />}</span>)}
+                  <div className="level-outcome-progress" aria-label={`${focusedTrack.title} ${focusedPercentage}% complete`}>
+                    <strong>{focusedPercentage}%</strong>
+                    <small>COMPLETE</small>
+                    <Progress value={focusedPercentage} />
                   </div>
-                  <div className="level-path-action">
-                    <span><Clock3 /> {track.time}</span>
-                    <Button onClick={() => startOutcome(track)}>{done ? "Continue" : "Start this outcome"} <ArrowRight /></Button>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                </header>
+                <div className="level-outcome-brief">
+                  <div><span>WHY THIS ROUTE</span><p>{focusedTrack.scenario}</p></div>
+                  <div><span>YOU ARE DONE WHEN</span><p>{focusedTrack.evidence}</p></div>
+                </div>
+                <footer className="level-path-action">
+                  <span><Clock3 /> {focusedTrack.time} · {focusedTrack.steps.length} focused missions</span>
+                  <Button onClick={() => startOutcome(focusedTrack)}>{focusedCompleted ? "Continue this outcome" : "Start this outcome"} <ArrowRight /></Button>
+                </footer>
+              </article>
+            );
+          })()}
 
           <footer className="level-focus-footer">
             <Lightbulb />
@@ -1887,6 +1879,8 @@ function LessonWorkspace({
   const lessonKey = missionProgressKey(track, lessonIndex);
   const done = missionIsComplete(track, lessonIndex, completed);
   const completedInTrack = lessons.filter((_, index) => missionIsComplete(track, index, completed)).length;
+  const currentLevel = successLevels.find((level) => level.trackIds.includes(track.id)) ?? successLevels[0];
+  const trackPercentage = lessons.length ? Math.round((completedInTrack / lessons.length) * 100) : 0;
   const [speaking, setSpeaking] = useState(false);
   const [verifiedCriteria, setVerifiedCriteria] = useState<number[]>(done ? lesson.success.map((_, index) => index) : []);
   const [evidenceNote, setEvidenceNote] = useState("");
@@ -1944,7 +1938,6 @@ function LessonWorkspace({
       : [...current, index]);
   };
 
-  const resultFlow = lesson.architecture ?? ["Origin", "Live Hub", "Destination", "Proof"];
   const activeAction = lesson.actions[actionIndex];
 
   return (
@@ -1953,18 +1946,20 @@ function LessonWorkspace({
         <Button variant="ghost" className="lesson-back" onClick={onBack}>
           <ArrowLeft /> Back to go-live journey
         </Button>
-        <div className="lesson-progress-summary">
-          <span>{completedInTrack}/{lessons.length} missions complete</span>
-          <Progress value={(completedInTrack / lessons.length) * 100} aria-label={`${track.title} progress`} />
+        <div className="lesson-location">
+          <span>LEVEL {currentLevel.number} OF {successLevels.length}</span>
+          <strong>{track.title}</strong>
+          <small>{trackPercentage}% complete · {completedInTrack} of {lessons.length} missions verified</small>
+          <Progress value={trackPercentage} aria-label={`${track.title} ${trackPercentage}% complete`} />
         </div>
       </div>
 
       <div className="lesson-layout">
         <aside className="lesson-outline">
           <div className="lesson-outline-head">
-            <span>WORKING OUTCOME</span>
-            <h2>{track.title}</h2>
-            <p>{track.time} · {lessons.length} focused missions</p>
+            <span>LEVEL {currentLevel.number} · {currentLevel.title}</span>
+            <h2>Mission list</h2>
+            <p>{track.time} · finish these in order</p>
           </div>
           <div className="lesson-outline-list">
             {lessons.map((item, index) => {
@@ -1998,18 +1993,13 @@ function LessonWorkspace({
         <article className="lesson-content">
           <header className="lesson-header">
             <div className="lesson-header-meta">
-              <span>MISSION {lessonIndex + 1} OF {lessons.length}</span>
+              <span>CURRENT MISSION</span>
               <span><Clock3 /> {lesson.duration}</span>
             </div>
             <h1>{lesson.title}</h1>
-            <section className="mission-result-first" aria-label="Working result for this mission">
-              <div className="mission-result-label"><span>WORKING RESULT</span><strong>Build this, then prove it.</strong></div>
-              <div className="mission-result-flow">
-                {resultFlow.map((part, index) => (
-                  <span key={`${part}-${index}`}><strong>{part}</strong>{index < resultFlow.length - 1 && <ArrowRight />}</span>
-                ))}
-              </div>
-              <div className="mission-result-proof"><CheckCircle2 /><span><small>SUCCESS LOOKS LIKE</small><strong>{lesson.success[0]}</strong></span></div>
+            <section className="mission-success-target" aria-label="Success target for this mission">
+              <CheckCircle2 />
+              <div><span>SUCCESS LOOKS LIKE</span><strong>{lesson.success[0]}</strong></div>
             </section>
             <p className="mission-objective">{lesson.objective}</p>
             <div className="lesson-header-actions">
