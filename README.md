@@ -6,7 +6,7 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
 - A five-level go-live journey: first successful call, connect telephony, route intelligently, operate production, and production readiness
-- Eight working-outcome paths covering an AI call, SIP, Microsoft Teams, phone numbers, routing, production AI Agents, monitoring, and troubleshooting
+- Twenty working-outcome courses covering native and external bots, speech providers, every major voice channel, routing, call features, Agent Assist, translation, outbound calling and campaigns, operations, APIs, governance, and troubleshooting
 - A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
 - A calm, product-launch-style homepage that asks customers to choose one real win instead of browsing product categories
 - A working lightweight Academy Guide that routes natural-language questions to the shortest verified outcome, while preserving a stable Intercom integration slot
@@ -18,7 +18,7 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
 - Supporting mission content for account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
 - Searchable troubleshooting book with 100 Live Hub issue patterns, completion-status strings, likely causes, self-service actions, escalation rules, and evidence checklists
-- A centralized official-TechDocs link map, checked against the supplied TechDocs menu, used by every lesson and library card
+- A centralized official-TechDocs link map, checked against the complete Live Hub 2.19.2 manual, used by every mission and reference card
 - Support guidance covering documentation, chat, AI Assistant, ticket severity, transcript/log sharing, recordings, and retention
 - Developer compass for the Live Hub REST API versus Bot and speech provider APIs
 - Device-local progress tracking with no account or database required
@@ -98,4 +98,4 @@ The project keeps its existing Sites/Vinext configuration and adds a separate st
 
 ## Content note
 
-The Academy condenses the supplied Live Hub documentation, legacy manual, support guidance, and Live Hub Log Glossary into task-oriented learning. Official documentation remains the source of truth for release-specific behavior.
+The Academy converts the complete 782-page Live Hub 2.19.2 manual, support guidance, and Live Hub Log Glossary into short, task-oriented customer outcomes. Vendor parameter tables, edge cases, and release-specific detail remain in Expert Reference; official documentation remains the source of truth.

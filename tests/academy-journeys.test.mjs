@@ -4,6 +4,7 @@ import test from "node:test";
 
 const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const lessonSource = await readFile(new URL("../app/lesson-data.ts", import.meta.url), "utf8");
+const supplementalSource = await readFile(new URL("../app/supplemental-lesson-data.ts", import.meta.url), "utf8");
 const docsSource = await readFile(new URL("../app/techdocs.ts", import.meta.url), "utf8");
 const quizSource = await readFile(new URL("../app/quiz-data.ts", import.meta.url), "utf8");
 
@@ -23,6 +24,31 @@ test("frames the Academy as a five-level customer success journey", () => {
   assert.match(pageSource, /Origin/);
   assert.match(pageSource, /Destination/);
   assert.match(pageSource, /Proof/);
+});
+
+test("covers the full 2.19.2 product map as focused outcome courses", () => {
+  for (const track of [
+    "bot-connect",
+    "speech-provider",
+    "click-to-call",
+    "whatsapp",
+    "outbound",
+    "campaigns",
+    "call-features",
+    "platform-api",
+    "account-admin",
+    "agent-assist",
+    "translation",
+  ]) assert.match(pageSource, new RegExp(`id: "${track}"`));
+  assert.match(pageSource, /complete outcome courses/);
+  assert.match(pageSource, /CHOOSE ONE OUTCOME/);
+});
+
+test("keeps current authentication and account rules accurate", () => {
+  assert.match(supplementalSource, /Dialout API.*HTTP Basic/s);
+  assert.match(supplementalSource, /main REST API.*OAuth bearer/s);
+  assert.match(supplementalSource, /does not by itself enable outbound PSTN/s);
+  assert.match(supplementalSource, /seven days for transcripts and thirty days for recordings/);
 });
 
 test("missions require actions and visible evidence instead of reading completion", () => {
