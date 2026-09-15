@@ -6,14 +6,16 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
 - A five-level go-live journey: first successful call, connect telephony, route intelligently, operate production, and production readiness
+- A gold-standard **Route a Real Customer Call** prototype built around real Live Hub 2.19.2 screens, visible hotspots, one move at a time, and Call History proof
 - One progress hierarchy across the experience: Levels 1–5, with the active outcome and completion shown in one place
 - Twenty working-outcome courses covering native and external bots, speech providers, every major voice channel, routing, call features, Agent Assist, translation, outbound calling and campaigns, operations, APIs, governance, and troubleshooting
 - A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
 - A calm, product-launch-style homepage that asks customers to choose one real win instead of browsing product categories
-- A working lightweight Academy Guide that routes natural-language questions to the shortest verified outcome, while preserving a stable Intercom integration slot
+- A working lightweight Academy Guide in the homepage hero that routes natural-language questions to the shortest verified outcome, while preserving a stable Intercom integration slot
 - The Live Hub call model—Origin → Route → Destination → Proof—taught once in orientation as a concept, never reused as a progress tracker
 - Story-first missions that show the working result before explanation, reveal one action at a time, and unlock the success check only at the final action
 - Exact portal paths, official screenshots, optional video, collapsed preparation, and on-demand troubleshooting without a documentation wall
+- Contextual official routing videos for Live Hub-number and external-SIP call paths, placed beside the rule-building action where they are useful
 - Short browser-based coaching summaries that prepare learners for action instead of narrating the full text
 - An optional 12-question production-readiness checkpoint with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
