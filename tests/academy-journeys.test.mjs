@@ -114,6 +114,18 @@ test("home provides a useful guide and keeps a stable Intercom integration slot"
   assert.doesNotMatch(pageSource, /AI Assistant coming soon/);
 });
 
+test("routing is the gold-standard visual product walkthrough", () => {
+  assert.match(pageSource, /function RoutingVisualWorkspace/);
+  assert.match(pageSource, /Route a Real Customer Call/);
+  assert.match(pageSource, /LIVE HUB · REAL PRODUCT SCREEN/);
+  assert.match(pageSource, /routing-rule-builder\.png/);
+  assert.match(pageSource, /call-history-proof\.png/);
+  assert.match(pageSource, /routing-hotspot/);
+  assert.match(pageSource, /S3VdrZ5FadQ/);
+  assert.match(pageSource, /mWC5wFb6hoQ/);
+  assert.match(pageSource, /This changes the example and the exact video—not your progress/);
+});
+
 test("finishing the last mission celebrates a working outcome", () => {
   assert.match(pageSource, /function MissionCompleteView/);
   assert.match(pageSource, /WORKING OUTCOME ACHIEVED/);

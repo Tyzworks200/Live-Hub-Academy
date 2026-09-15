@@ -630,8 +630,8 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
   routing: [
     {
       id: "routing-model",
-      title: "Understand origin, condition, and destination",
-      objective: "Read a routing rule as one simple sentence before creating it.",
+      title: "Frame the customer call",
+      objective: "Decide which exact call should move, where it starts, and where it must land.",
       duration: "3 min",
       path: ["Routing", "Routing Rules"],
       architecture: ["Origin", "Match condition", "Route To", "Optional services"],
@@ -652,8 +652,8 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     },
     {
       id: "routing-create",
-      title: "Create the smallest working rule",
-      objective: "Build one exact rule that sends one test call to one destination.",
+      title: "Build the route in Live Hub",
+      objective: "Create one precise rule that sends the test call to one destination.",
       duration: "5 min",
       path: ["Routing", "Add new routing rule"],
       architecture: ["Exact test call", "Matching rule", "One destination"],
@@ -675,11 +675,13 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       docUrl: TECH_DOCS.routing,
       image: images.routeCreate,
       imageAlt: "Create a new Live Hub routing rule",
+      videoId: "S3VdrZ5FadQ",
+      videoTitle: "Inbound Calls to a Bot Using a Live Hub Number",
     },
     {
       id: "routing-test",
-      title: "Test the route before adding features",
-      objective: "Prove the exact call reaches the correct destination with a clean baseline.",
+      title: "Call it and prove the result",
+      objective: "Make the exact customer call and prove that the intended destination received it.",
       duration: "4 min",
       path: ["Place test call", "Calls", "Call History"],
       architecture: ["Caller", "Origin", "Routing rule", "Destination", "Call History"],
@@ -702,7 +704,7 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
     },
     {
       id: "routing-add-services",
-      title: "Add one optional service safely",
+      title: "Add one production option",
       objective: "Extend a proven rule without losing the ability to identify what changed.",
       duration: "5 min",
       path: ["Routing", "Edit rule", "Services or Number Customization"],
