@@ -14,6 +14,8 @@ export const TECH_DOCS = {
   accounts: `${TECHDOCS_BASE}/Content/LiveHub/Account%20and%20Sign%20Up.htm`,
   dashboard: `${TECHDOCS_BASE}/Content/LiveHub/Live%20Hub%20Dashboard.htm`,
   quickSetupWizard: `${TECHDOCS_BASE}/#LiveHub/Configuration%20Wizard.htm?TocPath=_____24`,
+  botConnections: `${TECHDOCS_BASE}/Content/LiveHub/Managing%20your%20Bot.htm`,
+  speechProviders: `${TECHDOCS_BASE}/Content/VAIG_Combined/Managing%20Speech%20Services.htm`,
   aiAgent: `${TECHDOCS_BASE}/#AI-Agents/Add%20an%20AI%20Agent.htm?TocPath=AI%2520Agents%257CAgents%257C_____1`,
   aiAssistant: `${TECHDOCS_BASE}/#AI-Agents/AI%20Assistant.htm?TocPath=AI%2520Agents%257C_____24`,
   aiTools: `${TECHDOCS_BASE}/#AI-Agents/Tools.htm?TocPath=AI%2520Agents%257CTools%257C_____0`,

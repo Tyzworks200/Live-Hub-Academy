@@ -47,7 +47,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { lessonsByTrack, type Lesson } from "./lesson-data";
+import { lessonsByTrack as coreLessonsByTrack, type Lesson } from "./lesson-data";
+import { supplementalLessonsByTrack } from "./supplemental-lesson-data";
 import { knowledgeQuestions } from "./quiz-data";
 import { TECH_DOCS } from "./techdocs";
 import troubleshootingData from "./troubleshooting-data.json";
@@ -70,6 +71,11 @@ type Track = {
   color: string;
   steps: string[];
   phases: string[];
+};
+
+const lessonsByTrack: Record<string, Lesson[]> = {
+  ...coreLessonsByTrack,
+  ...supplementalLessonsByTrack,
 };
 
 const OFFICIAL_VIDEO_PLAYLIST =
@@ -218,6 +224,210 @@ const tracks: Track[] = [
     steps: lessonsByTrack.diagnose.map((lesson) => lesson.title),
     phases: ["CAPTURE", "READ RESULT", "FIND LAYER", "RETEST", "ESCALATE"],
   },
+  {
+    id: "bot-connect",
+    eyebrow: "Bring your own AI",
+    title: "Connect an Existing Bot",
+    description: "Choose the exact framework, connect speech, and prove the bot before telephony is added.",
+    role: "Bot developers and integration teams",
+    scenario: "Your bot already works in its own platform. Customers now need to speak with it through Live Hub.",
+    outcome: "A direct browser call reaches the existing bot and returns the expected spoken answer.",
+    evidence: "A successful direct bot test with recognized input and the expected response.",
+    reward: "Bot Connector",
+    time: "18 min",
+    level: "Builder",
+    icon: Bot,
+    color: "cyan",
+    steps: lessonsByTrack["bot-connect"].map((lesson) => lesson.title),
+    phases: ["CHOOSE", "CONNECT", "PROVE"],
+  },
+  {
+    id: "speech-provider",
+    eyebrow: "Speech stack",
+    title: "Bring Your Own Speech",
+    description: "Choose, connect, and measure one STT and TTS experience without guesswork.",
+    role: "AI builders and voice-experience owners",
+    scenario: "Your callers need a particular language, voice, latency, or provider account that the default stack does not cover.",
+    outcome: "The bot recognizes a real phrase, speaks in the correct voice, and exposes measurable latency.",
+    evidence: "A transcript, audio result, and the STT, bot, and TTS timing for one call.",
+    reward: "Speech Tuner",
+    time: "18 min",
+    level: "Builder",
+    icon: Headphones,
+    color: "violet",
+    steps: lessonsByTrack["speech-provider"].map((lesson) => lesson.title),
+    phases: ["CHOOSE", "CONNECT", "MEASURE"],
+  },
+  {
+    id: "voice-channel",
+    eyebrow: "Channel decision",
+    title: "Choose My Voice Channel",
+    description: "Choose one entry point, create it correctly, and prove it before routing grows.",
+    role: "New solution owners",
+    scenario: "You know who should handle the call, but first you must decide how that call enters Live Hub.",
+    outcome: "One correctly selected voice channel is ready and proven in the intended region.",
+    evidence: "A ready connection card with the correct region, state, and test result.",
+    reward: "Channel Architect",
+    time: "19 min",
+    level: "Beginner",
+    icon: Network,
+    color: "blue",
+    steps: lessonsByTrack["voice-channel"].map((lesson) => lesson.title),
+    phases: ["CHOOSE", "CREATE", "VERIFY", "ROUTE"],
+  },
+  {
+    id: "click-to-call",
+    eyebrow: "Digital channel",
+    title: "Add Calling to a Website",
+    description: "Create Click-to-call, protect browser authentication, and prove a routed WebRTC call.",
+    role: "Web and mobile application teams",
+    scenario: "A customer on your website should reach the AI without leaving the page or dialing a number.",
+    outcome: "A customer clicks one button and reaches the intended Live Hub destination from the browser.",
+    evidence: "A completed WebRTC call record showing the Click-to-call origin and matched route.",
+    reward: "Web Voice Builder",
+    time: "20 min",
+    level: "Developer",
+    icon: PhoneCall,
+    color: "green",
+    steps: lessonsByTrack["click-to-call"].map((lesson) => lesson.title),
+    phases: ["CREATE", "EMBED", "PROVE"],
+  },
+  {
+    id: "whatsapp",
+    eyebrow: "Messaging channel",
+    title: "Connect WhatsApp Calling",
+    description: "Prepare Meta ownership, authorize one number, and prove a WhatsApp voice call.",
+    role: "Digital-channel and customer-experience teams",
+    scenario: "Customers already use WhatsApp and should be able to call the same AI experience from there.",
+    outcome: "A WhatsApp caller reaches the intended destination and the result appears in Calls.",
+    evidence: "An active WhatsApp number and a successful call record with the matched route.",
+    reward: "WhatsApp Connector",
+    time: "18 min",
+    level: "Administrator",
+    icon: MessageCircle,
+    color: "green",
+    steps: lessonsByTrack.whatsapp.map((lesson) => lesson.title),
+    phases: ["PREPARE", "AUTHORIZE", "CALL"],
+  },
+  {
+    id: "call-features",
+    eyebrow: "Customer experience",
+    title: "Add Evidence, Transfer & Failover",
+    description: "Make calls observable and resilient after the baseline route works.",
+    role: "Solution designers and operations owners",
+    scenario: "The call works. Now it must leave the right evidence, reach a human when needed, and fail safely.",
+    outcome: "The production call produces approved evidence and has a tested human or failover path.",
+    evidence: "A test call containing the expected artifact and a proven transfer or failover outcome.",
+    reward: "Experience Guardian",
+    time: "21 min",
+    level: "Intermediate",
+    icon: ShieldCheck,
+    color: "violet",
+    steps: lessonsByTrack["call-features"].map((lesson) => lesson.title),
+    phases: ["EVIDENCE", "TRANSFER", "FAILOVER"],
+  },
+  {
+    id: "agent-assist",
+    eyebrow: "Human + AI",
+    title: "Deploy Agent Assist",
+    description: "Choose in-path or SIPREC, attach the assistant, and prove the human receives useful help.",
+    role: "Contact-center and agent-experience teams",
+    scenario: "A human agent handles the customer, but needs real-time AI guidance during the conversation.",
+    outcome: "The assistant receives the conversation and delivers the expected guidance to the human agent.",
+    evidence: "A captured transcript, the triggering phrase, and the expected assist output.",
+    reward: "Agent Assist Builder",
+    time: "20 min",
+    level: "Advanced",
+    icon: Activity,
+    color: "cyan",
+    steps: lessonsByTrack["agent-assist"].map((lesson) => lesson.title),
+    phases: ["DEFINE", "CHOOSE PATH", "ATTACH", "PROVE"],
+  },
+  {
+    id: "translation",
+    eyebrow: "Real-time language",
+    title: "Translate a Live Call",
+    description: "Create one language profile, attach it to routing, and prove both directions.",
+    role: "Global service and contact-center teams",
+    scenario: "The customer and human agent speak different languages but need a natural two-way conversation.",
+    outcome: "Both participants hear the other in their own language during one stable test call.",
+    evidence: "A successful two-way call and the real-time translation transcript.",
+    reward: "Language Bridge",
+    time: "20 min",
+    level: "Intermediate",
+    icon: Languages,
+    color: "pink",
+    steps: lessonsByTrack.translation.map((lesson) => lesson.title),
+    phases: ["PROFILE", "LANGUAGES", "VOICE", "PROVE"],
+  },
+  {
+    id: "outbound",
+    eyebrow: "API dialout",
+    title: "Place an Outbound AI Call",
+    description: "Enable dialout, create the reverse route, trigger one API call, and follow its status.",
+    role: "Developers and outbound solution teams",
+    scenario: "Your application must ask Live Hub to call one opted-in customer and connect the answered call to a bot.",
+    outcome: "The controlled phone rings, the bot handles the answer, and the final status is visible.",
+    evidence: "The returned call ID, Call History record, and final dialout status.",
+    reward: "Dialout Builder",
+    time: "20 min",
+    level: "Developer",
+    icon: PhoneCall,
+    color: "amber",
+    steps: lessonsByTrack.outbound.map((lesson) => lesson.title),
+    phases: ["ENABLE", "ROUTE", "CALL"],
+  },
+  {
+    id: "campaigns",
+    eyebrow: "Outbound automation",
+    title: "Run a Safe Outbound Campaign",
+    description: "Design a tiny pilot, validate targets, and scale only after every outcome is understood.",
+    role: "Campaign managers and operations teams",
+    scenario: "A consented customer list needs an automated reminder campaign without risking a production-scale mistake.",
+    outcome: "A controlled pilot completes and every target outcome can be explained.",
+    evidence: "Campaign progress, target statuses, related Call IDs, and a documented scale decision.",
+    reward: "Campaign Operator",
+    time: "20 min",
+    level: "Operator",
+    icon: SlidersHorizontal,
+    color: "amber",
+    steps: lessonsByTrack.campaigns.map((lesson) => lesson.title),
+    phases: ["DESIGN", "TARGETS", "RUN"],
+  },
+  {
+    id: "platform-api",
+    eyebrow: "Platform automation",
+    title: "Build with the Live Hub API",
+    description: "Create a safe API identity, authenticate correctly, and retrieve one known call.",
+    role: "Developers and platform integrators",
+    scenario: "Your operations system needs Live Hub call data without relying on a person exporting it from the portal.",
+    outcome: "A least-privilege integration retrieves one known call through the REST API.",
+    evidence: "A successful bounded API response containing the expected Call ID.",
+    reward: "Platform Integrator",
+    time: "20 min",
+    level: "Developer",
+    icon: Code2,
+    color: "blue",
+    steps: lessonsByTrack["platform-api"].map((lesson) => lesson.title),
+    phases: ["IDENTITY", "AUTHENTICATE", "PROVE"],
+  },
+  {
+    id: "account-admin",
+    eyebrow: "Governance",
+    title: "Prepare the Account for Production",
+    description: "Choose the account structure, protect continuity, and lock down people, systems, and call data.",
+    role: "Account owners, security teams, and administrators",
+    scenario: "The technical flow works, but the account now needs clear ownership, reliable billing, and safe access before customers call.",
+    outcome: "The account has the right hierarchy, an active billing plan, least-privilege access, and approved retention.",
+    evidence: "A readiness record covering ownership, plan state, access groups, retention, and support sharing.",
+    reward: "Production Steward",
+    time: "21 min",
+    level: "Administrator",
+    icon: ShieldCheck,
+    color: "violet",
+    steps: lessonsByTrack["account-admin"].map((lesson) => lesson.title),
+    phases: ["STRUCTURE", "CONTINUITY", "PROTECT"],
+  },
 ];
 
 type SuccessLevel = {
@@ -234,35 +444,35 @@ const successLevels: SuccessLevel[] = [
     title: "First successful call",
     promise: "A real phone call reaches an AI and receives the correct answer.",
     question: "Can one customer call one AI receptionist successfully?",
-    trackIds: ["voice-agent"],
+    trackIds: ["voice-agent", "bot-connect"],
   },
   {
     number: 2,
     title: "Connect my telephony",
     promise: "Your existing voice environment reaches Live Hub.",
     question: "Which real voice channel must connect next?",
-    trackIds: ["sip-trunk", "teams-sip", "phone-number"],
+    trackIds: ["voice-channel", "phone-number", "sip-trunk", "teams-sip", "click-to-call", "whatsapp", "speech-provider"],
   },
   {
     number: 3,
     title: "Route intelligently",
     promise: "The right call reaches the right destination.",
     question: "What should happen when this specific call arrives?",
-    trackIds: ["routing"],
+    trackIds: ["routing", "call-features", "agent-assist", "translation", "outbound", "campaigns"],
   },
   {
     number: 4,
     title: "Operate production",
     promise: "You can see what happened and fix the first failing layer.",
     question: "Can your team explain every important call from evidence?",
-    trackIds: ["operate", "diagnose"],
+    trackIds: ["operate", "diagnose", "platform-api"],
   },
   {
     number: 5,
     title: "Production readiness",
     promise: "Your AI behavior is grounded, tested, and observable before launch.",
     question: "Can you prove this deployment is safe to put in front of customers?",
-    trackIds: ["agent-builder"],
+    trackIds: ["agent-builder", "account-admin"],
   },
 ];
 
@@ -284,6 +494,96 @@ function guideLearner(question: string): AcademyGuideResult {
       answer: "Open Troubleshoot Live Traffic. It takes you from Call History to the first failing layer, then helps you collect a support-ready evidence pack.",
       trackId: "diagnose",
       action: "Start troubleshooting path",
+    };
+  }
+
+  if (/existing bot|copilot|dialogflow|rasa|amazon lex|bot framework/.test(prompt)) {
+    return {
+      eyebrow: "EXISTING BOT PATH",
+      title: "Connect the bot before adding a phone channel.",
+      answer: "Choose the exact framework and credentials, add the correct speech services, and prove a direct browser call before routing real traffic.",
+      trackId: "bot-connect",
+      action: "Connect my bot",
+    };
+  }
+
+  if (/speech|stt|tts|voice model|deepgram|soniox|elevenlabs|speechmatics/.test(prompt)) {
+    return {
+      eyebrow: "SPEECH PATH",
+      title: "Choose speech from the call you need to support.",
+      answer: "Bring Your Own Speech turns language, voice, latency, region, and provider ownership into one measurable call test.",
+      trackId: "speech-provider",
+      action: "Build the speech stack",
+    };
+  }
+
+  if (/whatsapp|meta business/.test(prompt)) {
+    return {
+      eyebrow: "WHATSAPP CALLING",
+      title: "Authorize one number, then prove one call.",
+      answer: "Prepare the correct Meta business, connect the WhatsApp number, route it, and verify the call in Live Hub.",
+      trackId: "whatsapp",
+      action: "Connect WhatsApp",
+    };
+  }
+
+  if (/click.to.call|webrtc|website call|web call|call button/.test(prompt)) {
+    return {
+      eyebrow: "WEB CALLING",
+      title: "Put a safe voice entry point in your website.",
+      answer: "Create the Click-to-call connection, protect browser authentication, embed the widget or SDK, and prove the routed WebRTC call.",
+      trackId: "click-to-call",
+      action: "Add web calling",
+    };
+  }
+
+  if (/campaign|target list|bulk call/.test(prompt)) {
+    return {
+      eyebrow: "OUTBOUND AUTOMATION",
+      title: "Pilot small before calling a real audience.",
+      answer: "Design one campaign outcome, validate a tiny target list, then monitor every result before you scale.",
+      trackId: "campaigns",
+      action: "Build a safe pilot",
+    };
+  }
+
+  if (/outbound|dialout|dial out|place a call|call api/.test(prompt)) {
+    return {
+      eyebrow: "OUTBOUND CALLING",
+      title: "Reverse the flow: bot to channel to customer.",
+      answer: "Enable dialout, create the bot-origin routing rule, send one Basic-auth API request, and follow its Call ID to the final status.",
+      trackId: "outbound",
+      action: "Place one outbound call",
+    };
+  }
+
+  if (/agent assist|siprec|human agent/.test(prompt)) {
+    return {
+      eyebrow: "HUMAN + AI",
+      title: "Choose in-path or SIPREC before configuring Agent Assist.",
+      answer: "The Agent Assist path connects the transcript source, routing service, assist bot, and one real human-facing result.",
+      trackId: "agent-assist",
+      action: "Deploy Agent Assist",
+    };
+  }
+
+  if (/translation|translate|language pair|multi.?language/.test(prompt)) {
+    return {
+      eyebrow: "REAL-TIME TRANSLATION",
+      title: "Build and prove one two-way language bridge.",
+      answer: "Choose automatic or dynamic activation, configure both languages and voices, attach the profile to routing, and test both directions.",
+      trackId: "translation",
+      action: "Translate a call",
+    };
+  }
+
+  if (/rest api|oauth|bearer|api client|automation/.test(prompt)) {
+    return {
+      eyebrow: "PLATFORM API",
+      title: "Start with one safe, read-only proof.",
+      answer: "Create a least-privilege API client, obtain an OAuth token, and retrieve one known Call ID before automating broader operations.",
+      trackId: "platform-api",
+      action: "Prove the API",
     };
   }
 
@@ -334,6 +634,16 @@ function guideLearner(question: string): AcademyGuideResult {
       answer: "Use Build Production AI Agents to add trusted knowledge, one focused tool, test scenarios, and log-based proof.",
       trackId: "agent-builder",
       action: "Start production AI path",
+    };
+  }
+
+  if (/account|subaccount|parent account|mfa|governance|privacy|retention|permission/.test(prompt)) {
+    return {
+      eyebrow: "PRODUCTION GOVERNANCE",
+      title: "Make the account safe before real traffic arrives.",
+      answer: "Choose the account model, protect billing continuity, assign least-privilege access, and set call-data retention and sharing deliberately.",
+      trackId: "account-admin",
+      action: "Prepare the account",
     };
   }
 
@@ -854,7 +1164,6 @@ function HomeView({
   const [assistantPrompt, setAssistantPrompt] = useState("");
   const assistantResult = assistantPrompt ? guideLearner(assistantPrompt) : null;
   const primaryPaths = tracks.slice(0, 3);
-  const focusedPaths = tracks.slice(3);
   const startedPath = tracks.find((track) =>
     track.steps.some((_, index) => missionIsComplete(track, index, completed))
   ) ?? tracks[0];
@@ -874,7 +1183,7 @@ function HomeView({
     <div className="page outcome-home">
       <section className="outcome-hero">
         <div className="outcome-hero-copy">
-          <span className="section-kicker"><Sparkles /> WELCOME TO LIVE HUB ACADEMY</span>
+          <span className="section-kicker"><Sparkles /> WELCOME TO LIVE HUB ACADEMY · ALIGNED TO 2.19.2</span>
           <h1>What will you<br /><span>make work?</span></h1>
           <p>
             Live Hub connects Voice AI to real phone systems, numbers, Microsoft Teams, and customer conversations. This is your fastest path from zero to a working, production-ready deployment.
@@ -932,23 +1241,9 @@ function HomeView({
         </div>
       </section>
 
-      <section className="path-section focused-paths">
-        <div className="path-heading compact">
-          <div><span className="section-kicker">OR SOLVE ONE SPECIFIC NEED</span><h2>Focused outcomes</h2></div>
-          <Button variant="ghost" onClick={goToJourneys}>Explore every path <ArrowRight /></Button>
-        </div>
-        <div className="focused-path-grid">
-          {focusedPaths.map((track) => {
-            const Icon = track.icon;
-            return (
-              <button key={track.id} className="focused-path-card" onClick={() => goToTrack(track.id)}>
-                <span className={`focused-path-icon ${track.color}`}><Icon /></span>
-                <span><small>WORKING RESULT</small><strong>{track.title}</strong><em>{track.outcome}</em></span>
-                <ArrowRight />
-              </button>
-            );
-          })}
-        </div>
+      <section className="course-universe-strip">
+        <div><span>{tracks.length}</span><p><strong>complete outcome courses</strong><small>Every major subject from Live Hub 2.19.2, organized into five go-live levels.</small></p></div>
+        <Button size="lg" onClick={goToJourneys}>Open the complete journey <ArrowRight /></Button>
       </section>
 
       <section id="livehub-academy-assistant" className="guide-strip" data-integration-slot="intercom">
@@ -1356,8 +1651,13 @@ function JourneysView({
   const completedCount = lessons.filter((_, index) => missionIsComplete(selected, index, completed)).length;
   const missingIndex = lessons.findIndex((_, index) => !missionIsComplete(selected, index, completed));
   const firstIncomplete = missingIndex === -1 ? Math.max(0, lessons.length - 1) : missingIndex;
+  const orderedTrackIds = successLevels.flatMap((level) => level.trackIds);
+  const currentJourneyIndex = orderedTrackIds.indexOf(selected.id);
+  const nextTrackId = orderedTrackIds[(currentJourneyIndex + 1 + orderedTrackIds.length) % orderedTrackIds.length];
+  const nextTrack = tracks.find((track) => track.id === nextTrackId) ?? tracks[(selectedIndex + 1) % tracks.length];
   const selectedLevel = successLevels.findIndex((level) => level.trackIds.includes(selected.id));
   const [expandedLevel, setExpandedLevel] = useState(selectedLevel >= 0 ? selectedLevel : 0);
+  const [focusedTrackId, setFocusedTrackId] = useState(selected.id);
   const [activeMissionIndex, setActiveMissionIndex] = useState<number | null>(startImmediately ? firstIncomplete : null);
   const [celebrating, setCelebrating] = useState(false);
 
@@ -1387,9 +1687,9 @@ function JourneysView({
       <MissionCompleteView
         track={selected}
         lessonCount={lessons.length}
-        nextTrack={tracks[(selectedIndex + 1) % tracks.length]}
+        nextTrack={nextTrack}
         onReview={() => setCelebrating(false)}
-        onNext={() => launchTrack(tracks[(selectedIndex + 1) % tracks.length].id)}
+        onNext={() => launchTrack(nextTrack.id)}
         onKnowledgeCheck={onKnowledgeCheck}
       />
     );
@@ -1415,14 +1715,15 @@ function JourneysView({
   const activeTracks = activeLevel.trackIds
     .map((id) => tracks.find((track) => track.id === id))
     .filter((track): track is Track => Boolean(track));
+  const focusedTrack = activeTracks.find((track) => track.id === focusedTrackId) ?? activeTracks[0];
 
   return (
     <div className="page success-roadmap-page">
       <header className="success-roadmap-head">
         <div>
-          <span className="section-kicker"><Zap /> LIVE HUB SUCCESS PATH</span>
+          <span className="section-kicker"><Zap /> LIVE HUB SUCCESS PATH · ALIGNED TO 2.19.2</span>
           <h1>From zero to a working<br /><span>Voice AI deployment.</span></h1>
-          <p>Do not learn the whole platform. Start with the working result you need today; the next decision appears only when it matters.</p>
+          <p>Choose one working result. The Academy reveals the next decision only when it matters—even though every Live Hub subject is now covered.</p>
         </div>
         <aside>
           <span>YOUR FASTEST FIRST WIN</span>
@@ -1454,9 +1755,9 @@ function JourneysView({
           <div className="level-rail-title"><span>GO-LIVE JOURNEY</span><strong>Start where you are.</strong></div>
           {successLevels.map((level, index) => {
             const levelTracks = level.trackIds.map((id) => tracks.find((track) => track.id === id)).filter((track): track is Track => Boolean(track));
-            const done = levelTracks.length > 0 && levelTracks.every((track) => track.steps.every((_, stepIndex) => missionIsComplete(track, stepIndex, completed)));
+            const done = levelTracks.some((track) => track.steps.every((_, stepIndex) => missionIsComplete(track, stepIndex, completed)));
             return (
-              <Button key={level.number} variant="ghost" role="tab" aria-selected={expandedLevel === index} className={expandedLevel === index ? "level-button active" : "level-button"} onClick={() => setExpandedLevel(index)}>
+              <Button key={level.number} variant="ghost" role="tab" aria-selected={expandedLevel === index} className={expandedLevel === index ? "level-button active" : "level-button"} onClick={() => { setExpandedLevel(index); setFocusedTrackId(level.trackIds[0]); }}>
                 <span className={done ? "level-number done" : "level-number"}>{done ? <Check /> : level.number}</span>
                 <span><small>{done ? "OUTCOME ACHIEVED" : `LEVEL ${level.number}`}</small><strong>{level.title}</strong></span>
                 <ChevronRight />
@@ -1473,11 +1774,23 @@ function JourneysView({
           </div>
           <div className="level-question"><CircleHelp /><span><small>THE ONLY QUESTION FOR THIS LEVEL</small><strong>{activeLevel.question}</strong></span></div>
 
+          {activeTracks.length > 1 && (
+            <div className="level-course-picker" aria-label={`Choose an outcome in ${activeLevel.title}`}>
+              <span>CHOOSE ONE OUTCOME</span>
+              <div>
+                {activeTracks.map((track) => (
+                  <Button key={track.id} variant="outline" className={focusedTrack?.id === track.id ? "active" : ""} onClick={() => setFocusedTrackId(track.id)}>{track.title}</Button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="level-paths">
-            {activeTracks.map((track) => {
+            {focusedTrack && [focusedTrack].map((track) => {
               const Icon = track.icon;
               const done = track.steps.filter((_, index) => missionIsComplete(track, index, completed)).length;
               const percentage = track.steps.length ? Math.round((done / track.steps.length) * 100) : 0;
+              const previewFlow = lessonsByTrack[track.id]?.[0]?.architecture ?? ["Origin", "Route", "Result", "Proof"];
               return (
                 <article key={track.id} className="level-path">
                   <div className="level-path-top">
@@ -1486,7 +1799,7 @@ function JourneysView({
                   </div>
                   <p>{track.outcome}</p>
                   <div className="mini-result-flow" aria-label={`Result flow for ${track.title}`}>
-                    <span>Origin</span><ArrowRight /><span>Route</span><ArrowRight /><span>Result</span><ArrowRight /><span>Proof</span>
+                    {previewFlow.slice(0, 4).map((part, index) => <span key={`${part}-${index}`}><strong>{part}</strong>{index < Math.min(previewFlow.length, 4) - 1 && <ArrowRight />}</span>)}
                   </div>
                   <div className="level-path-action">
                     <span><Clock3 /> {track.time}</span>

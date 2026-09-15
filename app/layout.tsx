@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Live Hub Academy",
   description:
-    "Guided, outcome-based learning for AudioCodes Live Hub — from first click to first production call.",
+    "The fastest outcome-based path from zero to a working, production-ready AudioCodes Live Hub deployment.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
