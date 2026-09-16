@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -786,6 +786,91 @@ function missionIsComplete(track: Track, index: number, completed: string[]) {
   return completed.includes(missionProgressKey(track, index)) || completed.includes(`${track.id}:${index}`);
 }
 
+const AGENT_BUILD_MODULES = [
+  { id: "bright-smile-create", label: "Persona", icon: Bot },
+  { id: "bright-smile-ground", label: "Knowledge", icon: FileText },
+  { id: "bright-smile-availability", label: "Tool", icon: Zap },
+  { id: "bright-smile-voice", label: "Voice", icon: Volume2 },
+  { id: "bright-smile-outcomes", label: "Outcomes", icon: ListChecks },
+  { id: "bright-smile-number", label: "Number", icon: PhoneCall },
+  { id: "bright-smile-route-proof", label: "Routing", icon: Route },
+] as const;
+
+function AgentBuildBoard({ lessons, completed, track }: { lessons: Lesson[]; completed: string[]; track: Track }) {
+  const doneFlags = lessons.map((_, index) => missionIsComplete(track, index, completed));
+  const doneCount = doneFlags.filter(Boolean).length;
+  const percent = lessons.length ? Math.round((doneCount / lessons.length) * 100) : 0;
+  const railPercent = lessons.length > 1 ? (doneCount / (lessons.length - 1)) * 100 : doneCount ? 100 : 0;
+  const prevDoneCountRef = useRef(doneCount);
+  const [justCompletedIndex, setJustCompletedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (doneCount > prevDoneCountRef.current) {
+      const newIndex = doneCount - 1;
+      setJustCompletedIndex(newIndex);
+      const timer = setTimeout(() => setJustCompletedIndex(null), 1900);
+      prevDoneCountRef.current = doneCount;
+      return () => clearTimeout(timer);
+    }
+    prevDoneCountRef.current = doneCount;
+  }, [doneCount]);
+
+  const latestCapability = doneCount > 0 ? lessons[doneCount - 1]?.capabilityGained : null;
+
+  return (
+    <section className="agent-build-board" aria-label={`${FLAGSHIP_SCENARIO.agent} build progress`}>
+      <header className="agent-build-header">
+        <div className="agent-build-title">
+          <span className="agent-build-avatar"><Bot /></span>
+          <div>
+            <small>ONE PROJECT · SAME AGENT IN EVERY MISSION</small>
+            <h2>{FLAGSHIP_SCENARIO.agent}</h2>
+            <p>{FLAGSHIP_SCENARIO.business} · Caller: {FLAGSHIP_SCENARIO.caller}</p>
+          </div>
+        </div>
+        <div className="agent-build-percent" aria-label={`${percent}% built`}>
+          <strong>{percent}<small>%</small></strong>
+          <small>built</small>
+        </div>
+      </header>
+
+      <div className="agent-build-chain" role="list">
+        <div className="agent-build-rail" aria-hidden="true"><span style={{ width: `${railPercent}%` }} /></div>
+        {AGENT_BUILD_MODULES.map((module, index) => {
+          const Icon = module.icon;
+          const done = doneFlags[index] ?? false;
+          const isNext = !done && doneFlags.slice(0, index).every(Boolean);
+          const justDone = justCompletedIndex === index;
+          const stateClass = done ? "done" : isNext ? "next" : "locked";
+          return (
+            <div key={module.id} role="listitem" className={`agent-build-node ${stateClass}${justDone ? " just-done" : ""}`}>
+              <span className="agent-build-icon">
+                {done ? <CheckCircle2 /> : <Icon />}
+                {justDone && (
+                  <em className="agent-build-spark" aria-hidden="true">
+                    <Sparkles />
+                  </em>
+                )}
+              </span>
+              <small>{module.label}</small>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="agent-build-summary">
+        {latestCapability ? (
+          <>
+            <Sparkles /> <strong>Now it can:</strong> {latestCapability}
+          </>
+        ) : (
+          "Nothing yet. Mission 1 creates the agent every later Mission improves."
+        )}
+      </p>
+    </section>
+  );
+}
+
 export default function Home() {
   const [view, setView] = useState<View>("home");
   const [selectedTrack, setSelectedTrack] = useState<Track>(tracks[0]);
@@ -1252,7 +1337,6 @@ function PathWorkspace({
   const lesson = lessons[safeIndex];
   const [routingSource, setRoutingSource] = useState<RoutingSource>("number");
   const pathComplete = lessons.length > 0 && lessons.every((_, index) => missionIsComplete(selected, index, completed));
-  const flagshipCapabilities = FLAGSHIP_CAPABILITIES.filter((_, index) => missionIsComplete(selected, index, completed));
 
   if (!lesson) return <div className="page"><p>No missions are available for this path yet.</p></div>;
 
@@ -1286,18 +1370,7 @@ function PathWorkspace({
         )}
       </header>
 
-      {selected.id === "voice-agent" && (
-        <section className="flagship-build-card" aria-label="The single project built across this path">
-          <div className="flagship-build-main">
-            <span><Bot /></span>
-            <div><small>ONE PROJECT · SAME AGENT IN EVERY MISSION</small><h2>{FLAGSHIP_SCENARIO.agent}</h2><p>{FLAGSHIP_SCENARIO.business} · Caller: {FLAGSHIP_SCENARIO.caller}</p></div>
-          </div>
-          <div className="flagship-build-state">
-            <small>WHAT IT CAN DO NOW</small>
-            {flagshipCapabilities.length ? flagshipCapabilities.map((item) => <span key={item.id}><CheckCircle2 /> {item.capability}</span>) : <p>Nothing yet. Mission 1 creates the agent every later Mission improves.</p>}
-          </div>
-        </section>
-      )}
+      {selected.id === "voice-agent" && <AgentBuildBoard lessons={lessons} completed={completed} track={selected} />}
 
       <div className="path-workspace-v2">
         <aside className="path-mission-list" aria-label="Missions in this path">
@@ -1305,8 +1378,10 @@ function PathWorkspace({
           {lessons.map((item, index) => {
             const done = missionIsComplete(selected, index, completed);
             const unlocked = selected.id !== "voice-agent" || index === 0 || done || missionIsComplete(selected, index - 1, completed);
+            const isUpNext = index !== safeIndex && !done && unlocked && lessons.slice(0, index).every((_, priorIndex) => missionIsComplete(selected, priorIndex, completed));
+            const stateClass = index === safeIndex ? "active" : done ? "done" : !unlocked ? "locked" : isUpNext ? "next" : "";
             return (
-              <button key={item.id} type="button" className={index === safeIndex ? "active" : done ? "done" : !unlocked ? "locked" : ""} disabled={!unlocked} onClick={() => { selectMission(index); resetPagePosition(); }}>
+              <button key={item.id} type="button" className={stateClass} disabled={!unlocked} onClick={() => { selectMission(index); resetPagePosition(); }}>
                 <span>{done ? <Check /> : !unlocked ? <LockKeyhole /> : index + 1}</span>
                 <strong>{item.title}</strong>
                 <small>{item.duration}</small>
