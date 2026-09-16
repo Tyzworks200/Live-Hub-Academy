@@ -7,7 +7,8 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 - A deliberately shallow learning structure: **Home → Path → Mission**, with actions kept inline unless media genuinely needs more room
 - One persistent progress indicator in the top bar: `Mission X of Y · Z% complete`
 - A homepage with one recommended starting point, a subordinate product tour, and plain alternate paths for experienced users
-- A working mission finder that searches real Path, Mission, click-path, prerequisite, action, and success-check data, then opens the exact matching Mission
+- A prominent home-page Academy Assistant that searches real Path, Mission, click-path, prerequisite, action, and success-check data, then opens the exact matching Mission
+- A stable `livehub-academy-assistant` integration slot and `livehub-academy:assistant-query` browser event for a future Live Hub agent or Intercom handoff
 - Path pages that combine destination, optional start toggle, and the ordered Mission list—without separate Level or Outcome screens
 - Mission pages that show success, exact Live Hub click path, collapsed prerequisites, every action at once, contextual media, verification, and troubleshooting
 - A real-dashboard orientation tour that explains the account selector, navigation, usage, Help Center, IAM, wizard, and support assistant
@@ -15,9 +16,10 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 - A brand-book-aligned experience using AudioCodes navy, blue, cyan, purple, Rajdhani display type, Poppins body type, and the official sound-wave artwork
 - A working lightweight Academy Guide that routes natural-language questions to the shortest verified mission, while preserving a stable Intercom integration slot
 - The Live Hub call model—Origin → Route → Destination → Proof—taught once in orientation as a concept, never reused as a progress tracker
-- Exact portal paths, official screenshots, contextual video, collapsed preparation, and on-demand troubleshooting without a documentation wall
-- Contextual official routing videos for Live Hub-number and external-SIP call paths, placed beside the rule-building action where they are useful
+- Exact portal paths, manually verified local screenshots, collapsed preparation, and on-demand troubleshooting without a documentation wall
+- A strict verified-media manifest: every rendered image names the control it proves, has an action-specific caption, and exists locally; unmatched actions intentionally remain text-only
 - Separate 60–90 second spoken briefings built from the objective, one warning, and the success check instead of full-text narration
+- A per-Mission **Watch instead** experience that automatically assembles the title, actions, verified screenshots or clean text cards, the same spoken briefing, and the final success check into a narrated 60–90 second flow
 - An optional 12-question production-readiness checkpoint with explanations and official documentation links
 - A corrected US/UK phone-number request flow that includes the form, required documents, provisioning wait, and the routing handoff
 - Supporting mission content for account models, alarm thresholds, billing, IAM, operations, and failed-call diagnosis
