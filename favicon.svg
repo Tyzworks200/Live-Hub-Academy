@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Live Hub">
+  <defs>
+    <linearGradient id="background" x1="8" y1="4" x2="57" y2="61" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102B59"/>
+      <stop offset="1" stop-color="#071126"/>
+    </linearGradient>
+    <linearGradient id="signal" x1="18" y1="14" x2="49" y2="51" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#45E5FF"/>
+      <stop offset="1" stop-color="#1481FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#background)"/>
+  <circle cx="50" cy="14" r="4" fill="#45E5FF" opacity=".95"/>
+  <path d="M14 31.5a4 4 0 0 1 8 0V45a4 4 0 0 1-8 0V31.5Z" fill="url(#signal)"/>
+  <path d="M25 18a4 4 0 0 1 8 0v27a4 4 0 0 1-8 0V18Z" fill="url(#signal)"/>
+  <path d="M36 24a4 4 0 0 1 8 0v21a4 4 0 0 1-8 0V24Z" fill="url(#signal)"/>
+  <path d="M47 32a4 4 0 0 1 8 0v13a4 4 0 0 1-8 0V32Z" fill="url(#signal)"/>
+</svg>
