@@ -49,6 +49,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { lessonsByTrack as coreLessonsByTrack, type Lesson } from "./lesson-data";
 import { supplementalLessonsByTrack } from "./supplemental-lesson-data";
+import { FLAGSHIP_CAPABILITIES, FLAGSHIP_SCENARIO, flagshipLessons } from "./flagship-journey";
 import { knowledgeQuestions } from "./quiz-data";
 import { TECH_DOCS } from "./techdocs";
 import troubleshootingData from "./troubleshooting-data.json";
@@ -76,6 +77,7 @@ type Track = {
 const lessonsByTrack: Record<string, Lesson[]> = {
   ...coreLessonsByTrack,
   ...supplementalLessonsByTrack,
+  "voice-agent": flagshipLessons,
 };
 
 const OFFICIAL_VIDEO_PLAYLIST =
@@ -87,13 +89,13 @@ const tracks: Track[] = [
     eyebrow: "Best first win",
     title: "Get one AI Agent answering real calls",
     description:
-      "Build a useful AI receptionist, make it speak, connect a real number, and call it from your phone.",
+      "Build Bright Smile Dental Clinic's receptionist as one continuous project—from empty agent to a real, evidence-backed phone call.",
     role: "New Live Hub users and AI builders",
-    scenario: "Your company needs an AI receptionist that can answer one real customer question: “What are your opening hours?”",
-    outcome: "A mobile caller reaches your AI Agent and receives the correct spoken answer.",
-    evidence: "A successful Call History record plus the expected answer in the transcript.",
-    reward: "Live Hub Explorer",
-    time: "35 min + provisioning",
+    scenario: `${FLAGSHIP_SCENARIO.business} needs ${FLAGSHIP_SCENARIO.agent} to help ${FLAGSHIP_SCENARIO.caller}.`,
+    outcome: FLAGSHIP_SCENARIO.promise,
+    evidence: "One successful Call ID plus AI Agents logs proving the FAQ answer, availability lookup, summary, and outcome.",
+    reward: "AI Receptionist Builder",
+    time: "62 min + provisioning",
     level: "Recommended",
     icon: Bot,
     color: "cyan",
@@ -832,7 +834,9 @@ export default function Home() {
       setSelectedTrack(track);
       const trackLessons = lessonsByTrack[track.id] ?? [];
       const firstIncomplete = trackLessons.findIndex((_, index) => !missionIsComplete(track, index, completed));
-      setSelectedMissionIndex(missionIndex ?? (firstIncomplete === -1 ? Math.max(0, trackLessons.length - 1) : firstIncomplete));
+      const requestedMission = missionIndex ?? (firstIncomplete === -1 ? Math.max(0, trackLessons.length - 1) : firstIncomplete);
+      const dependencySafeMission = track.id === "voice-agent" && firstIncomplete >= 0 && requestedMission > firstIncomplete ? firstIncomplete : requestedMission;
+      setSelectedMissionIndex(dependencySafeMission);
     }
     setView("journeys");
     setMobileOpen(false);
@@ -1091,6 +1095,13 @@ type VerifiedActionMedia = {
 };
 
 const verifiedActionMedia: Record<string, VerifiedActionMedia> = {
+  "voice-agent:bright-smile-create:1": { image: "ai-agents-list.png", alt: "Live Hub AI Agents list with the Add new agent button", caption: "Select Add new agent here to create Bright Smile Receptionist.", controlName: "Add new agent", verified: true },
+  "voice-agent:bright-smile-create:2": { image: "ai-agent-editor.png", alt: "Live Hub Add Agent editor showing name, welcome message, model, and prompt fields", caption: "Use this editor for the agent name, welcome message, model, and operating rules beside this action.", controlName: "Add Agent editor", verified: true },
+  "voice-agent:bright-smile-ground:2": { image: "ai-document-editor.png", alt: "Live Hub Add Document editor showing upload, name, description, and chunk settings", caption: "Choose Upload file in this editor and add the Bright Smile FAQ downloaded in the previous action.", controlName: "Add Document editor", verified: true },
+  "voice-agent:bright-smile-availability:2": { image: "ai-tool-editor.png", alt: "Live Hub Tool editor showing name, description, type, method, URL, parameters, and Test button", caption: "Use these controls for Bright Smile Availability; unlike the example shown, set this Academy tool to REST + GET and use the supplied mock URL.", controlName: "Tool General editor", verified: true },
+  "voice-agent:bright-smile-voice:0": { image: "ai-speech-telephony.png", alt: "Live Hub Speech and Telephony tab showing enabled state, region, STT, TTS, language, voice, barge-in, and DTMF", caption: "Enable voice and choose the matching region, STT, TTS, language, and voice in this tab.", controlName: "Speech and Telephony", verified: true },
+  "voice-agent:bright-smile-outcomes:0": { image: "ai-post-call-list.png", alt: "Live Hub Post call analysis list with the Add new post call analysis button", caption: "Select Add new post call analysis here to create Bright Smile Outcome.", controlName: "Add new post call analysis", verified: true },
+  "voice-agent:bright-smile-outcomes:1": { image: "ai-post-call-editor.png", alt: "Live Hub Add Post Call Analysis editor showing type, extract prompt, model, and variables", caption: "Choose Extract variables, define the outcome prompt, and add appointment_outcome in this editor.", controlName: "Add Post Call Analysis editor", verified: true },
   "routing:routing-model:0": { image: "routing-rules-list.png", alt: "Routing Rules table with Origin and Route to columns", caption: "Use the Origin column to identify where the call begins.", controlName: "Origin column", verified: true },
   "routing:routing-model:2": { image: "routing-rule-builder.png", alt: "Create Routing Rule screen with Calling number and Called number condition fields", caption: "Use one exact Calling number or Called number condition for the first test.", controlName: "Calling number and Called number fields", verified: true },
   "routing:routing-create:0": { image: "routing-rules-list.png", alt: "Routing Rules page with Add new routing rule button", caption: "Select Add new routing rule from this screen.", controlName: "Add new routing rule", verified: true },
@@ -1115,6 +1126,15 @@ function buildSpokenBriefing(lesson: Lesson) {
   const objective = lesson.objective.replace(/\.$/, "");
   const warning = lesson.commonMistake ?? "Keep the first attempt narrow and change only one thing at a time.";
   const success = lesson.success.slice(0, 2).join(" Then confirm that ").replace(/\.$/, "");
+  if (lesson.capabilityGained && lesson.opening) {
+    return [
+      lesson.opening.problem,
+      `Your move now is to ${objective.toLowerCase()}.`,
+      `Watch for one trap: ${warning}`,
+      `Success is visible: ${success.toLowerCase()}.`,
+      `When that is true, ${lesson.capabilityGained.toLowerCase()}`,
+    ].join(" ");
+  }
   return [
     `Your focus is simple: ${objective.toLowerCase()}.`,
     "Before you start, make sure the prerequisite is real, not assumed. A missing connection, permission, number, or region choice will make the next result misleading.",
@@ -1135,7 +1155,7 @@ type MissionWalkthroughSlide = {
 
 function buildMissionWalkthroughSlides(track: Track, lesson: Lesson): MissionWalkthroughSlide[] {
   return [
-    { kind: "opening", eyebrow: "MISSION BRIEF", title: lesson.title, text: `Success looks like: ${lesson.success[0]}`, media: null },
+    { kind: "opening", eyebrow: lesson.opening?.label ?? "MISSION BRIEF", title: lesson.title, text: lesson.opening?.problem ?? `Success looks like: ${lesson.success[0]}`, media: null },
     ...lesson.actions.map((action, index) => ({
       kind: "action" as const,
       eyebrow: `ACTION ${index + 1} OF ${lesson.actions.length}`,
@@ -1143,7 +1163,7 @@ function buildMissionWalkthroughSlides(track: Track, lesson: Lesson): MissionWal
       text: action.instruction,
       media: getActionMedia(track.id, lesson, index),
     })),
-    { kind: "closing", eyebrow: "SUCCESS CHECK", title: "You are done when…", text: lesson.success.join(" · "), media: null },
+    { kind: "closing", eyebrow: lesson.capabilityGained ? "CAPABILITY ADDED" : "SUCCESS CHECK", title: lesson.capabilityGained ?? "You are done when…", text: lesson.success.join(" · "), media: null },
   ];
 }
 
@@ -1232,12 +1252,16 @@ function PathWorkspace({
   const lesson = lessons[safeIndex];
   const [routingSource, setRoutingSource] = useState<RoutingSource>("number");
   const pathComplete = lessons.length > 0 && lessons.every((_, index) => missionIsComplete(selected, index, completed));
+  const flagshipCapabilities = FLAGSHIP_CAPABILITIES.filter((_, index) => missionIsComplete(selected, index, completed));
 
   if (!lesson) return <div className="page"><p>No missions are available for this path yet.</p></div>;
 
   const completeMission = () => {
     const key = missionProgressKey(selected, safeIndex);
     if (!missionIsComplete(selected, safeIndex, completed)) toggleStep(key);
+  };
+
+  const continueMission = () => {
     if (safeIndex < lessons.length - 1) {
       selectMission(safeIndex + 1);
       resetPagePosition();
@@ -1262,14 +1286,28 @@ function PathWorkspace({
         )}
       </header>
 
+      {selected.id === "voice-agent" && (
+        <section className="flagship-build-card" aria-label="The single project built across this path">
+          <div className="flagship-build-main">
+            <span><Bot /></span>
+            <div><small>ONE PROJECT · SAME AGENT IN EVERY MISSION</small><h2>{FLAGSHIP_SCENARIO.agent}</h2><p>{FLAGSHIP_SCENARIO.business} · Caller: {FLAGSHIP_SCENARIO.caller}</p></div>
+          </div>
+          <div className="flagship-build-state">
+            <small>WHAT IT CAN DO NOW</small>
+            {flagshipCapabilities.length ? flagshipCapabilities.map((item) => <span key={item.id}><CheckCircle2 /> {item.capability}</span>) : <p>Nothing yet. Mission 1 creates the agent every later Mission improves.</p>}
+          </div>
+        </section>
+      )}
+
       <div className="path-workspace-v2">
         <aside className="path-mission-list" aria-label="Missions in this path">
           <span>MISSIONS</span>
           {lessons.map((item, index) => {
             const done = missionIsComplete(selected, index, completed);
+            const unlocked = selected.id !== "voice-agent" || index === 0 || done || missionIsComplete(selected, index - 1, completed);
             return (
-              <button key={item.id} type="button" className={index === safeIndex ? "active" : done ? "done" : ""} onClick={() => { selectMission(index); resetPagePosition(); }}>
-                <span>{done ? <Check /> : index + 1}</span>
+              <button key={item.id} type="button" className={index === safeIndex ? "active" : done ? "done" : !unlocked ? "locked" : ""} disabled={!unlocked} onClick={() => { selectMission(index); resetPagePosition(); }}>
+                <span>{done ? <Check /> : !unlocked ? <LockKeyhole /> : index + 1}</span>
                 <strong>{item.title}</strong>
                 <small>{item.duration}</small>
               </button>
@@ -1287,6 +1325,7 @@ function PathWorkspace({
           completed={completed}
           toggleStep={toggleStep}
           onComplete={completeMission}
+          onContinue={continueMission}
         />
       </div>
     </div>
@@ -1301,6 +1340,7 @@ function MissionWorkspace({
   completed,
   toggleStep,
   onComplete,
+  onContinue,
 }: {
   track: Track;
   lesson: Lesson;
@@ -1309,6 +1349,7 @@ function MissionWorkspace({
   completed: string[];
   toggleStep: (key: string) => void;
   onComplete: () => void;
+  onContinue: () => void;
 }) {
   const done = missionIsComplete(track, lessonIndex, completed);
   const [speaking, setSpeaking] = useState(false);
@@ -1318,6 +1359,8 @@ function MissionWorkspace({
   const successKeys = lesson.success.map((_, index) => `success:${lesson.id}:${index}`);
   const allActionsDone = done || actionKeys.every((key) => completed.includes(key));
   const allSuccessDone = done || successKeys.every((key) => completed.includes(key));
+  const isFlagship = track.id === "voice-agent";
+  const previouslyEarned = isFlagship ? FLAGSHIP_CAPABILITIES.slice(0, lessonIndex) : [];
 
   useEffect(() => () => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -1342,11 +1385,18 @@ function MissionWorkspace({
   return (
     <article className="mission-surface">
       <header className="mission-head-v2">
-        <div><span>MISSION {lessonIndex + 1} · {lesson.duration}</span><h2>{lesson.title}</h2></div>
+        <div><span>MISSION {lessonIndex + 1} · {lesson.duration}</span><h2>{lesson.title}</h2>{isFlagship && <p className="mission-running-build"><Bot /> Still building: <strong>{FLAGSHIP_SCENARIO.agent}</strong>{previouslyEarned.length ? ` · ${previouslyEarned.length} capabilities already working` : " · starts here"}</p>}</div>
         <div className="mission-audio"><div className="mission-format-buttons"><Button variant="outline" onClick={toggleBriefing}>{speaking ? <Square /> : <Volume2 />}{speaking ? "Stop briefing" : "Listen · 60–90 sec"}</Button><Button variant="outline" className={watching ? "active" : ""} onClick={() => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); setSpeaking(false); setWatching((current) => !current); }}><Play />{watching ? "Close walkthrough" : "Watch instead"}</Button></div><details><summary>Read briefing</summary><p>{briefing}</p></details></div>
       </header>
 
       {watching && <MissionWalkthrough track={track} lesson={lesson} briefing={briefing} onClose={() => setWatching(false)} />}
+
+      {lesson.opening && (
+        <section className={`mission-opening ${lesson.opening.label === "SEE THE GAP FIRST" ? "failure-first" : "stake-first"}`}>
+          <div className="mission-opening-icon">{lesson.opening.label === "SEE THE GAP FIRST" ? <Zap /> : <Lightbulb />}</div>
+          <div><small>{lesson.opening.label}</small><h3>{lesson.opening.problem}</h3>{lesson.opening.tryThis && <p><strong>Try this before you fix it:</strong> {lesson.opening.tryThis}</p>}{lesson.opening.expectedGap && <p><strong>What you should notice:</strong> {lesson.opening.expectedGap}</p>}</div>
+        </section>
+      )}
 
       <section className="mission-success-line"><CheckCircle2 /><span><small>SUCCESS LOOKS LIKE</small><strong>{lesson.success[0]}</strong></span></section>
 
@@ -1356,6 +1406,13 @@ function MissionWorkspace({
         <summary><ListChecks /><span><strong>Before you start</strong><small>{lesson.before.length} prerequisites</small></span><ChevronRight /></summary>
         <div>{lesson.before.map((item) => <p key={item}><Check /> {item}</p>)}</div>
       </details>
+
+      {lesson.skipForNow?.length ? (
+        <details className="mission-skip-v2">
+          <summary><ShieldCheck /><span><strong>Keep this first run small</strong><small>{lesson.skipForNow.length} things to ignore for now</small></span><ChevronRight /></summary>
+          <div>{lesson.skipForNow.map((item) => <span key={item}><X /> {item}</span>)}</div>
+        </details>
+      ) : null}
 
       <section className="mission-actions-v2">
         <header><span>DO THE WORK</span><h3>Complete these actions in Live Hub</h3></header>
@@ -1367,6 +1424,7 @@ function MissionWorkspace({
             return (
               <article key={actionKey} className={checked ? "inline-action checked" : "inline-action"}>
                 <label><Checkbox checked={checked} disabled={done} onCheckedChange={() => toggleStep(actionKey)} aria-label={`Mark ${action.title} complete`} /><span><strong>{action.title}</strong><p>{action.instruction}</p>{action.note && <em><Lightbulb /> {action.note}</em>}</span></label>
+                {action.resource && <div className="action-resource"><Button asChild variant="outline"><a href={action.resource.href} target={action.resource.download ? undefined : "_blank"} rel={action.resource.download ? undefined : "noreferrer"} download={action.resource.download}><FileText /> {action.resource.label} {action.resource.download ? <ArrowRight /> : <ExternalLink />}</a></Button></div>}
                 {media && (
                   <div className="action-media">
                     <figure><img src={media.image} alt={media.alt} loading="lazy" /><figcaption><CheckCircle2 /> {media.caption}</figcaption></figure>
@@ -1383,8 +1441,30 @@ function MissionWorkspace({
       <section className="mission-proof-v2">
         <header><span>SUCCESS CHECK</span><h3>Confirm what you can see</h3></header>
         <div>{lesson.success.map((item, index) => { const key = successKeys[index]; const checked = done || completed.includes(key); return <label key={key} className={checked ? "checked" : ""}><Checkbox checked={checked} disabled={done || !allActionsDone} onCheckedChange={() => toggleStep(key)} /><strong>{item}</strong></label>; })}</div>
-        <Button size="lg" disabled={done || !allActionsDone || !allSuccessDone} onClick={onComplete}>{done ? "Mission complete" : lessonIndex === totalMissions - 1 ? "Complete this path" : "Complete mission & open the next one"}<ArrowRight /></Button>
+        <Button size="lg" disabled={done || !allActionsDone || !allSuccessDone} onClick={onComplete}>{done ? "Mission complete" : lessonIndex === totalMissions - 1 ? "Complete this path" : "Confirm mission complete"}<ArrowRight /></Button>
       </section>
+
+      {done && lesson.capabilityGained && (
+        lessonIndex === totalMissions - 1 && isFlagship ? (
+          <section className="path-payoff" aria-live="polite">
+            <span className="path-payoff-award"><Award /></span>
+            <small>PATH COMPLETE · {track.reward.toUpperCase()} EARNED</small>
+            <h3>You built {FLAGSHIP_SCENARIO.agent}.</h3>
+            <p className="path-payoff-statement">“{FLAGSHIP_SCENARIO.finalStatement}”</p>
+            <div>{FLAGSHIP_CAPABILITIES.map((item) => <span key={item.id}><CheckCircle2 /><strong>{item.capability}</strong></span>)}</div>
+            <p>Call the provisioned number again whenever you want to repeat the proof. Use the matching Call ID and AI Agents log when you show the result to a colleague.</p>
+            <Button asChild size="lg"><a href="https://livehub.audiocodes.io/login" target="_blank" rel="noreferrer"><PhoneCall /> Call or inspect it again <ExternalLink /></a></Button>
+          </section>
+        ) : (
+          <section className="mission-capability-earned" aria-live="polite">
+            <span><CheckCircle2 /></span>
+            <div><small>CAPABILITY ADDED</small><h3>{lesson.capabilityGained}</h3>{isFlagship && <p>The next Mission changes this same {FLAGSHIP_SCENARIO.agent}—you are not starting a new exercise.</p>}</div>
+            {lessonIndex < totalMissions - 1 && <Button size="lg" onClick={onContinue}>Continue to Mission {lessonIndex + 2} <ArrowRight /></Button>}
+          </section>
+        )
+      )}
+
+      {done && !lesson.capabilityGained && lessonIndex < totalMissions - 1 && <section className="mission-capability-earned"><span><CheckCircle2 /></span><div><small>MISSION COMPLETE</small><h3>The result is saved. Continue when you are ready.</h3></div><Button size="lg" onClick={onContinue}>Continue to Mission {lessonIndex + 2} <ArrowRight /></Button></section>}
 
       <details className="mission-troubleshooting-v2"><summary><AlertTriangle /><span><strong>Troubleshoot this mission</strong><small>Open only if your result differs</small></span><ChevronRight /></summary><div>{lesson.troubleshooting.map((item) => <section key={item.problem}><strong>{item.problem}</strong><p>{item.fix}</p></section>)}</div></details>
     </article>

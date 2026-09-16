@@ -5,6 +5,7 @@ import test from "node:test";
 const pageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const lessonSource = await readFile(new URL("../app/lesson-data.ts", import.meta.url), "utf8");
 const supplementalSource = await readFile(new URL("../app/supplemental-lesson-data.ts", import.meta.url), "utf8");
+const flagshipSource = await readFile(new URL("../app/flagship-journey.ts", import.meta.url), "utf8");
 const docsSource = await readFile(new URL("../app/techdocs.ts", import.meta.url), "utf8");
 const quizSource = await readFile(new URL("../app/quiz-data.ts", import.meta.url), "utf8");
 
@@ -53,7 +54,7 @@ test("Path merges the old level and outcome layers", () => {
 });
 
 test("Path mission rows contain only position, title, duration, and completion state", () => {
-  assert.match(pathWorkspace, /done \? <Check \/> : index \+ 1/);
+  assert.match(pathWorkspace, /done \? <Check \/> : !unlocked \? <LockKeyhole \/> : index \+ 1/);
   assert.match(pathWorkspace, /<strong>\{item\.title\}<\/strong>/);
   assert.match(pathWorkspace, /<small>\{item\.duration\}<\/small>/);
   assert.doesNotMatch(pathWorkspace, /item\.objective|item\.description/);
@@ -114,6 +115,53 @@ test("the first real instruction is reachable in two views", () => {
   assert.match(pathWorkspace, /<MissionWorkspace/);
   assert.match(missionWorkspace, /GO TO/);
   assert.match(missionWorkspace, /lesson\.actions\.map/);
+});
+
+test("the flagship path builds one persistent dental receptionist in dependency order", () => {
+  const missionIds = [
+    "bright-smile-create",
+    "bright-smile-ground",
+    "bright-smile-availability",
+    "bright-smile-voice",
+    "bright-smile-outcomes",
+    "bright-smile-number",
+    "bright-smile-route-proof",
+  ];
+  const offsets = missionIds.map((id) => flagshipSource.indexOf(`id: "${id}"`));
+  offsets.forEach((offset) => assert.ok(offset > -1));
+  assert.deepEqual([...offsets].sort((a, b) => a - b), offsets);
+  assert.match(flagshipSource, /Bright Smile Receptionist/g);
+  assert.match(flagshipSource, /finalStatement: "I built an agent that answers clinic hours from our FAQ, checks appointment slots, and logs whether the caller got booked\."/);
+});
+
+test("flagship teaching begins with stakes or visible failure and scopes every mission", () => {
+  assert.ok((flagshipSource.match(/label: "SEE THE GAP FIRST"/g) ?? []).length >= 2);
+  assert.ok((flagshipSource.match(/label: "THE STAKE"/g) ?? []).length >= 5);
+  assert.equal((flagshipSource.match(/skipForNow:/g) ?? []).length, 7);
+  assert.equal((flagshipSource.match(/capabilityGained:/g) ?? []).length, 7);
+  assert.match(missionWorkspace, /lesson\.opening/);
+  assert.match(missionWorkspace, /Keep this first run small/);
+  assert.match(missionWorkspace, /CAPABILITY ADDED/);
+});
+
+test("the flagship exercise ships its own safe fictional practice data", async () => {
+  const faq = await readFile(new URL("../public/bright-smile-faq.txt", import.meta.url), "utf8");
+  const availability = JSON.parse(await readFile(new URL("../public/bright-smile-availability.json", import.meta.url), "utf8"));
+  assert.match(faq, /fictional training content/i);
+  assert.match(faq, /Friday: 8:00 AM–2:00 PM/);
+  assert.equal(availability.fictional, true);
+  assert.equal(availability.booking_supported, false);
+  assert.equal(availability.available_slots[0].time, "10:00");
+  assert.match(flagshipSource, /Download the Bright Smile FAQ/);
+  assert.match(flagshipSource, /bright-smile-availability\.json/);
+});
+
+test("mission completion reveals a capability before the next mission", () => {
+  assert.match(pathWorkspace, /const completeMission/);
+  assert.doesNotMatch(pathWorkspace.slice(pathWorkspace.indexOf("const completeMission"), pathWorkspace.indexOf("const continueMission")), /selectMission/);
+  assert.match(missionWorkspace, /className="mission-capability-earned"/);
+  assert.match(missionWorkspace, /Continue to Mission/);
+  assert.match(missionWorkspace, /className="path-payoff"/);
 });
 
 test("phone-number mission uses the documented request workflow", () => {

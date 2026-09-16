@@ -4,6 +4,18 @@ export type LessonAction = {
   title: string;
   instruction: string;
   note?: string;
+  resource?: {
+    label: string;
+    href: string;
+    download?: boolean;
+  };
+};
+
+export type LessonOpening = {
+  label: "THE STAKE" | "SEE THE GAP FIRST";
+  problem: string;
+  tryThis?: string;
+  expectedGap?: string;
 };
 
 export type LessonDecision = {
@@ -34,6 +46,9 @@ export type Lesson = {
   videoTitle?: string;
   decision?: LessonDecision;
   skipForNow?: string[];
+  requires?: string[];
+  opening?: LessonOpening;
+  capabilityGained?: string;
 };
 
 const firstRunNumberLesson: Lesson = {
