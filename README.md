@@ -6,6 +6,11 @@ The official outcome-first success experience for AudioCodes Live Hub: the faste
 
 - A deliberately shallow learning structure: **Home → Path → Mission**, with actions kept inline unless media genuinely needs more room
 - One persistent progress indicator in the top bar: `Mission X of Y · Z% complete`
+- A gold-standard flagship Path built around one continuous project: **Bright Smile Receptionist**, the same named AI Agent from creation to a real public call
+- Dependency-ordered flagship Missions: create → expose the knowledge gap → ground → add a safe lookup tool → prove voice → capture outcomes → provision a number → route and prove
+- A downloadable fictional clinic FAQ and read-only mock availability endpoint, so the first Path is executable rather than theoretical
+- A visible problem or business stake before every flagship Mission, plus an explicit **Keep this first run small** list
+- Mission-completion cards that name the capability just added, and a Path payoff that describes the exact working agent the learner built
 - A homepage with one recommended starting point, a subordinate product tour, and plain alternate paths for experienced users
 - A prominent home-page Academy Assistant that searches real Path, Mission, click-path, prerequisite, action, and success-check data, then opens the exact matching Mission
 - A stable `livehub-academy-assistant` integration slot and `livehub-academy:assistant-query` browser event for a future Live Hub agent or Intercom handoff
@@ -103,4 +108,4 @@ The project keeps its existing Sites/Vinext configuration and adds a separate st
 
 ## Content note
 
-The Academy converts the complete 782-page Live Hub 2.19.2 manual, support guidance, and Live Hub Log Glossary into short, task-oriented customer outcomes. Vendor parameter tables, edge cases, and release-specific detail remain in Expert Reference; official documentation remains the source of truth.
+The Academy converts the complete Live Hub 2.19.2 technical documentation, support guidance, and Live Hub Log Glossary into short, task-oriented customer outcomes. Vendor parameter tables, edge cases, and release-specific detail remain in Expert Reference; official documentation remains the source of truth.
