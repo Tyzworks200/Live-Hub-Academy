@@ -85,7 +85,7 @@ const tracks: Track[] = [
   {
     id: "voice-agent",
     eyebrow: "Best first win",
-    title: "First Successful AI Call",
+    title: "Get one AI Agent answering real calls",
     description:
       "Build a useful AI receptionist, make it speak, connect a real number, and call it from your phone.",
     role: "New Live Hub users and AI builders",
@@ -674,7 +674,7 @@ function guideLearner(question: string): AcademyGuideResult {
 
 const navItems: { id: View; label: string; icon: typeof Bot }[] = [
   { id: "home", label: "Success home", icon: Sparkles },
-  { id: "journeys", label: "Go-live journey", icon: Route },
+  { id: "journeys", label: "Paths", icon: Route },
   { id: "troubleshooting", label: "Fix a failed call", icon: AlertTriangle },
   { id: "library", label: "Expert reference", icon: LibraryBig },
   { id: "glossary", label: "Voice terms", icon: Code2 },
@@ -787,7 +787,7 @@ function missionIsComplete(track: Track, index: number, completed: string[]) {
 export default function Home() {
   const [view, setView] = useState<View>("home");
   const [selectedTrack, setSelectedTrack] = useState<Track>(tracks[0]);
-  const [startSelectedTrack, setStartSelectedTrack] = useState(false);
+  const [selectedMissionIndex, setSelectedMissionIndex] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
 
@@ -826,22 +826,20 @@ export default function Home() {
   ).length;
   const progress = currentSteps ? Math.round((currentCompleted / currentSteps) * 100) : 0;
 
-  const selectedIndex = useMemo(
-    () => tracks.findIndex((track) => track.id === selectedTrack.id),
-    [selectedTrack]
-  );
-
-  const goToTrack = (id: string) => {
+  const goToTrack = (id: string, missionIndex?: number) => {
     const track = tracks.find((item) => item.id === id);
-    if (track) setSelectedTrack(track);
-    setStartSelectedTrack(true);
+    if (track) {
+      setSelectedTrack(track);
+      const trackLessons = lessonsByTrack[track.id] ?? [];
+      const firstIncomplete = trackLessons.findIndex((_, index) => !missionIsComplete(track, index, completed));
+      setSelectedMissionIndex(missionIndex ?? (firstIncomplete === -1 ? Math.max(0, trackLessons.length - 1) : firstIncomplete));
+    }
     setView("journeys");
     setMobileOpen(false);
     resetPagePosition();
   };
 
   const goToView = (next: View) => {
-    setStartSelectedTrack(false);
     setView(next);
     setMobileOpen(false);
     resetPagePosition();
@@ -894,15 +892,6 @@ export default function Home() {
           })}
         </nav>
 
-        <div className="sidebar-progress-card">
-          <div className="progress-card-head">
-            <span>Current mission</span>
-            <strong>{progress}%</strong>
-          </div>
-          <Progress value={progress} aria-label="Academy progress" />
-          <p>{currentCompleted ? `${currentCompleted} of ${currentSteps} missions complete in ${selectedTrack.title}.` : `Ready to begin: ${selectedTrack.title}.`}</p>
-        </div>
-
         <Button asChild variant="ghost" className="sidebar-help">
           <a href={TECH_DOCS.support} target="_blank" rel="noreferrer">
             <CircleHelp />
@@ -922,6 +911,10 @@ export default function Home() {
           <div className="breadcrumb">
             Live Hub <span>/</span> Academy
           </div>
+          <div className="topbar-progress" aria-label={`${progress}% complete in ${selectedTrack.title}`}>
+            <div><strong>Mission {Math.min(selectedMissionIndex + 1, Math.max(1, currentSteps))} of {Math.max(1, currentSteps)} · {progress}% complete</strong></div>
+            <Progress value={progress} />
+          </div>
           <div className="topbar-actions">
             <Button variant="ghost" className="top-link" onClick={() => goToView("library")}>
               <Search /> Expert reference
@@ -935,25 +928,22 @@ export default function Home() {
         </header>
 
         {view === "home" && (
-          <HomeView
+          <AcademyHome
             goToTrack={goToTrack}
             goToOrientation={() => goToView("orientation")}
-            goToJourneys={() => goToView("journeys")}
-            goToCertification={() => goToView("quiz")}
             completed={completed}
           />
         )}
         {view === "orientation" && <OrientationView goToJourneys={() => goToView("journeys")} />}
         {view === "journeys" && (
-          <JourneysView
+          <PathWorkspace
             key={selectedTrack.id}
             selected={selectedTrack}
-            selectedIndex={selectedIndex}
-            startImmediately={startSelectedTrack}
+            selectedMissionIndex={selectedMissionIndex}
+            selectMission={setSelectedMissionIndex}
             launchTrack={goToTrack}
             completed={completed}
             toggleStep={toggleStep}
-            onKnowledgeCheck={() => goToView("quiz")}
           />
         )}
         {view === "troubleshooting" && <TroubleshootingView goToDiagnosis={() => goToTrack("diagnose")} />}
@@ -962,6 +952,362 @@ export default function Home() {
         {view === "glossary" && <GlossaryView />}
       </section>
     </main>
+  );
+}
+
+type MissionMatch = {
+  track: Track;
+  lesson: Lesson;
+  lessonIndex: number;
+  score: number;
+};
+
+const trackSearchAliases: Record<string, string> = {
+  "voice-agent": "ai receptionist native agent answer customer opening hours first call",
+  "bot-connect": "existing bot copilot dialogflow rasa amazon lex framework",
+  "sip-trunk": "sip trunk provider contact center fqdn registration keep alive",
+  "teams-sip": "microsoft teams tenant direct routing users",
+  "phone-number": "phone number did purchase provision us uk",
+  routing: "route routing origin destination called calling number real customer call",
+  diagnose: "failed call error logs ladder debug troubleshoot disconnected",
+  operate: "monitor calls alarms billing usage access iam",
+};
+
+function findMissionMatches(query: string): MissionMatch[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return [];
+  const tokens = normalized.split(/[^a-z0-9+]+/).filter((token) => token.length > 1);
+
+  return tracks
+    .flatMap((track) => (lessonsByTrack[track.id] ?? []).map((lesson, lessonIndex) => {
+      const titleText = `${track.title} ${lesson.title}`.toLowerCase();
+      const searchable = [
+        titleText,
+        trackSearchAliases[track.id] ?? "",
+        lesson.objective,
+        lesson.path.join(" "),
+        lesson.before.join(" "),
+        lesson.actions.map((action) => `${action.title} ${action.instruction}`).join(" "),
+        lesson.success.join(" "),
+      ].join(" ").toLowerCase();
+      const tokenScore = tokens.reduce((score, token) => score + (searchable.includes(token) ? 2 : 0), 0);
+      const score = tokenScore
+        + (titleText.includes(normalized) ? 12 : 0)
+        + (searchable.includes(normalized) ? 6 : 0);
+      return { track, lesson, lessonIndex, score };
+    }))
+    .filter((match) => match.score > 0)
+    .sort((a, b) => b.score - a.score || a.lessonIndex - b.lessonIndex)
+    .slice(0, 4);
+}
+
+function AcademyHome({
+  goToTrack,
+  goToOrientation,
+  completed,
+}: {
+  goToTrack: (id: string, missionIndex?: number) => void;
+  goToOrientation: () => void;
+  completed: string[];
+}) {
+  const [query, setQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
+  const matches = useMemo(() => findMissionMatches(submittedQuery), [submittedQuery]);
+  const alternateIds = ["sip-trunk", "teams-sip", "routing", "phone-number", "bot-connect", "diagnose", "operate", "agent-builder"];
+  const alternatePaths = alternateIds.map((id) => tracks.find((track) => track.id === id)).filter((track): track is Track => Boolean(track));
+
+  const runSearch = (value: string) => {
+    const trimmed = value.trim();
+    setQuery(value);
+    setSubmittedQuery(trimmed);
+  };
+
+  return (
+    <div className="page academy-home-v2">
+      <section className="home-entry-hero">
+        <div>
+          <span className="section-kicker"><Sparkles /> WELCOME TO LIVE HUB ACADEMY</span>
+          <h1>Turn a Live Hub goal<br /><span>into a working result.</span></h1>
+          <p>Choose what you need to make work, then follow one focused path inside the real product.</p>
+          <div className="home-entry-actions">
+            <Button size="lg" onClick={() => goToTrack("voice-agent")}>Make my first AI call <ArrowRight /></Button>
+            <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See Live Hub in 3 minutes</Button>
+          </div>
+        </div>
+        <aside>
+          <span>YOUR FIRST INSTRUCTION IS TWO CLICKS AWAY</span>
+          <strong>Home → Path workspace → do the work</strong>
+          <p>No level screen. No outcome card. The first mission opens with every action visible.</p>
+        </aside>
+      </section>
+
+      <section className="alternate-paths">
+        <header><div><span className="section-kicker">ALREADY KNOW YOUR START?</span><h2>Open the path you need.</h2></div><p>SIP, Teams, routing, operations, and advanced AI paths start directly in their first unfinished mission.</p></header>
+        <div>
+          {alternatePaths.map((track) => {
+            const Icon = track.icon;
+            const done = track.steps.filter((_, index) => missionIsComplete(track, index, completed)).length;
+            return (
+              <button key={track.id} type="button" onClick={() => goToTrack(track.id)}>
+                <span className={`alternate-path-icon ${track.color}`}><Icon /></span>
+                <span><strong>{track.title}</strong><small>{track.time} · {track.steps.length} missions{done ? ` · ${done} complete` : ""}</small></span>
+                <ChevronRight />
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="livehub-academy-assistant" className="mission-finder" data-integration-slot="intercom">
+        <div className="mission-finder-intro"><Bot /><span><small>ACADEMY GUIDE · WORKING SEARCH</small><h2>What are you trying to make work?</h2><p>Searches every Path, Mission, click path, prerequisite, and action.</p></span></div>
+        <form onSubmit={(event) => { event.preventDefault(); runSearch(query); }}>
+          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Example: connect a Generic SIP trunk" aria-label="Find a Live Hub mission" />
+          <Button type="submit"><Search /> Find my mission</Button>
+        </form>
+        <div className="mission-finder-suggestions" aria-label="Suggested searches">
+          {["Route a customer call", "Connect a Generic SIP trunk", "Fix a failed call"].map((suggestion) => <button key={suggestion} type="button" onClick={() => runSearch(suggestion)}>{suggestion}</button>)}
+        </div>
+        {submittedQuery && (
+          <div className="mission-matches" aria-live="polite">
+            {matches.length ? matches.map((match) => (
+              <button key={`${match.track.id}:${match.lesson.id}`} type="button" onClick={() => goToTrack(match.track.id, match.lessonIndex)}>
+                <span><small>{match.track.title}</small><strong>{match.lesson.title}</strong><em>{match.lesson.path.join(" › ")}</em></span>
+                <span>Open mission <ArrowRight /></span>
+              </button>
+            )) : <p>No exact mission found. Try “SIP,” “routing,” “Teams,” “AI Agent,” or “failed call.”</p>}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+type RoutingSource = "number" | "sip";
+
+type ActionMedia = {
+  image?: string;
+  alt?: string;
+  caption?: string;
+  videoId?: string;
+  videoTitle?: string;
+};
+
+function getActionMedia(trackId: string, lesson: Lesson, actionIndex: number, routingSource: RoutingSource): ActionMedia | null {
+  if (trackId === "routing") {
+    const routingMedia: Record<string, ActionMedia> = {
+      "routing-model:0": { image: "routing-rules-list.png", alt: "Live Hub Routing rules list", caption: "Find the source and destination that already exist in this account." },
+      "routing-model:2": { image: "routing-rule-builder.png", alt: "Live Hub routing condition fields", caption: "Start with one exact calling or called number." },
+      "routing-create:0": { image: "routing-rules-list.png", alt: "Add new routing rule in Live Hub", caption: "Add the rule from the Routing page.", videoId: routingSource === "number" ? "S3VdrZ5FadQ" : "mWC5wFb6hoQ", videoTitle: routingSource === "number" ? "Inbound Calls to a Bot Using a Live Hub Number" : "Inbound Calls to a Bot Using External SIP Provider" },
+      "routing-create:2": { image: "routing-rule-builder.png", alt: "Live Hub routing rule builder", caption: "Set the exact origin and first test condition." },
+      "routing-create:4": { image: "routing-rule-summary.png", alt: "Expanded saved routing rule", caption: "Read the saved rule back from origin to destination." },
+      "routing-test:2": { image: "call-history-proof.png", alt: "Live Hub Call History", caption: "The newest call record is where the route is proved." },
+      "routing-add-services:0": { image: "routing-rule-services.png", alt: "Optional routing services", caption: "Add only the production capability this call needs." },
+      "routing-add-services:2": { image: "routing-rule-numbers.png", alt: "Routing number customization", caption: "Change numbers only when the destination requires it." },
+      "routing-add-services:4": { image: "call-history-proof.png", alt: "Call History baseline comparison", caption: "Compare this call with the known-good baseline." },
+    };
+    return routingMedia[`${lesson.id}:${actionIndex}`] ?? null;
+  }
+
+  if (actionIndex !== 0 || (!lesson.image && !lesson.videoId)) return null;
+  return {
+    image: lesson.image,
+    alt: lesson.imageAlt,
+    caption: "Use this screen only while completing the action beside it.",
+    videoId: lesson.videoId,
+    videoTitle: lesson.videoTitle,
+  };
+}
+
+function buildSpokenBriefing(lesson: Lesson) {
+  const objective = lesson.objective.replace(/\.$/, "");
+  const warning = lesson.commonMistake ?? "Keep the first attempt narrow and change only one thing at a time.";
+  const success = lesson.success.slice(0, 2).join(" Then confirm that ").replace(/\.$/, "");
+  return [
+    `Your focus is simple: ${objective.toLowerCase()}.`,
+    "Before you start, make sure the prerequisite is real, not assumed. A missing connection, permission, number, or region choice will make the next result misleading.",
+    `The main trap is this: ${warning}`,
+    "Work through the visible actions in order. Keep the first attempt small, use one controlled test, and resist adding optional behavior until the basic result is stable.",
+    `You are finished when ${success.toLowerCase()}.`,
+    "If the evidence does not match, stop at that point. Keep the failed result, change one thing, and test again. The goal is a result you can explain, repeat, and show to another person.",
+  ].join(" ");
+}
+
+function PathWorkspace({
+  selected,
+  selectedMissionIndex,
+  selectMission,
+  launchTrack,
+  completed,
+  toggleStep,
+}: {
+  selected: Track;
+  selectedMissionIndex: number;
+  selectMission: (index: number) => void;
+  launchTrack: (id: string, missionIndex?: number) => void;
+  completed: string[];
+  toggleStep: (key: string) => void;
+}) {
+  const lessons = lessonsByTrack[selected.id] ?? [];
+  const safeIndex = Math.min(selectedMissionIndex, Math.max(0, lessons.length - 1));
+  const lesson = lessons[safeIndex];
+  const [routingSource, setRoutingSource] = useState<RoutingSource>("number");
+  const pathComplete = lessons.length > 0 && lessons.every((_, index) => missionIsComplete(selected, index, completed));
+
+  if (!lesson) return <div className="page"><p>No missions are available for this path yet.</p></div>;
+
+  const completeMission = () => {
+    const key = missionProgressKey(selected, safeIndex);
+    if (!missionIsComplete(selected, safeIndex, completed)) toggleStep(key);
+    if (safeIndex < lessons.length - 1) {
+      selectMission(safeIndex + 1);
+      resetPagePosition();
+    }
+  };
+
+  return (
+    <div className="page path-page">
+      <header className="path-header">
+        <div><span className="section-kicker">PATH</span><h1>{selected.title}</h1><p>{selected.description}</p></div>
+        {["voice-agent", "bot-connect"].includes(selected.id) && (
+          <div className="path-toggle" aria-label="Choose how to start the AI path">
+            <span>STARTING POINT</span>
+            <div><Button variant="outline" className={selected.id === "voice-agent" ? "active" : ""} onClick={() => launchTrack("voice-agent", 0)}>Build a new AI Agent</Button><Button variant="outline" className={selected.id === "bot-connect" ? "active" : ""} onClick={() => launchTrack("bot-connect", 0)}>Connect an existing bot</Button></div>
+          </div>
+        )}
+        {selected.id === "routing" && (
+          <div className="path-toggle" aria-label="Choose the origin for this routing path">
+            <span>CALL ORIGIN</span>
+            <div><Button variant="outline" className={routingSource === "number" ? "active" : ""} onClick={() => setRoutingSource("number")}>Live Hub number</Button><Button variant="outline" className={routingSource === "sip" ? "active" : ""} onClick={() => setRoutingSource("sip")}>External SIP provider</Button></div>
+          </div>
+        )}
+      </header>
+
+      <div className="path-workspace-v2">
+        <aside className="path-mission-list" aria-label="Missions in this path">
+          <span>MISSIONS</span>
+          {lessons.map((item, index) => {
+            const done = missionIsComplete(selected, index, completed);
+            return (
+              <button key={item.id} type="button" className={index === safeIndex ? "active" : done ? "done" : ""} onClick={() => { selectMission(index); resetPagePosition(); }}>
+                <span>{done ? <Check /> : index + 1}</span>
+                <strong>{item.title}</strong>
+                <small>{item.duration}</small>
+              </button>
+            );
+          })}
+          {pathComplete && <div className="path-complete-note"><Award /><span><strong>Path complete</strong><small>{selected.reward} earned</small></span></div>}
+        </aside>
+
+        <MissionWorkspace
+          key={lesson.id}
+          track={selected}
+          lesson={lesson}
+          lessonIndex={safeIndex}
+          totalMissions={lessons.length}
+          completed={completed}
+          toggleStep={toggleStep}
+          onComplete={completeMission}
+          routingSource={routingSource}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MissionWorkspace({
+  track,
+  lesson,
+  lessonIndex,
+  totalMissions,
+  completed,
+  toggleStep,
+  onComplete,
+  routingSource,
+}: {
+  track: Track;
+  lesson: Lesson;
+  lessonIndex: number;
+  totalMissions: number;
+  completed: string[];
+  toggleStep: (key: string) => void;
+  onComplete: () => void;
+  routingSource: RoutingSource;
+}) {
+  const done = missionIsComplete(track, lessonIndex, completed);
+  const [speaking, setSpeaking] = useState(false);
+  const briefing = buildSpokenBriefing(lesson);
+  const actionKeys = lesson.actions.map((_, index) => `action:${lesson.id}:${index}`);
+  const successKeys = lesson.success.map((_, index) => `success:${lesson.id}:${index}`);
+  const allActionsDone = done || actionKeys.every((key) => completed.includes(key));
+  const allSuccessDone = done || successKeys.every((key) => completed.includes(key));
+
+  useEffect(() => () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  }, [lesson.id]);
+
+  const toggleBriefing = () => {
+    if (!("speechSynthesis" in window)) return;
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(briefing);
+    utterance.rate = 0.94;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+    setSpeaking(true);
+  };
+
+  return (
+    <article className="mission-surface">
+      <header className="mission-head-v2">
+        <div><span>MISSION {lessonIndex + 1} · {lesson.duration}</span><h2>{lesson.title}</h2></div>
+        <div className="mission-audio"><Button variant="outline" onClick={toggleBriefing}>{speaking ? <Square /> : <Volume2 />}{speaking ? "Stop briefing" : "Play 60–90 sec briefing"}</Button><details><summary>Read briefing</summary><p>{briefing}</p></details></div>
+      </header>
+
+      <section className="mission-success-line"><CheckCircle2 /><span><small>SUCCESS LOOKS LIKE</small><strong>{lesson.success[0]}</strong></span></section>
+
+      <section className="mission-click-path" aria-label="Click path in Live Hub"><span>GO TO</span><div>{lesson.path.map((part, index) => <span key={`${part}:${index}`}>{part}{index < lesson.path.length - 1 && <ChevronRight />}</span>)}</div></section>
+
+      <details className="mission-before-v2">
+        <summary><ListChecks /><span><strong>Before you start</strong><small>{lesson.before.length} prerequisites</small></span><ChevronRight /></summary>
+        <div>{lesson.before.map((item) => <p key={item}><Check /> {item}</p>)}</div>
+      </details>
+
+      <section className="mission-actions-v2">
+        <header><span>DO THE WORK</span><h3>Complete these actions in Live Hub</h3></header>
+        <div>
+          {lesson.actions.map((action, index) => {
+            const actionKey = actionKeys[index];
+            const checked = done || completed.includes(actionKey);
+            const media = getActionMedia(track.id, lesson, index, routingSource);
+            return (
+              <article key={actionKey} className={checked ? "inline-action checked" : "inline-action"}>
+                <label><Checkbox checked={checked} disabled={done} onCheckedChange={() => toggleStep(actionKey)} aria-label={`Mark ${action.title} complete`} /><span><strong>{action.title}</strong><p>{action.instruction}</p>{action.note && <em><Lightbulb /> {action.note}</em>}</span></label>
+                {media && (
+                  <div className="action-media">
+                    {media.image && <figure><img src={media.image} alt={media.alt ?? action.title} loading="lazy" /><figcaption>{media.caption}</figcaption></figure>}
+                    {media.videoId && <figure><div className="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${media.videoId}?rel=0`} title={media.videoTitle ?? action.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div><figcaption>{media.videoTitle}</figcaption></figure>}
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {lesson.commonMistake && <aside className="mission-warning-v2"><AlertTriangle /><span><strong>Common mistake</strong><p>{lesson.commonMistake}</p></span></aside>}
+
+      <section className="mission-proof-v2">
+        <header><span>SUCCESS CHECK</span><h3>Confirm what you can see</h3></header>
+        <div>{lesson.success.map((item, index) => { const key = successKeys[index]; const checked = done || completed.includes(key); return <label key={key} className={checked ? "checked" : ""}><Checkbox checked={checked} disabled={done || !allActionsDone} onCheckedChange={() => toggleStep(key)} /><strong>{item}</strong></label>; })}</div>
+        <Button size="lg" disabled={done || !allActionsDone || !allSuccessDone} onClick={onComplete}>{done ? "Mission complete" : lessonIndex === totalMissions - 1 ? "Complete this path" : "Complete mission & open the next one"}<ArrowRight /></Button>
+      </section>
+
+      <details className="mission-troubleshooting-v2"><summary><AlertTriangle /><span><strong>Troubleshoot this mission</strong><small>Open only if your result differs</small></span><ChevronRight /></summary><div>{lesson.troubleshooting.map((item) => <section key={item.problem}><strong>{item.problem}</strong><p>{item.fix}</p></section>)}</div></details>
+    </article>
   );
 }
 
