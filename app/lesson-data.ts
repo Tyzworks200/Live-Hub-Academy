@@ -36,29 +36,6 @@ export type Lesson = {
   skipForNow?: string[];
 };
 
-const images = {
-  botPicker: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/VAIG_Cloud/Connect%20your%20bot_latest_2.png",
-  agentFramework: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-LiveHubAIAgentFramework.png",
-  speechSettings: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/VAIG_Cloud/byoc_botsett_data_msftVGA.png",
-  routeCreate: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/livehub-create-new-routing-rule.png",
-  routeList: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LiveHubExpandRoutingRule.png",
-  testCard: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/Test-your-bot-card.png",
-  testDialog: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-%20Bot-testing.png",
-  callHistory: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-callhistory-new.png",
-  callSummary: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-call-summary.png",
-  botLatency: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/BotLatency.png",
-  sipLadder: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/VAIG_Cloud/LH-call-history-sip-ladder.png",
-  teamsCreate: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/VAIG_Cloud/Teams-Create_Conn.png",
-  whatsappCreate: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-whatsapp-addnew.png",
-  assistPicker: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/Connect%20your%20assist-bot.png",
-  assistOutside: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LHAgentAssitDiagram-outsideLiveHub.png",
-  assistRoute: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LiveHub_AgentAssit_routing.png",
-  translationGeneral: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-voice-translation-configure-general.png",
-  translationLanguages: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-voice-translation-languages.png",
-  translationAdvanced: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-voice-translation-configure-advanced.png",
-  translationDynamic: "https://techdocs.audiocodes.com/livehub/Content/Resources/Images/LiveHub/LH-voice-translation-languages-dynamic.png",
-};
-
 const firstRunNumberLesson: Lesson = {
   id: "request-first-number",
   title: "Give customers a real US or UK number",
@@ -121,8 +98,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Adding documents, tools, transfers, and production logic before one simple conversation works.",
       docUrl: TECH_DOCS.aiAgent,
-      image: images.agentFramework,
-      imageAlt: "Live Hub AI Agent framework selection screen",
       videoId: "Ggv2W6vYtIo",
       videoTitle: "Quick Start Guide for Voice AI Live Hub Setup",
     },
@@ -172,8 +147,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Creating a second manual Bot connection when the agent already generated one automatically.",
       docUrl: TECH_DOCS.aiAgent,
-      image: images.speechSettings,
-      imageAlt: "Speech-to-text and text-to-speech settings in Live Hub",
     },
     {
       id: "voice-test",
@@ -197,8 +170,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Building a routing rule before the agent passes a direct browser voice test.",
       docUrl: TECH_DOCS.botTest,
-      image: images.testCard,
-      imageAlt: "Live Hub Bot connection card with the test-call control",
     },
     firstRunNumberLesson,
     {
@@ -224,8 +195,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Using only Call History or only AI Logs. Production diagnosis needs both views.",
       docUrl: TECH_DOCS.routing,
-      image: images.routeCreate,
-      imageAlt: "Create a new Live Hub routing rule",
     },
   ],
 
@@ -473,8 +442,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Calling the trunk ‘connected’ because the card exists. A completed test call and its evidence are the real success check.",
       docUrl: TECH_DOCS.genericSip,
-      image: images.sipLadder,
-      imageAlt: "Live Hub SIP Ladder used to verify a SIP connection",
     },
     firstRunNumberLesson,
     {
@@ -499,8 +466,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Using a catch-all before the exact first test works. Specific rules should be evaluated before broad fallbacks.",
       docUrl: TECH_DOCS.routing,
-      image: images.routeCreate,
-      imageAlt: "Create an exact Live Hub routing rule from a phone number to SIP",
     },
   ],
 
@@ -528,8 +493,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Creating the Teams connection before confirming the tenant, licenses, service account, and current Live Hub account.",
       docUrl: TECH_DOCS.teamsTenant,
-      image: images.teamsCreate,
-      imageAlt: "Microsoft Teams connection setup in Live Hub",
     },
     {
       id: "teams-create-connection",
@@ -552,8 +515,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The region is wrong", fix: "Correct or recreate the connection before adding phone numbers and routing." },
       ],
       docUrl: TECH_DOCS.teams,
-      image: images.teamsCreate,
-      imageAlt: "Create a Microsoft Teams connection in Live Hub",
     },
     {
       id: "teams-assign-numbers",
@@ -622,8 +583,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Creating one rule and assuming it controls both directions. Teams-to-SIP and SIP-to-Teams need separate rules.",
       docUrl: TECH_DOCS.teamsRouting,
-      image: images.routeCreate,
-      imageAlt: "Create a Live Hub routing rule between Teams and SIP",
     },
   ],
 
@@ -647,8 +606,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       troubleshooting: [{ problem: "You cannot select an origin or destination", fix: "Create that number, bot, or connection first and confirm it uses the same account and region." }],
       commonMistake: "Starting with optional services before the basic origin-to-destination route succeeds.",
       docUrl: TECH_DOCS.routing,
-      image: images.routeList,
-      imageAlt: "Expanded Live Hub routing rule",
     },
     {
       id: "routing-create",
@@ -673,8 +630,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Using a broad wildcard for the first test and then not knowing which traffic the rule captures.",
       docUrl: TECH_DOCS.routing,
-      image: images.routeCreate,
-      imageAlt: "Create a new Live Hub routing rule",
       videoId: "S3VdrZ5FadQ",
       videoTitle: "Inbound Calls to a Bot Using a Live Hub Number",
     },
@@ -699,8 +654,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
       ],
       commonMistake: "Adding features to a route that has never passed a plain end-to-end call.",
       docUrl: TECH_DOCS.callHistory,
-      image: images.callHistory,
-      imageAlt: "Live Hub Call History used to verify a routing rule",
     },
     {
       id: "routing-add-services",
@@ -908,8 +861,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "WebRTC authentication is unclear", fix: "Use authentication code for the safer setup. Basic credentials are supported but are not the preferred method." },
       ],
       docUrl: TECH_DOCS.voiceChannels,
-      image: images.teamsCreate,
-      imageAlt: "Create a Microsoft Teams connection in Live Hub",
     },
     {
       id: "verify-channel",
@@ -930,8 +881,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The wrong region was used", fix: "Recreate or edit the connection before continuing, then keep all first-test entities in one region." },
       ],
       docUrl: TECH_DOCS.teams,
-      image: images.whatsappCreate,
-      imageAlt: "Add new WhatsApp number screen in Live Hub",
     },
     {
       id: "route-channel",
@@ -953,8 +902,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The call is rejected", fix: "Check called-number formatting, including the + country code, exact number, prefix, or * pattern." },
       ],
       docUrl: TECH_DOCS.routing,
-      image: images.routeCreate,
-      imageAlt: "Create a new routing rule in Live Hub",
     },
   ],
 
@@ -978,8 +925,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "You created a voice bot by mistake", fix: "Return to Bot connections and use Add new assist bot connection. The two connection types serve different call roles." },
       ],
       docUrl: TECH_DOCS.agentAssist,
-      image: images.assistPicker,
-      imageAlt: "Live Hub add new assist bot connection screen",
     },
     {
       id: "choose-assist-path",
@@ -999,8 +944,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The assist bot receives no transcript", fix: "If the call is outside Live Hub, verify the SIPREC session reaches the Live Hub connection. If inside, verify the service is enabled on the matching routing rule." },
       ],
       docUrl: TECH_DOCS.agentAssist,
-      image: images.assistOutside,
-      imageAlt: "Agent Assist architecture for calls outside Live Hub using SIPREC",
     },
     {
       id: "attach-assist",
@@ -1022,8 +965,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "You selected the assist bot as the main destination", fix: "For calls already in Live Hub, keep the normal destination and add the assist bot under Services." },
       ],
       docUrl: TECH_DOCS.agentAssist,
-      image: images.assistRoute,
-      imageAlt: "Agent Assist service selected in a Live Hub routing rule",
     },
     {
       id: "test-assist",
@@ -1045,8 +986,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "There is no transcript", fix: "Check the routing rule service and, for outside calls, the SIPREC connection before changing the bot logic." },
       ],
       docUrl: TECH_DOCS.callHistory,
-      image: images.callSummary,
-      imageAlt: "Live Hub call summary used to verify an Agent Assist test call",
     },
   ],
 
@@ -1070,8 +1009,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "You are unsure which activation mode to use", fix: "Start with Automatic for one fixed language pair. Use Dynamic only when agents must choose a language during the call." },
       ],
       docUrl: TECH_DOCS.translationCreate,
-      image: images.translationGeneral,
-      imageAlt: "General settings for automatic voice translation in Live Hub",
     },
     {
       id: "translation-languages",
@@ -1093,8 +1030,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "Dynamic activation does nothing", fix: "Confirm a DTMF code exists for that exact language pair and note whether customer activation is allowed." },
       ],
       docUrl: TECH_DOCS.translationDynamic,
-      image: images.translationDynamic,
-      imageAlt: "Dynamic voice translation language and DTMF settings",
     },
     {
       id: "translation-speech",
@@ -1116,8 +1051,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "Participants hear two voices too loudly", fix: "Lower the foreign/original language slider while translation is playing, or mute it for the agent when appropriate." },
       ],
       docUrl: TECH_DOCS.translationAutomatic,
-      image: images.translationAdvanced,
-      imageAlt: "Advanced volume and feature controls for Live Hub voice translation",
     },
     {
       id: "translation-route-test",
@@ -1140,8 +1073,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "Translation is slow", fix: "Use Call History to compare STT, provider, and TTS timing before changing multiple settings." },
       ],
       docUrl: TECH_DOCS.routing,
-      image: images.translationLanguages,
-      imageAlt: "Automatic translation language configuration in Live Hub",
     },
   ],
 
@@ -1165,8 +1096,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "There are several records", fix: "Compare the SID, start time, routing group, and transfer details before choosing one record in isolation." },
       ],
       docUrl: TECH_DOCS.callHistory,
-      image: images.callHistory,
-      imageAlt: "Live Hub Call History with filters and call records",
     },
     {
       id: "read-completion-status",
@@ -1187,8 +1116,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The status is blank or unclear", fix: "Use the call summary, participant sequence, service indicators, and timestamps to find the last successful stage." },
       ],
       docUrl: TECH_DOCS.callHistory,
-      image: images.callSummary,
-      imageAlt: "Live Hub call summary showing completion and enabled services",
     },
     {
       id: "inspect-failing-layer",
@@ -1210,8 +1137,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "Support cannot see the content", fix: "Sharing is off by default. Share the relevant transcript or AI agent logs, or download the exact files and send them yourself." },
       ],
       docUrl: TECH_DOCS.callHistory,
-      image: images.sipLadder,
-      imageAlt: "Live Hub SIP Ladder used to identify which side returned an error",
     },
     {
       id: "apply-one-fix",
@@ -1233,8 +1158,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "The same failure remains", fix: "Restore the setting if necessary, record that the cause was disproved, and move to the next most likely cause." },
       ],
       docUrl: TECH_DOCS.callHistory,
-      image: images.botLatency,
-      imageAlt: "Live Hub latency view for comparing bot and speech stages",
     },
     {
       id: "escalate-cleanly",
@@ -1256,8 +1179,6 @@ export const lessonsByTrack: Record<string, Lesson[]> = {
         { problem: "You are unsure what to share", fix: "Start with metadata and the smallest relevant excerpt. Add call content only when it is needed for the investigation." },
       ],
       docUrl: TECH_DOCS.support,
-      image: images.callHistory,
-      imageAlt: "Live Hub Call History used to download evidence for support",
     },
   ],
 };

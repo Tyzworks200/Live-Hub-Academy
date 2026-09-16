@@ -1020,6 +1020,9 @@ function AcademyHome({
     const trimmed = value.trim();
     setQuery(value);
     setSubmittedQuery(trimmed);
+    if (trimmed && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("livehub-academy:assistant-query", { detail: { query: trimmed } }));
+    }
   };
 
   return (
@@ -1034,10 +1037,25 @@ function AcademyHome({
             <Button size="lg" variant="outline" onClick={goToOrientation}><Play /> See Live Hub in 3 minutes</Button>
           </div>
         </div>
-        <aside>
-          <span>YOUR FIRST INSTRUCTION IS TWO CLICKS AWAY</span>
-          <strong>Home → Path workspace → do the work</strong>
-          <p>No level screen. No outcome card. The first mission opens with every action visible.</p>
+        <aside id="livehub-academy-assistant" className="home-ai-guide" data-integration-slot="intercom" data-assistant-fallback="mission-search">
+          <header><span><Bot /></span><div><small>LIVE HUB ACADEMY ASSISTANT</small><strong>Ask what you need to make work</strong></div><i>READY</i></header>
+          <p>Describe your goal or the thing that failed. The built-in guide opens the closest verified Mission; this same space is ready for a Live Hub agent or Intercom.</p>
+          <form onSubmit={(event) => { event.preventDefault(); runSearch(query); }}>
+            <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Example: route my number to an AI Agent" aria-label="Ask the Live Hub Academy assistant" />
+            <Button type="submit" aria-label="Ask the Academy"><ArrowRight /></Button>
+          </form>
+          <div className="home-ai-prompts" aria-label="Suggested questions">
+            {["Route a customer call", "Connect Generic SIP", "Fix a failed call"].map((suggestion) => <button key={suggestion} type="button" onClick={() => runSearch(suggestion)}>{suggestion}</button>)}
+          </div>
+          {submittedQuery && (
+            <div className="home-ai-answer" aria-live="polite">
+              <span className="home-ai-user">{submittedQuery}</span>
+              {matches.length ? (
+                <div><small>BEST NEXT MISSION</small><strong>{matches[0].lesson.title}</strong><p>{matches[0].track.title}</p><Button onClick={() => goToTrack(matches[0].track.id, matches[0].lessonIndex)}>Open this Mission <ArrowRight /></Button></div>
+              ) : <div><strong>I could not match that yet.</strong><p>Try SIP, routing, Teams, AI Agent, billing, or failed call.</p></div>}
+            </div>
+          )}
+          <footer><span /> Local Mission matching is active</footer>
         </aside>
       </section>
 
@@ -1058,64 +1076,39 @@ function AcademyHome({
         </div>
       </section>
 
-      <section id="livehub-academy-assistant" className="mission-finder" data-integration-slot="intercom">
-        <div className="mission-finder-intro"><Bot /><span><small>ACADEMY GUIDE · WORKING SEARCH</small><h2>What are you trying to make work?</h2><p>Searches every Path, Mission, click path, prerequisite, and action.</p></span></div>
-        <form onSubmit={(event) => { event.preventDefault(); runSearch(query); }}>
-          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Example: connect a Generic SIP trunk" aria-label="Find a Live Hub mission" />
-          <Button type="submit"><Search /> Find my mission</Button>
-        </form>
-        <div className="mission-finder-suggestions" aria-label="Suggested searches">
-          {["Route a customer call", "Connect a Generic SIP trunk", "Fix a failed call"].map((suggestion) => <button key={suggestion} type="button" onClick={() => runSearch(suggestion)}>{suggestion}</button>)}
-        </div>
-        {submittedQuery && (
-          <div className="mission-matches" aria-live="polite">
-            {matches.length ? matches.map((match) => (
-              <button key={`${match.track.id}:${match.lesson.id}`} type="button" onClick={() => goToTrack(match.track.id, match.lessonIndex)}>
-                <span><small>{match.track.title}</small><strong>{match.lesson.title}</strong><em>{match.lesson.path.join(" › ")}</em></span>
-                <span>Open mission <ArrowRight /></span>
-              </button>
-            )) : <p>No exact mission found. Try “SIP,” “routing,” “Teams,” “AI Agent,” or “failed call.”</p>}
-          </div>
-        )}
-      </section>
     </div>
   );
 }
 
 type RoutingSource = "number" | "sip";
 
-type ActionMedia = {
-  image?: string;
-  alt?: string;
-  caption?: string;
-  videoId?: string;
-  videoTitle?: string;
+type VerifiedActionMedia = {
+  image: string;
+  alt: string;
+  caption: string;
+  controlName: string;
+  verified: true;
 };
 
-function getActionMedia(trackId: string, lesson: Lesson, actionIndex: number, routingSource: RoutingSource): ActionMedia | null {
-  if (trackId === "routing") {
-    const routingMedia: Record<string, ActionMedia> = {
-      "routing-model:0": { image: "routing-rules-list.png", alt: "Live Hub Routing rules list", caption: "Find the source and destination that already exist in this account." },
-      "routing-model:2": { image: "routing-rule-builder.png", alt: "Live Hub routing condition fields", caption: "Start with one exact calling or called number." },
-      "routing-create:0": { image: "routing-rules-list.png", alt: "Add new routing rule in Live Hub", caption: "Add the rule from the Routing page.", videoId: routingSource === "number" ? "S3VdrZ5FadQ" : "mWC5wFb6hoQ", videoTitle: routingSource === "number" ? "Inbound Calls to a Bot Using a Live Hub Number" : "Inbound Calls to a Bot Using External SIP Provider" },
-      "routing-create:2": { image: "routing-rule-builder.png", alt: "Live Hub routing rule builder", caption: "Set the exact origin and first test condition." },
-      "routing-create:4": { image: "routing-rule-summary.png", alt: "Expanded saved routing rule", caption: "Read the saved rule back from origin to destination." },
-      "routing-test:2": { image: "call-history-proof.png", alt: "Live Hub Call History", caption: "The newest call record is where the route is proved." },
-      "routing-add-services:0": { image: "routing-rule-services.png", alt: "Optional routing services", caption: "Add only the production capability this call needs." },
-      "routing-add-services:2": { image: "routing-rule-numbers.png", alt: "Routing number customization", caption: "Change numbers only when the destination requires it." },
-      "routing-add-services:4": { image: "call-history-proof.png", alt: "Call History baseline comparison", caption: "Compare this call with the known-good baseline." },
-    };
-    return routingMedia[`${lesson.id}:${actionIndex}`] ?? null;
-  }
+const verifiedActionMedia: Record<string, VerifiedActionMedia> = {
+  "routing:routing-model:0": { image: "routing-rules-list.png", alt: "Routing Rules table with Origin and Route to columns", caption: "Use the Origin column to identify where the call begins.", controlName: "Origin column", verified: true },
+  "routing:routing-model:2": { image: "routing-rule-builder.png", alt: "Create Routing Rule screen with Calling number and Called number condition fields", caption: "Use one exact Calling number or Called number condition for the first test.", controlName: "Calling number and Called number fields", verified: true },
+  "routing:routing-create:0": { image: "routing-rules-list.png", alt: "Routing Rules page with Add new routing rule button", caption: "Select Add new routing rule from this screen.", controlName: "Add new routing rule", verified: true },
+  "routing:routing-create:2": { image: "routing-rule-builder.png", alt: "Create Routing Rule screen showing Type, Call origin, and Conditions", caption: "Complete Type, Call origin, and the exact test condition here.", controlName: "Origin and Conditions", verified: true },
+  "routing:routing-create:3": { image: "routing-rule-builder.png", alt: "Create Routing Rule screen showing the Route to destination field", caption: "Choose the single destination in the Route to panel.", controlName: "Route to", verified: true },
+  "routing:routing-create:4": { image: "routing-rule-summary.png", alt: "Expanded saved routing rule showing origin, destination, region, and services", caption: "Expand the saved rule and read it from origin to destination.", controlName: "Expanded routing rule", verified: true },
+  "routing:routing-test:2": { image: "call-history-proof.png", alt: "Call History table with successful and failed completion states", caption: "Use the newest Call History row to verify the result.", controlName: "Call History", verified: true },
+  "routing:routing-add-services:0": { image: "routing-rule-services.png", alt: "Routing Services controls for recording, Agent Assist, and Voice Translation", caption: "Enable only the one service required by this action.", controlName: "Services", verified: true },
+  "routing:routing-add-services:2": { image: "routing-rule-numbers.png", alt: "Number customization fields for calling, called, and service numbers", caption: "Change a number only when the downstream service requires it.", controlName: "Number customization", verified: true },
+  "routing:routing-add-services:4": { image: "call-history-proof.png", alt: "Call History table used to compare a new call with a baseline", caption: "Compare the repeated call with the known-good Call History record.", controlName: "Call History", verified: true },
+  "operate:operate-dashboard:0": { image: "live-hub-dashboard.png", alt: "Live Hub dashboard with the Current account selector at the top", caption: "Confirm Current account before interpreting any dashboard value.", controlName: "Current account", verified: true },
+  "operate:operate-dashboard:1": { image: "live-hub-dashboard.png", alt: "Live Hub dashboard showing the Main Services counters", caption: "Use the Main Services counters to open each configured service area.", controlName: "Main Services", verified: true },
+  "operate:operate-dashboard:2": { image: "live-hub-dashboard.png", alt: "Live Hub dashboard showing the Call statistics panel", caption: "Read traffic for the selected interval in Call statistics.", controlName: "Call statistics", verified: true },
+  "operate:operate-dashboard:3": { image: "live-hub-dashboard.png", alt: "Live Hub dashboard showing the Active alarms panel", caption: "Select an Active alarms severity to investigate it.", controlName: "Active alarms", verified: true },
+};
 
-  if (actionIndex !== 0 || (!lesson.image && !lesson.videoId)) return null;
-  return {
-    image: lesson.image,
-    alt: lesson.imageAlt,
-    caption: "Use this screen only while completing the action beside it.",
-    videoId: lesson.videoId,
-    videoTitle: lesson.videoTitle,
-  };
+function getActionMedia(trackId: string, lesson: Lesson, actionIndex: number): VerifiedActionMedia | null {
+  return verifiedActionMedia[`${trackId}:${lesson.id}:${actionIndex}`] ?? null;
 }
 
 function buildSpokenBriefing(lesson: Lesson) {
@@ -1130,6 +1123,93 @@ function buildSpokenBriefing(lesson: Lesson) {
     `You are finished when ${success.toLowerCase()}.`,
     "If the evidence does not match, stop at that point. Keep the failed result, change one thing, and test again. The goal is a result you can explain, repeat, and show to another person.",
   ].join(" ");
+}
+
+type MissionWalkthroughSlide = {
+  kind: "opening" | "action" | "closing";
+  eyebrow: string;
+  title: string;
+  text: string;
+  media: VerifiedActionMedia | null;
+};
+
+function buildMissionWalkthroughSlides(track: Track, lesson: Lesson): MissionWalkthroughSlide[] {
+  return [
+    { kind: "opening", eyebrow: "MISSION BRIEF", title: lesson.title, text: `Success looks like: ${lesson.success[0]}`, media: null },
+    ...lesson.actions.map((action, index) => ({
+      kind: "action" as const,
+      eyebrow: `ACTION ${index + 1} OF ${lesson.actions.length}`,
+      title: action.title,
+      text: action.instruction,
+      media: getActionMedia(track.id, lesson, index),
+    })),
+    { kind: "closing", eyebrow: "SUCCESS CHECK", title: "You are done when…", text: lesson.success.join(" · "), media: null },
+  ];
+}
+
+function MissionWalkthrough({ track, lesson, briefing, onClose }: { track: Track; lesson: Lesson; briefing: string; onClose: () => void }) {
+  const slides = useMemo(() => buildMissionWalkthroughSlides(track, lesson), [track, lesson]);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const slide = slides[slideIndex];
+  const verifiedScreenCount = slides.filter((item) => item.media?.verified).length;
+
+  useEffect(() => {
+    if (!playing) return;
+    const millisecondsPerSlide = Math.max(6000, Math.round(75000 / slides.length));
+    const timer = window.setInterval(() => {
+      setSlideIndex((current) => {
+        if (current >= slides.length - 1) {
+          window.clearInterval(timer);
+          return current;
+        }
+        return current + 1;
+      });
+    }, millisecondsPerSlide);
+    return () => window.clearInterval(timer);
+  }, [playing, slides.length]);
+
+  useEffect(() => () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  }, []);
+
+  const play = () => {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    setSlideIndex(0);
+    const utterance = new SpeechSynthesisUtterance(briefing);
+    utterance.rate = 0.94;
+    utterance.onend = () => { setPlaying(false); setSlideIndex(slides.length - 1); };
+    utterance.onerror = () => setPlaying(false);
+    window.speechSynthesis.speak(utterance);
+    setPlaying(true);
+  };
+
+  const stop = () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    setPlaying(false);
+  };
+
+  const close = () => {
+    stop();
+    onClose();
+  };
+
+  return (
+    <section className="mission-walkthrough" aria-label={`Narrated walkthrough for ${lesson.title}`}>
+      <header><div><span>WATCH INSTEAD · GENERATED FROM THIS MISSION</span><strong>{slides.length} slides · {verifiedScreenCount} verified screens · about 75 seconds</strong></div><Button variant="ghost" onClick={close} aria-label="Close narrated walkthrough"><X /></Button></header>
+      <div className={`walkthrough-stage ${slide.media ? "has-screen" : "text-card"}`}>
+        {slide.media ? <figure><img src={slide.media.image} alt={slide.media.alt} /><figcaption><CheckCircle2 /> Verified screen · {slide.media.controlName}</figcaption></figure> : <div className="walkthrough-text-card"><span>{slide.kind === "closing" ? <CheckCircle2 /> : <Play />}</span><small>{slide.eyebrow}</small><h3>{slide.title}</h3><p>{slide.text}</p></div>}
+        {slide.media && <div className="walkthrough-lower-third"><small>{slide.eyebrow}</small><strong>{slide.title}</strong><p>{slide.text}</p><em>{slide.media.caption}</em></div>}
+      </div>
+      <footer>
+        <Button variant="outline" onClick={() => setSlideIndex((current) => Math.max(0, current - 1))} disabled={slideIndex === 0}><ArrowLeft /> Previous</Button>
+        <div className="walkthrough-dots" aria-label={`Slide ${slideIndex + 1} of ${slides.length}`}>{slides.map((item, index) => <button key={`${item.kind}:${index}`} type="button" className={index === slideIndex ? "active" : ""} onClick={() => setSlideIndex(index)} aria-label={`Open slide ${index + 1}`} />)}</div>
+        <Button onClick={playing ? stop : play}>{playing ? <Square /> : <Play />}{playing ? "Stop" : "Play narrated flow"}</Button>
+        <Button variant="outline" onClick={() => setSlideIndex((current) => Math.min(slides.length - 1, current + 1))} disabled={slideIndex === slides.length - 1}>Next <ArrowRight /></Button>
+      </footer>
+    </section>
+  );
 }
 
 function PathWorkspace({
@@ -1207,7 +1287,6 @@ function PathWorkspace({
           completed={completed}
           toggleStep={toggleStep}
           onComplete={completeMission}
-          routingSource={routingSource}
         />
       </div>
     </div>
@@ -1222,7 +1301,6 @@ function MissionWorkspace({
   completed,
   toggleStep,
   onComplete,
-  routingSource,
 }: {
   track: Track;
   lesson: Lesson;
@@ -1231,10 +1309,10 @@ function MissionWorkspace({
   completed: string[];
   toggleStep: (key: string) => void;
   onComplete: () => void;
-  routingSource: RoutingSource;
 }) {
   const done = missionIsComplete(track, lessonIndex, completed);
   const [speaking, setSpeaking] = useState(false);
+  const [watching, setWatching] = useState(false);
   const briefing = buildSpokenBriefing(lesson);
   const actionKeys = lesson.actions.map((_, index) => `action:${lesson.id}:${index}`);
   const successKeys = lesson.success.map((_, index) => `success:${lesson.id}:${index}`);
@@ -1247,6 +1325,7 @@ function MissionWorkspace({
 
   const toggleBriefing = () => {
     if (!("speechSynthesis" in window)) return;
+    setWatching(false);
     if (speaking) {
       window.speechSynthesis.cancel();
       setSpeaking(false);
@@ -1264,8 +1343,10 @@ function MissionWorkspace({
     <article className="mission-surface">
       <header className="mission-head-v2">
         <div><span>MISSION {lessonIndex + 1} · {lesson.duration}</span><h2>{lesson.title}</h2></div>
-        <div className="mission-audio"><Button variant="outline" onClick={toggleBriefing}>{speaking ? <Square /> : <Volume2 />}{speaking ? "Stop briefing" : "Play 60–90 sec briefing"}</Button><details><summary>Read briefing</summary><p>{briefing}</p></details></div>
+        <div className="mission-audio"><div className="mission-format-buttons"><Button variant="outline" onClick={toggleBriefing}>{speaking ? <Square /> : <Volume2 />}{speaking ? "Stop briefing" : "Listen · 60–90 sec"}</Button><Button variant="outline" className={watching ? "active" : ""} onClick={() => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); setSpeaking(false); setWatching((current) => !current); }}><Play />{watching ? "Close walkthrough" : "Watch instead"}</Button></div><details><summary>Read briefing</summary><p>{briefing}</p></details></div>
       </header>
+
+      {watching && <MissionWalkthrough track={track} lesson={lesson} briefing={briefing} onClose={() => setWatching(false)} />}
 
       <section className="mission-success-line"><CheckCircle2 /><span><small>SUCCESS LOOKS LIKE</small><strong>{lesson.success[0]}</strong></span></section>
 
@@ -1282,14 +1363,13 @@ function MissionWorkspace({
           {lesson.actions.map((action, index) => {
             const actionKey = actionKeys[index];
             const checked = done || completed.includes(actionKey);
-            const media = getActionMedia(track.id, lesson, index, routingSource);
+            const media = getActionMedia(track.id, lesson, index);
             return (
               <article key={actionKey} className={checked ? "inline-action checked" : "inline-action"}>
                 <label><Checkbox checked={checked} disabled={done} onCheckedChange={() => toggleStep(actionKey)} aria-label={`Mark ${action.title} complete`} /><span><strong>{action.title}</strong><p>{action.instruction}</p>{action.note && <em><Lightbulb /> {action.note}</em>}</span></label>
                 {media && (
                   <div className="action-media">
-                    {media.image && <figure><img src={media.image} alt={media.alt ?? action.title} loading="lazy" /><figcaption>{media.caption}</figcaption></figure>}
-                    {media.videoId && <figure><div className="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${media.videoId}?rel=0`} title={media.videoTitle ?? action.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div><figcaption>{media.videoTitle}</figcaption></figure>}
+                    <figure><img src={media.image} alt={media.alt} loading="lazy" /><figcaption><CheckCircle2 /> {media.caption}</figcaption></figure>
                   </div>
                 )}
               </article>

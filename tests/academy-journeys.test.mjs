@@ -12,7 +12,7 @@ const homeRuntime = pageSource.slice(pageSource.indexOf("export default function
 const academyHome = pageSource.slice(pageSource.indexOf("function AcademyHome("), pageSource.indexOf("type RoutingSource"));
 const pathWorkspace = pageSource.slice(pageSource.indexOf("function PathWorkspace("), pageSource.indexOf("function MissionWorkspace("));
 const missionWorkspace = pageSource.slice(pageSource.indexOf("function MissionWorkspace("), pageSource.indexOf("function LegacyHomeView("));
-const audioBriefing = pageSource.slice(pageSource.indexOf("function buildSpokenBriefing("), pageSource.indexOf("function PathWorkspace("));
+const audioBriefing = pageSource.slice(pageSource.indexOf("function buildSpokenBriefing("), pageSource.indexOf("type MissionWalkthroughSlide"));
 
 test("renders exactly the Home, Path, and Mission structure for the primary journey", () => {
   assert.match(homeRuntime, /<AcademyHome/);
@@ -35,8 +35,10 @@ test("home has one recommended door, plain alternate paths, and a working missio
   assert.match(academyHome, /Make my first AI call/);
   assert.match(academyHome, /Open the path you need/);
   assert.match(academyHome, /findMissionMatches\(submittedQuery\)/);
-  assert.match(academyHome, /goToTrack\(match\.track\.id, match\.lessonIndex\)/);
+  assert.match(academyHome, /matches\[0\]\.track\.id, matches\[0\]\.lessonIndex/);
   assert.match(academyHome, /data-integration-slot="intercom"/);
+  assert.match(academyHome, /livehub-academy:assistant-query/);
+  assert.match(academyHome, /Local Mission matching is active/);
   assert.doesNotMatch(academyHome, /disabled[^>]*>[^<]*(Soon|Coming soon)/i);
 });
 
@@ -67,13 +69,22 @@ test("Mission puts every action in one scrolling view with inline checks", () =>
   assert.doesNotMatch(missionWorkspace, /actionIndex|furthestActionIndex|Action \{.*of/);
 });
 
-test("screenshots and videos sit beside the action that needs them", () => {
-  assert.match(pageSource, /function getActionMedia/);
-  assert.match(pageSource, /routing-rule-builder\.png/);
-  assert.match(pageSource, /call-history-proof\.png/);
-  assert.match(pageSource, /S3VdrZ5FadQ/);
-  assert.match(pageSource, /mWC5wFb6hoQ/);
+test("only explicitly verified local screenshots can render beside actions", async () => {
+  const mediaManifest = pageSource.slice(pageSource.indexOf("const verifiedActionMedia"), pageSource.indexOf("function getActionMedia"));
+  const imageNames = [...mediaManifest.matchAll(/image: "([^"]+\.png)"/g)].map((match) => match[1]);
+  assert.ok(imageNames.length > 0);
+  assert.match(mediaManifest, /controlName:/);
+  assert.match(mediaManifest, /verified: true/);
+  assert.doesNotMatch(mediaManifest, /https?:\/\//);
+  assert.doesNotMatch(lessonSource, /image:|imageAlt:|Content\/Resources\/Images/);
+  for (const imageName of new Set(imageNames)) {
+    const bytes = await readFile(new URL(`../public/${imageName}`, import.meta.url));
+    assert.equal(bytes.subarray(1, 4).toString(), "PNG");
+    assert.ok(bytes.readUInt32BE(16) > 300, `${imageName} should be wide enough to read`);
+    assert.ok(bytes.readUInt32BE(20) > 80, `${imageName} should be tall enough to read`);
+  }
   assert.match(missionWorkspace, /className="action-media"/);
+  assert.doesNotMatch(missionWorkspace, /lesson\.image|lesson\.imageAlt/);
 });
 
 test("voice is a short spoken briefing rather than a lesson read-aloud", () => {
@@ -81,8 +92,21 @@ test("voice is a short spoken briefing rather than a lesson read-aloud", () => {
   assert.match(audioBriefing, /lesson\.commonMistake/);
   assert.match(audioBriefing, /lesson\.success\.slice\(0, 2\)/);
   assert.doesNotMatch(audioBriefing, /lesson\.path|lesson\.actions/);
-  assert.match(missionWorkspace, /Play 60–90 sec briefing/);
+  assert.match(missionWorkspace, /Listen · 60–90 sec/);
   assert.doesNotMatch(missionWorkspace, /lessonNarration/);
+});
+
+test("Watch instead assembles one narrated slideshow per Mission from existing data", () => {
+  assert.match(pageSource, /function buildMissionWalkthroughSlides/);
+  assert.match(pageSource, /lesson\.actions\.map/);
+  assert.match(pageSource, /media: getActionMedia\(track\.id, lesson, index\)/);
+  assert.match(pageSource, /function MissionWalkthrough/);
+  assert.match(pageSource, /Math\.round\(75000 \/ slides\.length\)/);
+  assert.match(pageSource, /SpeechSynthesisUtterance\(briefing\)/);
+  assert.match(pageSource, /WATCH INSTEAD · GENERATED FROM THIS MISSION/);
+  assert.match(pageSource, /slide\.media \?/);
+  assert.match(pageSource, /className="walkthrough-text-card"/);
+  assert.match(missionWorkspace, /Watch instead/);
 });
 
 test("the first real instruction is reachable in two views", () => {

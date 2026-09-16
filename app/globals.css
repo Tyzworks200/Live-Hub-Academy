@@ -2199,3 +2199,84 @@ button { cursor: pointer; }
   .mission-proof-v2 { padding: 24px 17px; }
   .mission-troubleshooting-v2 > div { grid-template-columns: 1fr; }
 }
+
+/* Functional home assistant: local Mission matching now, Live Hub/Intercom hook later. */
+.home-entry-hero > .home-ai-guide { align-self: stretch; display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: 25px; }
+.home-ai-guide > header { display: grid; grid-template-columns: 46px minmax(0,1fr) auto; align-items: center; gap: 12px; }
+.home-ai-guide > header > span { display: grid; width: 46px; height: 46px; place-items: center; border-radius: 14px; color: #001a30; background: linear-gradient(135deg,var(--bright-cyan),#479dff); }
+.home-ai-guide > header svg { width: 23px; }
+.home-ai-guide > header > div { min-width: 0; }
+.home-ai-guide > header small { display: block; color: var(--bright-cyan); font: 700 11px/1.2 "Rajdhani",sans-serif; letter-spacing: .1em; }
+.home-entry-hero > .home-ai-guide > header strong { display: block; margin: 4px 0 0; color: #fff; font-size: 16px; line-height: 1.35; }
+.home-ai-guide > header i { border: 1px solid rgba(75,240,172,.3); border-radius: 99px; padding: 5px 7px; color: #58e9b7; background: rgba(75,240,172,.08); font: 700 10px/1 "Rajdhani",sans-serif; font-style: normal; letter-spacing: .08em; }
+.home-entry-hero > .home-ai-guide > p { margin: 17px 0 0; color: #a9c0d5; font-size: 14px; line-height: 1.6; }
+.home-ai-guide > form { display: grid; grid-template-columns: minmax(0,1fr) 48px; gap: 7px; margin-top: 18px; border: 1px solid rgba(0,255,255,.25); border-radius: 14px; padding: 6px; background: rgba(255,255,255,.07); }
+.home-ai-guide > form [data-slot="input"] { height: 44px; border: 0; color: #fff; background: transparent; box-shadow: none; font-size: 14px; }
+.home-ai-guide > form [data-slot="input"]::placeholder { color: #7891a8; }
+.home-ai-guide > form .inline-flex { width: 48px; height: 44px; padding: 0; color: #00192d; background: var(--bright-cyan); }
+.home-ai-prompts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.home-ai-prompts button { border: 1px solid rgba(255,255,255,.14); border-radius: 99px; padding: 6px 9px; color: #b8cbdd; background: rgba(255,255,255,.04); font-size: 11px; }
+.home-ai-prompts button:hover { border-color: rgba(0,255,255,.42); color: #fff; background: rgba(0,188,255,.12); }
+.home-ai-answer { display: grid; gap: 8px; margin-top: 14px; }
+.home-entry-hero > .home-ai-guide .home-ai-user { justify-self: end; max-width: 84%; border-radius: 12px 12px 3px 12px; padding: 8px 10px; color: #d8e7f4; background: rgba(255,255,255,.1); font-size: 12px; line-height: 1.4; }
+.home-ai-answer > div { border: 1px solid rgba(0,255,255,.18); border-radius: 3px 13px 13px; padding: 12px; background: rgba(0,29,54,.72); }
+.home-ai-answer small { color: var(--bright-cyan); font: 700 10px/1.2 "Rajdhani",sans-serif; letter-spacing: .1em; }
+.home-entry-hero > .home-ai-guide .home-ai-answer strong { margin: 4px 0 0; color: #fff; font-size: 14px; line-height: 1.4; }
+.home-ai-answer p { margin: 3px 0 10px; color: #8fa9c0; font-size: 12px; }
+.home-ai-answer .inline-flex { min-height: 38px; color: #00192d; background: var(--bright-cyan); font-size: 12px; }
+.home-ai-guide > footer { display: flex; align-items: center; gap: 7px; margin-top: 14px; color: #728ea6; font-size: 11px; }
+.home-ai-guide > footer > span { width: 7px; height: 7px; border-radius: 50%; background: #4ae8ae; box-shadow: 0 0 0 4px rgba(74,232,174,.1); }
+
+/* Mission video at scale: a narrated data-driven screen flow, not a recording. */
+.mission-format-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.mission-format-buttons .inline-flex.active { border-color: var(--bright-cyan); color: var(--bright-cyan); background: rgba(0,188,255,.12); }
+.mission-walkthrough { border-bottom: 1px solid #193b5c; padding: clamp(18px,2.5vw,30px); color: #fff; background: #020914; }
+.mission-walkthrough > header { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+.mission-walkthrough > header > div { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.mission-walkthrough > header span { color: var(--bright-cyan); font: 700 11px/1.2 "Rajdhani",sans-serif; letter-spacing: .11em; }
+.mission-walkthrough > header strong { color: #94afc5; font-size: 12px; font-weight: 500; }
+.mission-walkthrough > header .inline-flex { color: #9bb2c7; }
+.walkthrough-stage { position: relative; min-height: 420px; overflow: hidden; border: 1px solid #17436a; border-radius: 18px; background: radial-gradient(circle at 85% 5%,rgba(0,188,255,.18),transparent 28%),linear-gradient(145deg,#06172b,#0a3158); }
+.walkthrough-stage.has-screen { display: grid; grid-template-columns: minmax(0,1.42fr) minmax(290px,.58fr); }
+.walkthrough-stage > figure { display: flex; min-width: 0; min-height: 420px; flex-direction: column; justify-content: center; margin: 0; padding: 18px; background: #eef5f9; }
+.walkthrough-stage > figure img { display: block; width: 100%; max-height: 470px; object-fit: contain; background: #fff; box-shadow: 0 14px 38px rgba(1,16,31,.16); }
+.walkthrough-stage > figure figcaption { display: flex; align-items: center; gap: 7px; margin-top: 10px; color: #3f647b; font-size: 12px; }
+.walkthrough-stage > figure figcaption svg { width: 16px; color: #0d9a6e; }
+.walkthrough-lower-third { display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: clamp(22px,3vw,38px); }
+.walkthrough-lower-third small,.walkthrough-text-card > small { color: var(--bright-cyan); font: 700 11px/1.2 "Rajdhani",sans-serif; letter-spacing: .11em; }
+.walkthrough-lower-third strong { margin-top: 7px; font: 700 clamp(28px,3vw,42px)/.95 "Rajdhani",sans-serif; }
+.walkthrough-lower-third p { margin: 13px 0 0; color: #c0d2e1; font-size: 15px; line-height: 1.65; }
+.walkthrough-lower-third em { margin-top: 17px; border-top: 1px solid rgba(255,255,255,.11); padding-top: 13px; color: #7696b0; font-size: 12px; font-style: normal; line-height: 1.5; }
+.walkthrough-text-card { display: flex; max-width: 800px; min-height: 420px; flex-direction: column; justify-content: center; margin: auto; padding: clamp(34px,6vw,80px); text-align: center; }
+.walkthrough-text-card > span { display: grid; width: 62px; height: 62px; place-items: center; margin: 0 auto 20px; border: 1px solid rgba(0,255,255,.35); border-radius: 20px; color: #00182b; background: var(--bright-cyan); box-shadow: 0 0 34px rgba(0,188,255,.25); }
+.walkthrough-text-card > span svg { width: 28px; }
+.walkthrough-text-card h3 { margin: 9px 0 9px; font-size: clamp(39px,5vw,67px); line-height: .9; }
+.walkthrough-text-card p { margin: 0; color: #b5cada; font-size: clamp(16px,1.4vw,19px); line-height: 1.65; }
+.mission-walkthrough > footer { display: grid; grid-template-columns: auto minmax(100px,1fr) auto auto; align-items: center; gap: 8px; margin-top: 13px; }
+.mission-walkthrough > footer .inline-flex { min-height: 42px; border-color: #244867; color: #c2d4e3; background: #0a1f35; }
+.mission-walkthrough > footer .inline-flex:nth-of-type(2) { color: #00182c; background: var(--bright-cyan); }
+.walkthrough-dots { display: flex; justify-content: center; gap: 6px; }
+.walkthrough-dots button { width: 7px; height: 7px; border: 0; border-radius: 50%; padding: 0; background: #34516b; }
+.walkthrough-dots button.active { width: 23px; border-radius: 99px; background: var(--bright-cyan); }
+.action-media figcaption { display: flex; align-items: center; gap: 7px; }
+.action-media figcaption svg { width: 16px; flex: 0 0 auto; color: #0c9c70; }
+
+@media (max-width: 1050px) {
+  .walkthrough-stage.has-screen { grid-template-columns: 1fr; }
+  .walkthrough-stage > figure { min-height: 0; }
+  .walkthrough-lower-third { min-height: 250px; }
+}
+
+@media (max-width: 700px) {
+  .home-entry-hero > .home-ai-guide { padding: 18px; }
+  .home-ai-guide > header { grid-template-columns: 42px minmax(0,1fr); }
+  .home-ai-guide > header i { display: none; }
+  .home-ai-guide > header > span { width: 42px; height: 42px; }
+  .mission-format-buttons { justify-content: flex-start; }
+  .mission-format-buttons .inline-flex { flex: 1; min-width: 145px; }
+  .walkthrough-stage,.walkthrough-text-card { min-height: 360px; }
+  .walkthrough-text-card { padding: 34px 21px; }
+  .mission-walkthrough > footer { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .walkthrough-dots { grid-column: 1/-1; grid-row: 1; }
+  .mission-walkthrough > footer .inline-flex { width: 100%; }
+}
