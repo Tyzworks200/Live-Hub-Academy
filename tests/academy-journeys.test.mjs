@@ -8,53 +8,95 @@ const supplementalSource = await readFile(new URL("../app/supplemental-lesson-da
 const docsSource = await readFile(new URL("../app/techdocs.ts", import.meta.url), "utf8");
 const quizSource = await readFile(new URL("../app/quiz-data.ts", import.meta.url), "utf8");
 
-test("offers the three approved outcome-first paths", () => {
-  assert.match(pageSource, /First Successful AI Call/);
-  assert.match(pageSource, /Bring Your Own SIP/);
-  assert.match(pageSource, /Connect Microsoft Teams/);
-  assert.match(pageSource, /ALREADY HAVE A TELEPHONY START/);
+const homeRuntime = pageSource.slice(pageSource.indexOf("export default function Home()"), pageSource.indexOf("type MissionMatch"));
+const academyHome = pageSource.slice(pageSource.indexOf("function AcademyHome("), pageSource.indexOf("type RoutingSource"));
+const pathWorkspace = pageSource.slice(pageSource.indexOf("function PathWorkspace("), pageSource.indexOf("function MissionWorkspace("));
+const missionWorkspace = pageSource.slice(pageSource.indexOf("function MissionWorkspace("), pageSource.indexOf("function LegacyHomeView("));
+const audioBriefing = pageSource.slice(pageSource.indexOf("function buildSpokenBriefing("), pageSource.indexOf("function PathWorkspace("));
+
+test("renders exactly the Home, Path, and Mission structure for the primary journey", () => {
+  assert.match(homeRuntime, /<AcademyHome/);
+  assert.match(homeRuntime, /<PathWorkspace/);
+  assert.match(pathWorkspace, /<MissionWorkspace/);
+  assert.doesNotMatch(homeRuntime, /<HomeView|<JourneysView|<LessonWorkspace|<RoutingVisualWorkspace/);
 });
 
-test("frames the Academy as a five-level customer success journey", () => {
-  assert.match(pageSource, /First successful call/);
-  assert.match(pageSource, /Connect my telephony/);
-  assert.match(pageSource, /Route intelligently/);
-  assert.match(pageSource, /Operate production/);
-  assert.match(pageSource, /Production readiness/);
-  assert.match(pageSource, /Origin/);
-  assert.match(pageSource, /Destination/);
-  assert.match(pageSource, /Proof/);
-  assert.match(pageSource, /LEVEL \{activeLevel\.number\} OF \{successLevels\.length\}/);
+test("uses one persistent progress indicator and no competing path or mission progress bar", () => {
+  assert.equal((homeRuntime.match(/className="topbar-progress"/g) ?? []).length, 1);
+  assert.match(homeRuntime, /Mission \{Math\.min\(selectedMissionIndex \+ 1/);
+  assert.match(homeRuntime, /\{progress\}% complete/);
+  assert.doesNotMatch(homeRuntime, /sidebar-progress-card/);
+  assert.doesNotMatch(pathWorkspace, /<Progress/);
+  assert.doesNotMatch(missionWorkspace, /<Progress/);
 });
 
-test("uses one progress hierarchy and teaches the call model only once", () => {
-  assert.match(pageSource, /HOW ONE CALL MOVES · CONCEPT ONLY/);
-  assert.match(pageSource, /This is the Live Hub mental model—not a course progress tracker/);
-  assert.doesNotMatch(pageSource, /className="academy-method"/);
-  assert.doesNotMatch(pageSource, /className="operating-model"/);
-  assert.doesNotMatch(pageSource, /className="mini-result-flow"/);
-  assert.doesNotMatch(pageSource, /className="mission-result-flow"/);
-  assert.match(pageSource, /className="lesson-location"/);
-  assert.match(pageSource, /LEVEL \{currentLevel\.number\} OF \{successLevels\.length\}/);
+test("home has one recommended door, plain alternate paths, and a working mission finder", () => {
+  assert.match(academyHome, /Turn a Live Hub goal/);
+  assert.match(academyHome, /Make my first AI call/);
+  assert.match(academyHome, /Open the path you need/);
+  assert.match(academyHome, /findMissionMatches\(submittedQuery\)/);
+  assert.match(academyHome, /goToTrack\(match\.track\.id, match\.lessonIndex\)/);
+  assert.match(academyHome, /data-integration-slot="intercom"/);
+  assert.doesNotMatch(academyHome, /disabled[^>]*>[^<]*(Soon|Coming soon)/i);
 });
 
-test("covers the full 2.19.2 product map as focused outcome courses", () => {
-  for (const track of [
-    "bot-connect",
-    "speech-provider",
-    "click-to-call",
-    "whatsapp",
-    "outbound",
-    "campaigns",
-    "call-features",
-    "platform-api",
-    "account-admin",
-    "agent-assist",
-    "translation",
-  ]) assert.match(pageSource, new RegExp(`id: "${track}"`));
-  assert.match(pageSource, /complete outcome courses/);
-  assert.match(pageSource, /CHOOSE YOUR ROUTE THROUGH THIS LEVEL/);
-  assert.match(pageSource, /Complete one route—not both/);
+test("Path merges the old level and outcome layers", () => {
+  assert.match(pathWorkspace, /className="path-header"/);
+  assert.match(pathWorkspace, /className="path-mission-list"/);
+  assert.match(pathWorkspace, /Build a new AI Agent/);
+  assert.match(pathWorkspace, /Connect an existing bot/);
+  assert.match(pathWorkspace, /Live Hub number/);
+  assert.match(pathWorkspace, /External SIP provider/);
+  assert.doesNotMatch(pathWorkspace, /LEVEL|OUTCOME|Certification path/);
+});
+
+test("Path mission rows contain only position, title, duration, and completion state", () => {
+  assert.match(pathWorkspace, /done \? <Check \/> : index \+ 1/);
+  assert.match(pathWorkspace, /<strong>\{item\.title\}<\/strong>/);
+  assert.match(pathWorkspace, /<small>\{item\.duration\}<\/small>/);
+  assert.doesNotMatch(pathWorkspace, /item\.objective|item\.description/);
+});
+
+test("Mission puts every action in one scrolling view with inline checks", () => {
+  assert.match(missionWorkspace, /SUCCESS LOOKS LIKE/);
+  assert.match(missionWorkspace, /lesson\.path\.map/);
+  assert.match(missionWorkspace, /<details className="mission-before-v2">/);
+  assert.match(missionWorkspace, /lesson\.actions\.map/);
+  assert.match(missionWorkspace, /Mark \$\{action\.title\} complete/);
+  assert.match(missionWorkspace, /lesson\.success\.map/);
+  assert.doesNotMatch(missionWorkspace, /actionIndex|furthestActionIndex|Action \{.*of/);
+});
+
+test("screenshots and videos sit beside the action that needs them", () => {
+  assert.match(pageSource, /function getActionMedia/);
+  assert.match(pageSource, /routing-rule-builder\.png/);
+  assert.match(pageSource, /call-history-proof\.png/);
+  assert.match(pageSource, /S3VdrZ5FadQ/);
+  assert.match(pageSource, /mWC5wFb6hoQ/);
+  assert.match(missionWorkspace, /className="action-media"/);
+});
+
+test("voice is a short spoken briefing rather than a lesson read-aloud", () => {
+  assert.match(audioBriefing, /lesson\.objective/);
+  assert.match(audioBriefing, /lesson\.commonMistake/);
+  assert.match(audioBriefing, /lesson\.success\.slice\(0, 2\)/);
+  assert.doesNotMatch(audioBriefing, /lesson\.path|lesson\.actions/);
+  assert.match(missionWorkspace, /Play 60–90 sec briefing/);
+  assert.doesNotMatch(missionWorkspace, /lessonNarration/);
+});
+
+test("the first real instruction is reachable in two views", () => {
+  assert.match(academyHome, /goToTrack\("voice-agent"\)/);
+  assert.match(pathWorkspace, /<MissionWorkspace/);
+  assert.match(missionWorkspace, /GO TO/);
+  assert.match(missionWorkspace, /lesson\.actions\.map/);
+});
+
+test("phone-number mission uses the documented request workflow", () => {
+  assert.match(lessonSource, /Give customers a real US or UK number/);
+  assert.match(lessonSource, /Submit the form/);
+  assert.match(lessonSource, /Wait for provisioning/);
+  assert.doesNotMatch(lessonSource, /Buy one Live Hub phone number/);
 });
 
 test("keeps current authentication and account rules accurate", () => {
@@ -64,85 +106,28 @@ test("keeps current authentication and account rules accurate", () => {
   assert.match(supplementalSource, /seven days for transcripts and thirty days for recordings/);
 });
 
-test("missions require actions and visible evidence instead of reading completion", () => {
-  assert.match(pageSource, /MISSION/);
-  assert.match(pageSource, /EVIDENCE/);
-  assert.match(pageSource, /Prove the mission worked/);
-  assert.match(pageSource, /One action at a time/);
-  assert.match(pageSource, /Success check locked/);
-  assert.match(pageSource, /challengeReady/);
-  assert.match(pageSource, /allEvidenceVerified/);
-  assert.match(pageSource, /Checkbox/);
-});
-
-test("voice is a short coaching script instead of full-text narration", () => {
-  assert.match(pageSource, /const coachingScript/);
-  assert.match(pageSource, /Coach me · under 90 sec/);
-  assert.doesNotMatch(pageSource, /const lessonNarration/);
-});
-
-test("phone-number lesson uses the Academy request workflow", () => {
-  assert.match(lessonSource, /Give customers a real US or UK number/);
-  assert.match(lessonSource, /Submit the form/);
-  assert.match(lessonSource, /Wait for provisioning/);
-  assert.doesNotMatch(lessonSource, /Buy one Live Hub phone number/);
-});
-
 test("navigation transitions reset the document to the top", () => {
   assert.match(pageSource, /function resetPagePosition/);
   assert.match(pageSource, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
-  assert.match(pageSource, /const openLesson = \(index: number\)/);
+  assert.match(pathWorkspace, /selectMission\(index\); resetPagePosition\(\)/);
 });
 
-test("official deep links do not use the broken lowercase content path", () => {
+test("official deep links use verified documentation entry points", () => {
   assert.doesNotMatch(docsSource, /\/content\/ai-agents/i);
   assert.match(docsSource, /#AI-Agents\/Tools\.htm/);
   assert.match(docsSource, /Purchasing%20Phone%20Numbers\.htm/);
+  assert.match(docsSource, /AudioCodes%20Live%20Hub\.htm\?TocPath=_____1/);
 });
 
-test("turns the supplied SIP training into actionable checks", () => {
+test("turns supplied SIP material into actionable checks", () => {
   assert.match(lessonSource, /FQDN \(Request-URI\)/);
   assert.match(lessonSource, /REGISTER or OPTIONS/);
   assert.match(lessonSource, /Teams-to-SIP and SIP-to-Teams need separate rules/);
 });
 
-test("home provides a useful guide and keeps a stable Intercom integration slot", () => {
-  assert.match(pageSource, /id="livehub-academy-assistant"/);
-  assert.match(pageSource, /data-integration-slot="intercom"/);
-  assert.match(pageSource, /function guideLearner/);
-  assert.match(pageSource, /ACADEMY GUIDE · READY/);
-  assert.doesNotMatch(pageSource, /AI Assistant coming soon/);
-});
-
-test("routing is the gold-standard visual product walkthrough", () => {
-  assert.match(pageSource, /function RoutingVisualWorkspace/);
-  assert.match(pageSource, /Route a Real Customer Call/);
-  assert.match(pageSource, /LIVE HUB · REAL PRODUCT SCREEN/);
-  assert.match(pageSource, /routing-rule-builder\.png/);
-  assert.match(pageSource, /call-history-proof\.png/);
-  assert.match(pageSource, /routing-hotspot/);
-  assert.match(pageSource, /S3VdrZ5FadQ/);
-  assert.match(pageSource, /mWC5wFb6hoQ/);
-  assert.match(pageSource, /This changes the example and the exact video—not your progress/);
-});
-
-test("finishing the last mission celebrates a working outcome", () => {
-  assert.match(pageSource, /function MissionCompleteView/);
-  assert.match(pageSource, /WORKING OUTCOME ACHIEVED/);
-  assert.match(pageSource, /You made it/);
-  assert.match(pageSource, /Continue toward production/);
-  assert.match(pageSource, /Optional knowledge checkpoint/);
-  assert.match(pageSource, /Progress and evidence saved on this device/);
-  assert.match(pageSource, /onMissionComplete\(\)/);
-});
-
-test("bootcamp knowledge check links explanations to official TechDocs", () => {
+test("bootcamp checkpoint keeps explanations linked to official TechDocs", () => {
   assert.match(pageSource, /function KnowledgeCheckView/);
   assert.match(quizSource, /knowledgeQuestions/);
   assert.match(quizSource, /sourceUrl: TECH_DOCS\./);
   assert.doesNotMatch(quizSource, /\$750|\$500|MOQ|Azure Marketplace/);
-});
-
-test("uses the improved Live Hub documentation entry point", () => {
-  assert.match(docsSource, /AudioCodes%20Live%20Hub\.htm\?TocPath=_____1/);
 });
