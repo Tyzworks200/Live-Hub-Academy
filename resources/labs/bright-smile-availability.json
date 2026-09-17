@@ -1,0 +1,24 @@
+{
+  "exercise": "Live Hub Academy — Bright Smile Dental Clinic",
+  "fictional": true,
+  "booking_supported": false,
+  "timezone": "Clinic local time",
+  "available_slots": [
+    {
+      "day": "Tuesday",
+      "time": "10:00",
+      "appointment_type": "Hygiene"
+    },
+    {
+      "day": "Tuesday",
+      "time": "14:30",
+      "appointment_type": "Dental check-up"
+    },
+    {
+      "day": "Thursday",
+      "time": "09:00",
+      "appointment_type": "Hygiene"
+    }
+  ],
+  "next_step": "A clinic team member must confirm the appointment by phone."
+}

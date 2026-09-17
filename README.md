@@ -1,19 +1,15 @@
-# Live Hub Academy V22 — Full Academy + Community
+# Live Hub Academy V23 — Full Community Edition
 
-This package keeps the complete V20 Academy learning engine and assets, then adds the V22 community layer.
+GitHub Pages-ready package. Publish the contents of this folder from `/docs` on `main`.
 
-## GitHub Pages
-Upload the contents of this folder into the repository `/docs` folder because the current GitHub Pages configuration publishes `main` → `/docs`. Keep all PNG, data, favicon, JSON and TXT files beside `index.html`.
+## Included
+- V21 community-first Academy UX and role-based learning paths
+- Full surviving V19 learning assets and screenshots retained at root for compatibility
+- Organized copies under `assets/images`, `assets/icons`, `resources/labs`, and `data`
+- Community Pulse, ideas/voting, lesson tips/questions/feedback prototype
+- Monitoring Lab / Production Watcher mission
+- Troubleshooting library, XP, badges, learning paths, AI helper
+- Bright Smile hands-on lab resources
+- Source documentation folder for maintainers
 
-## What is preserved
-- V20 role-based Academy, XP, missions, proof flow, AI guide, walkthroughs and screenshots
-- Existing troubleshooting knowledge and learning data
-- Bright Smile sample resources and routing / AI Agent / alarm visuals
-
-## V22 additions
-- Community entry point and Community Pulse
-- Ideas, votes and feedback prototype
-- Share a tip / ask the community / suggest improvement from lessons
-- Clear distinction between verified AudioCodes guidance and community tips
-
-Community data is local-browser prototype data only; a real shared community requires a backend/authentication layer.
+Community posts and votes are a browser-local prototype (localStorage); a shared production community requires a backend/service.
