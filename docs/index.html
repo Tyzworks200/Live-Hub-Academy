@@ -349,6 +349,27 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .community-pulse{margin:34px 0;padding:28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#f8fbff,#fff)}
 .community-pulse .pulse-head,.community-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:18px}.community-pulse h2,.community-head h1{margin:4px 0}.pulse-grid,.community-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.pulse-card,.community-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px}.pulse-card small,.community-card small{color:var(--muted);font-weight:800;letter-spacing:.06em}.pulse-card h3,.community-card h3{margin:8px 0;font-size:17px}.pulse-card p,.community-card p{color:var(--muted);font-size:14px;line-height:1.5}.community-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.idea-form{display:grid;grid-template-columns:180px 1fr auto;gap:10px;margin:18px 0}.idea-form select,.idea-form input,.feedback-modal select,.feedback-modal textarea{border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;background:#fff}.idea-list{display:grid;gap:10px}.idea-row{display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}.vote-btn{border:0;border-radius:12px;background:#eef7ff;padding:10px;font-weight:800;cursor:pointer}.idea-status{font-size:12px;font-weight:800;padding:6px 9px;border-radius:999px;background:#eef3f7;white-space:nowrap}.verified{color:#087d68;font-weight:800}.community-tip{color:#6c4ac7;font-weight:800}.lesson-community{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fbfcff}.lesson-community h3{margin:0 0 10px}.lesson-community-actions{display:flex;gap:8px;flex-wrap:wrap}.feedback-modal{position:fixed;inset:0;background:#07132199;z-index:200;display:grid;place-items:center;padding:20px}.feedback-panel{width:min(560px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 30px 90px #0004}.feedback-panel textarea{width:100%;min-height:130px;resize:vertical;margin:12px 0}.feedback-panel .row{display:flex;justify-content:flex-end;gap:8px}.community-empty{text-align:center;padding:36px;color:var(--muted)}
 @media(max-width:860px){.pulse-grid,.community-grid{grid-template-columns:1fr}.idea-form{grid-template-columns:1fr}.idea-row{grid-template-columns:60px 1fr}.idea-status{grid-column:2}}
+
+/* V20 SMART HOME + ROLE DISCOVERY RESTORED */
+.guide-panel{display:grid;grid-template-columns:minmax(0,.8fr) minmax(360px,1.2fr);gap:24px;align-items:center;margin:0 0 28px;padding:24px 26px;border:1px solid #c9dbee;border-radius:20px;background:linear-gradient(135deg,#fff,#edf6ff);box-shadow:0 12px 30px rgba(5,43,81,.06)}
+.guide-copy{display:flex;align-items:flex-start;gap:15px}.guide-orb{width:48px;height:48px;flex:0 0 auto;display:grid;place-items:center;border-radius:16px;color:#002f55;background:linear-gradient(145deg,#80f2ff,#00bceb);box-shadow:0 10px 22px rgba(0,188,235,.22)}
+.guide-copy small{font:700 10.5px/1 "Rajdhani",sans-serif;letter-spacing:.12em;color:var(--blue)}.guide-copy h2{margin:6px 0 5px;font-size:22px}.guide-copy p{margin:0;max-width:500px;color:var(--muted);font-size:13.5px;line-height:1.55}
+.guide-form{display:flex;gap:9px}.guide-form input{min-width:0;flex:1;padding:13px 15px;border:1px solid #c8d9e8;border-radius:13px;background:#fff;font-size:14px;box-shadow:0 5px 14px rgba(7,48,82,.04)}.guide-form input:focus{outline:3px solid rgba(0,92,255,.16);border-color:var(--blue)}
+.guide-form button{display:inline-flex;align-items:center;gap:6px;padding:0 18px;border-radius:13px;color:#fff;background:#0d1b30;font-size:13.5px;font-weight:700}.guide-form button:hover{background:#142c4f}
+.guide-prompts{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.guide-prompts button{padding:6px 9px;border:1px solid #d2dfeb;border-radius:99px;color:#4f6479;background:rgba(255,255,255,.8);font-size:11px;font-weight:600}.guide-prompts button:hover{color:var(--blue);border-color:#9fc4ff}
+.guide-result{display:none;margin-top:11px;padding:12px 14px;border:1px solid #bad9fb;border-radius:13px;background:#fff}.guide-result.show{display:flex;align-items:center;gap:12px}.guide-result .msy{color:var(--blue)}.guide-result div{min-width:0;flex:1}.guide-result small{display:block;font:700 10px/1 "Rajdhani",sans-serif;letter-spacing:.1em;color:var(--blue)}.guide-result strong{display:block;margin-top:4px;font-size:14px}.guide-result span{display:block;color:var(--muted);font-size:12px}.guide-result button{padding:8px 12px;border-radius:99px;color:#fff;background:var(--blue);font-size:12px;font-weight:700}
+
+
+/* ===== V20 smart community experience ===== */
+.role-carousel-shell{position:relative;margin:0 0 24px}.role-carousel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,26%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:none}.role-carousel::-webkit-scrollbar{display:none}.role-card{scroll-snap-align:start;min-height:128px;text-align:left;border:1px solid var(--line);border-radius:18px;background:#fff;padding:17px;cursor:pointer;transition:.2s;box-shadow:0 8px 22px rgba(5,43,81,.04)}.role-card:hover{transform:translateY(-2px);box-shadow:0 15px 28px rgba(5,43,81,.1)}.role-card.on{border-color:#78aef8;box-shadow:0 0 0 2px rgba(0,92,255,.12),0 15px 30px rgba(0,92,255,.1)}.role-card .role-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#edf6ff;color:var(--blue);margin-bottom:12px}.role-card strong{display:block;font-size:14px;margin-bottom:4px}.role-card span{display:block;color:var(--muted);font-size:11.5px;line-height:1.45}.role-card small{display:block;margin-top:9px;color:var(--blue);font:700 10px/1 Rajdhani,sans-serif;letter-spacing:.08em}.role-arrows{display:flex;gap:7px}.role-arrow{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--navy)}
+.community-banner{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin:0 0 26px;padding:18px 20px;border-radius:18px;background:linear-gradient(120deg,#071c35,#0b3b68);color:#fff;overflow:hidden;position:relative}.community-banner:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-70px;top:-100px;background:rgba(0,188,235,.16)}.community-copy small{font:700 10px/1 Rajdhani,sans-serif;letter-spacing:.12em;color:#75e9ff}.community-copy h3{margin:6px 0 4px;font-size:18px}.community-copy p{margin:0;color:#bdd0e2;font-size:12.5px}.community-level{position:relative;z-index:1;text-align:right}.community-level strong{display:block;font:700 28px/1 Rajdhani,sans-serif}.community-level span{font-size:11px;color:#8eefff}.xp-mini{width:150px;height:5px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:7px}.xp-mini i{display:block;height:100%;background:#61e7ff;border-radius:99px}
+.proof-box{margin-top:18px;padding:18px;border:1px solid #b8d9ff;border-radius:16px;background:linear-gradient(145deg,#f8fcff,#eef7ff)}.proof-head{display:flex;gap:11px;align-items:flex-start}.proof-head>.msy{color:var(--blue);font-size:22px}.proof-head small{display:block;font:700 10px/1 Rajdhani,sans-serif;letter-spacing:.1em;color:var(--blue);margin-bottom:4px}.proof-head strong{font-size:14px}.proof-head p{margin:5px 0 0;color:var(--muted);font-size:12.5px;line-height:1.5}.proof-btn{width:100%;margin-top:14px;padding:12px 16px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer}.proof-btn:disabled{background:#9fb5c9}.proof-btn.done{background:var(--green)}.proof-hints{margin:12px 0 0;padding:0;list-style:none}.proof-hints li{display:flex;gap:7px;margin:5px 0;color:#607488;font-size:11.5px}.proof-hints .msy{font-size:14px;color:var(--green)}
+@media(max-width:860px){.role-carousel{grid-auto-columns:minmax(210px,65%)}.community-banner{grid-template-columns:1fr}.community-level{text-align:left}.xp-mini{width:100%}}@media(max-width:560px){.role-carousel{grid-auto-columns:86%}}
+.guide-panel.compact{grid-template-columns:auto minmax(0,1fr);gap:16px;margin:-2px 0 22px;padding:13px 16px;border-radius:15px;background:#fff;box-shadow:none}
+.guide-panel.compact .guide-copy{align-items:center}.guide-panel.compact .guide-orb{width:38px;height:38px;border-radius:12px}.guide-panel.compact .guide-copy h2{margin:3px 0 0;font-size:16px}.guide-panel.compact .guide-copy p,.guide-panel.compact .guide-prompts{display:none}.guide-panel.compact .guide-form input{padding:10px 13px}.guide-panel.compact .guide-form button{min-height:40px;padding:0 14px}.guide-panel.compact .guide-result{grid-column:2;margin-top:-7px;padding:9px 12px}.guide-panel.compact .guide-result.show{display:flex}
+.your-academy{margin:0 0 24px}.your-academy-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:10px}.your-academy-head h2{margin:0;font-size:20px}.your-academy-head p{margin:3px 0 0;color:var(--muted);font-size:13px}.smart-home{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.8fr);gap:12px}.next-card,.completed-panel{min-height:148px;border:1px solid var(--line);border-radius:17px;background:#fff}.next-card{position:relative;overflow:hidden;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:20px}.next-card:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(var(--blue),var(--cyan))}.next-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;color:#003150;background:linear-gradient(145deg,#91f4ff,#16c9e9)}.next-copy small,.completed-panel>small{display:block;font:700 10.5px/1 "Rajdhani",sans-serif;letter-spacing:.12em;color:var(--blue)}.next-copy h3{margin:6px 0 4px;font-size:18px}.next-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.next-card .btn{white-space:nowrap}.completed-panel{padding:18px 19px}.completed-panel h3{margin:7px 0 11px;font-size:17px}.completed-list{display:flex;flex-wrap:wrap;gap:7px}.completed-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #b9e5d5;border-radius:99px;color:#05714f;background:#edfbf5;font-size:11.5px;font-weight:700}.completed-chip .msy{font-size:14px}.completed-empty{color:var(--muted);font-size:12.5px;line-height:1.5}.role-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 10px}.role-heading h2{margin:0;font-size:20px}.role-heading p{margin:3px 0 0;color:var(--muted);font-size:13px}.chip .msy{font-size:14px;vertical-align:-2px}.track-card.recommended-next{outline:2px solid rgba(0,92,255,.22);box-shadow:0 16px 34px rgba(0,92,255,.11)}.tc-next{display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;color:var(--blue);font:700 10px/1 "Rajdhani",sans-serif;letter-spacing:.09em}.tc-next .msy{font-size:13px}.tc-role{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:900px){.smart-home{grid-template-columns:1fr}.guide-panel.compact{grid-template-columns:1fr}.guide-panel.compact .guide-result{grid-column:1}.next-card{grid-template-columns:auto 1fr}.next-card .btn{grid-column:1/-1;justify-self:start}.guide-panel.compact .guide-copy p{display:block}}
+@media (max-width:560px){.guide-panel.compact{padding:13px}.guide-panel.compact .guide-form{display:grid;grid-template-columns:1fr}.your-academy-head,.role-heading{align-items:flex-start;flex-direction:column}.next-card{grid-template-columns:1fr}.next-icon{width:42px;height:42px}.next-card .btn{grid-column:auto;width:100%}.completed-panel{min-height:auto}}
 </style>
 </head>
 <body>
@@ -360,6 +381,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   <div id="topnav">
     <button data-nav="home" class="on">Home</button>
     <button data-nav="community">Community</button>
+    <button data-nav="resources">Resources</button>
     <button data-nav="troubleshoot">Troubleshooting</button>
     <button data-nav="quiz">Quiz</button>
     <button data-nav="badges">Badges</button>
@@ -548,6 +570,8 @@ function render(){
     renderQuiz();
   } else if(parts[0] === "community"){
     renderCommunity();
+  } else if(parts[0] === "resources"){
+    renderResources();
   } else if(parts[0] === "troubleshoot"){
     renderTroubleshoot();
   } else if(parts[0] === "badges"){
@@ -569,6 +593,28 @@ function syncTopbar(){
 /* ============ HOME ============ */
 let homeFilterLevel = "All";
 let homeSearch = "";
+
+// V20 audience-first discovery
+D.academyAudiences = D.academyAudiences || [
+{id:"all",label:"Explore everything",icon:"explore",tracks:D.tracks.map(t=>t.id)},
+{id:"start",label:"I'm new to Live Hub",icon:"rocket_launch",tracks:["voice-agent","phone-number","routing","voice-channel","bot-connect"]},
+{id:"ai",label:"I build AI experiences",icon:"smart_toy",tracks:["voice-agent","agent-builder","bot-connect","speech-provider","call-features"]},
+{id:"telephony",label:"I own voice & telephony",icon:"settings_input_antenna",tracks:["sip-trunk","teams-sip","phone-number","routing","voice-channel"]},
+{id:"operations",label:"I operate production",icon:"monitor_heart",tracks:["operate","monitoring-lab","diagnose","routing","call-features"]},
+{id:"admin",label:"I manage the account",icon:"admin_panel_settings",tracks:["operate","phone-number","teams-sip","voice-channel"]},
+{id:"developer",label:"I'm a developer",icon:"code",tracks:["agent-builder","click-to-call","bot-connect","speech-provider"]},
+{id:"experience",label:"I improve CX",icon:"auto_awesome",tracks:["voice-agent","call-features","speech-provider","whatsapp"]}
+];
+D.recommendationOrder = D.recommendationOrder || ["voice-agent","routing","operate","monitoring-lab","diagnose"];
+let homeFilterLevel = STATE.audience || "start";
+function audienceById(id){ return (D.academyAudiences||[]).find(item=>item.id===id) || (D.academyAudiences||[])[0]; }
+function suggestedTrack(){
+  const active = D.tracks.find(track=>trackDoneCount(track.id)>0 && !trackIsComplete(track.id)); if(active) return active;
+  const audience=audienceById(homeFilterLevel); const n=audience?.tracks.map(trackById).find(t=>t&&!trackIsComplete(t.id)); if(n)return n;
+  return (D.recommendationOrder||[]).map(trackById).find(t=>t&&!trackIsComplete(t.id)) || D.tracks.find(t=>!trackIsComplete(t.id)) || D.tracks[0];
+}
+function smartHomeHtml(){ const next=suggestedTrack(), complete=earnedBadges(), inProgress=next&&trackDoneCount(next.id)>0, nextMission=next?lessonsFor(next.id)[firstIncompleteIndex(next.id)]:null; return `<section class="your-academy"><div class="your-academy-head"><div><h2>Your Academy</h2><p>What you finish stays visible. Your next useful capability moves to the front.</p></div></div><div class="smart-home"><div class="next-card"><div class="next-icon">${msy(inProgress?"resume":"auto_awesome",'style="font-size:24px"')}</div><div class="next-copy"><small>${inProgress?"CONTINUE WHERE YOU STOPPED":"SUGGESTED NEXT"}</small><h3>${next?next.title:"All available paths complete"}</h3><p>${nextMission?`Next Mission: ${nextMission.title} · ${nextMission.duration}`:"You have proven every current path."}</p></div>${next?`<button class="btn btn-primary" onclick="go('#/track/${next.id}${inProgress?`/mission/${firstIncompleteIndex(next.id)}`:""}')">${inProgress?"Continue":"Open path"} ${msy("arrow_forward")}</button>`:""}</div><div class="completed-panel"><small>COMPLETED BY YOU</small><h3>${complete.length?`${complete.length} working outcome${complete.length===1?"":"s"} proven`:"Your first achievement will live here"}</h3>${complete.length?`<div class="completed-list">${complete.map(t=>`<button class="completed-chip" onclick="go('#/track/${t.id}')">${msy("verified")} ${t.reward}</button>`).join("")}</div>`:`<p class="completed-empty">Complete a path and keep its capability visible here.</p>`}</div></div></section>`; }
+
 
 function renderHome(){
   const started = D.tracks.filter(t => trackDoneCount(t.id) > 0 && !trackIsComplete(t.id));
@@ -594,6 +640,12 @@ function renderHome(){
       </div>
     </section>
 
+    <section class="guide-panel compact" id="academy-guide"><div class="guide-copy"><div class="guide-orb">${msy("forum")}</div><div><small>ACADEMY AI GUIDE</small><h2>What do you need to make work?</h2><p>Find the best mission for your goal.</p></div></div><div><form class="guide-form" id="guide-form"><input id="guide-input" placeholder="Route a number, create alarms, fix a failed call…"/><button type="submit">Find Mission ${msy("arrow_forward")}</button></form><div class="guide-result" id="guide-result"></div></div></section>
+
+    ${smartHomeHtml()}
+
+    <section class="community-banner"><div class="community-copy"><small>YOUR LIVE HUB JOURNEY</small><h3>${STATE.completed.length ? "Your Academy is learning with you." : "Start small. Build proof. Unlock the next capability."}</h3><p>Paths, achievements and recommendations adapt to what you complete.</p></div><div class="community-level"><strong>Level ${level()}</strong><span>${STATE.xp} XP · ${STATE.streak||0} day streak</span><div class="xp-mini"><i style="width:${STATE.xp%100}%"></i></div></div></section>
+
     ${resume ? `
     <div class="continue-card">
       ${ringSvg(trackPercent(resume.id), 52, 5)}
@@ -611,11 +663,9 @@ function renderHome(){
     <section class="community-pulse"><div class="pulse-head"><div><span class="kicker">${msy("groups")} LIVE HUB COMMUNITY</span><h2>Learn it. Share it. Improve it.</h2><p class="lead" style="font-size:15px;margin:4px 0 0">The Academy gets smarter when builders share what worked, what was hard, and what Live Hub should do next.</p></div><button class="btn btn-dark" onclick="go('#/community')">Enter community ${msy("arrow_forward")}</button></div><div class="pulse-grid"><div class="pulse-card"><small>🔥 TRENDING MISSION</small><h3>Protect my production deployment</h3><p>Build a real monitoring baseline with failed-call and voice-quality alarms.</p><button class="btn btn-ghost" style="color:var(--ink);border-color:var(--line)" onclick="go('#/track/monitoring-lab')">Start mission</button></div><div class="pulse-card"><small>💡 COMMUNITY IDEAS</small><h3>${communityIdeas().length} ideas waiting for votes</h3><p>Suggest a product improvement, Academy change, or friction point.</p><button class="btn btn-ghost" style="color:var(--ink);border-color:var(--line)" onclick="go('#/community')">See ideas</button></div><div class="pulse-card"><small>🧠 KNOWLEDGE LOOP</small><h3>Official answer + community experience</h3><p>Keep verified guidance clear while letting practitioners add useful field tips.</p><button class="btn btn-ghost" style="color:var(--ink);border-color:var(--line)" onclick="go('#/troubleshoot')">Troubleshoot</button></div></div></section>
 
     <div id="gallery">
-      <div class="gallery-head">
-        <h2>All learning paths</h2>
-        <div class="search-wrap">${msy("search")}<input id="search-input" placeholder="Search paths…" value="${homeSearch}"/></div>
-      </div>
-      <div class="chip-row" id="chip-row"></div>
+      <div class="role-heading"><div><h2>Choose what brings you here</h2><p>Pick your role. The Academy slides the most useful paths to the front.</p></div><div class="role-arrows"><button class="role-arrow" onclick="slideRoles(-1)">${msy("arrow_back")}</button><button class="role-arrow" onclick="slideRoles(1)">${msy("arrow_forward")}</button></div></div>
+      <div class="role-carousel-shell"><div class="role-carousel" id="chip-row"></div></div>
+      <div class="gallery-head"><h2>Working outcomes</h2><div class="search-wrap">${msy("search")}<input id="search-input" placeholder="Search paths…" value="${homeSearch}"/></div></div>
       <div class="track-grid" id="track-grid"></div>
     </div>
 
@@ -628,6 +678,7 @@ function renderHome(){
 
   renderChips();
   renderTrackGrid();
+  wireAcademyGuide();
   document.getElementById("search-input").addEventListener("input", e=>{ homeSearch = e.target.value; renderTrackGrid(); });
   animateHeroPreview();
 }
@@ -658,25 +709,12 @@ function animateHeroPreview(){
   }, 750);
 }
 
-function renderChips(){
-  const levels = ["All", ...new Set(D.tracks.map(t=>t.level))];
-  document.getElementById("chip-row").innerHTML = levels.map(l =>
-    `<button class="chip ${l===homeFilterLevel?'on':''}" data-lvl="${l}">${l}</button>`).join("");
-  document.querySelectorAll(".chip").forEach(c=>{
-    c.addEventListener("click", ()=>{ homeFilterLevel = c.dataset.lvl; renderChips(); renderTrackGrid(); });
-  });
-}
-
-function renderTrackGrid(){
-  const q = homeSearch.trim().toLowerCase();
-  const list = D.tracks.filter(t=>{
-    const okLevel = homeFilterLevel === "All" || t.level === homeFilterLevel;
-    const okSearch = !q || (t.title+t.description+t.reward).toLowerCase().includes(q);
-    return okLevel && okSearch;
-  });
-  document.getElementById("track-grid").innerHTML = list.map(trackCardHtml).join("") ||
-    `<p style="color:var(--muted)">No paths match that search.</p>`;
-}
+function missionMatches(query){const clean=query.toLowerCase().replace(/[^a-z0-9\s-]/g," ").trim();if(!clean)return[];const tokens=clean.split(/\s+/).filter(t=>t.length>2);const results=[];D.tracks.forEach(track=>lessonsFor(track.id).forEach((lesson,lessonIndex)=>{const hay=[track.title,track.description,track.scenario,lesson.title,lesson.objective,(lesson.path||[]).join(" "),lesson.commonMistake].filter(Boolean).join(" ").toLowerCase();let score=0;tokens.forEach(t=>{if(hay.includes(t))score+=2});if(score)results.push({track,lesson,lessonIndex,score})}));return results.sort((a,b)=>b.score-a.score).slice(0,3)}
+function showGuideResult(query){const r=document.getElementById("guide-result"),m=missionMatches(query);if(!r)return;if(!m.length){r.className="guide-result show";r.innerHTML=`${msy("search_off")}<div><small>TRY A PRODUCT GOAL</small><strong>No exact Mission yet</strong><span>Try routing, SIP, Teams, AI Agent, billing, alarms, or failed call.</span></div>`;return;}const x=m[0];r.className="guide-result show";r.innerHTML=`${msy("auto_awesome")}<div><small>BEST NEXT MISSION</small><strong>${x.lesson.title}</strong><span>${x.track.title}</span></div><button type="button" onclick="go('#/track/${x.track.id}/mission/${x.lessonIndex}')">Open Mission</button>`}
+function wireAcademyGuide(){const f=document.getElementById("guide-form"),i=document.getElementById("guide-input");if(f&&i)f.addEventListener("submit",e=>{e.preventDefault();showGuideResult(i.value)})}
+function renderChips(){ const audiences=D.academyAudiences||[], el=document.getElementById("chip-row"); if(!el)return; const copy={all:"Explore every learning path",start:"Your fastest route to a working first call",ai:"Build agents, speech and AI experiences",telephony:"Numbers, SIP, Teams and routing",operations:"Observe, diagnose and keep service healthy",admin:"Users, accounts, billing and governance",developer:"APIs, automation and programmable calling",experience:"Assist, translate and improve conversations"}; el.innerHTML=audiences.map(item=>`<button class="role-card ${item.id===homeFilterLevel?'on':''}" data-lvl="${item.id}"><div class="role-icon">${msy(item.icon)}</div><strong>${item.label}</strong><span>${copy[item.id]||"Focused Live Hub learning paths"}</span><small>${item.tracks.length} PATHS ${item.id===homeFilterLevel?'· SELECTED':'· EXPLORE'}</small></button>`).join(""); document.querySelectorAll(".role-card").forEach(c=>c.addEventListener("click",()=>{homeFilterLevel=c.dataset.lvl;STATE.audience=homeFilterLevel;saveState();renderChips();renderTrackGrid();const smart=document.querySelector('.your-academy');if(smart)smart.outerHTML=smartHomeHtml();})); }
+function slideRoles(direction){const el=document.getElementById("chip-row");if(el)el.scrollBy({left:direction*Math.min(520,el.clientWidth*.75),behavior:"smooth"});}
+function renderTrackGrid(){ const q=homeSearch.trim().toLowerCase(), audience=audienceById(homeFilterLevel); const list=D.tracks.filter(t=>{const okAudience=q||homeFilterLevel==="all"||!audience?true:audience.tracks.includes(t.id); const okSearch=!q||(t.title+t.description+t.reward+t.role+t.scenario).toLowerCase().includes(q); return okAudience&&okSearch;}); document.getElementById("track-grid").innerHTML=list.map(trackCardHtml).join("")||`<p style="color:var(--muted)">No path matches yet. Try another role or a shorter search.</p>`; }
 
 function trackCardHtml(t){
   const pct = trackPercent(t.id);
@@ -832,6 +870,8 @@ function renderMission(trackId, index){
         </div>
       </div>`).join("")}
     </div>
+
+    ${renderMissionMedia(trackId,index)}
 
     ${lesson.commonMistake ? `<div class="mistake-box">${msy("report")}<div><strong>Common mistake</strong><p>${lesson.commonMistake}</p></div></div>` : ""}
 
@@ -1052,6 +1092,39 @@ document.addEventListener("DOMContentLoaded", ()=>{
     nav.style.display = nav.style.display === "flex" ? "none" : "flex";
   });
 });
+
+/* ===== FINAL MASTER: original V18 learning media + resources ===== */
+const ORIGINAL_MEDIA = {
+  "voice-agent": [
+    {img:"ai-agents-list.png",title:"AI Agents list"},{img:"ai-agent-editor.png",title:"Agent editor"},{img:"ai-documents-list.png",title:"Documents"},{img:"ai-document-editor.png",title:"Document editor"},{img:"ai-tools-list.png",title:"Tools"},{img:"ai-tool-editor.png",title:"Tool editor"},{img:"ai-speech-telephony.png",title:"Speech & Telephony"},{img:"ai-post-call-list.png",title:"Post-call analysis"},{img:"call-history-proof.png",title:"Call History proof"}
+  ],
+  "agent-builder": [{img:"ai-agent-editor.png",title:"Agent editor"},{img:"ai-documents-list.png",title:"Ground with documents"},{img:"ai-tools-list.png",title:"Add tools"},{img:"ai-post-call-editor.png",title:"Post-call analysis"}],
+  "routing": [{img:"routing-rules-list.png",title:"Routing rules"},{img:"routing-rule-builder.png",title:"Rule builder"},{img:"routing-rule-numbers.png",title:"Number matching"},{img:"routing-rule-services.png",title:"Services"},{img:"routing-rule-summary.png",title:"Rule summary"},{img:"call-history-proof.png",title:"Prove the matched call"}],
+  "operate": [{img:"live-hub-dashboard.png",title:"Live Hub dashboard"},{img:"call-history-proof.png",title:"Call History evidence"}],
+  "monitoring-lab": [{img:"live-hub-dashboard.png",title:"Start with account health"},{img:"call-history-proof.png",title:"Drill into the calls behind a metric"}]
+};
+function renderMissionMedia(trackId,index){
+  const media=ORIGINAL_MEDIA[trackId]||[]; if(!media.length) return "";
+  const start=Math.min(index*2,Math.max(0,media.length-2)), picks=media.slice(start,start+2);
+  return `<div class="section-h"><span class="msy">photo_library</span><h3>See it in Live Hub</h3></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:24px">${picks.map(m=>`<a href="${m.img}" target="_blank" style="display:block;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;text-decoration:none;color:inherit"><img src="${m.img}" alt="${m.title}" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover;object-position:top"><div style="padding:10px 12px;font-weight:800">${m.title} <span class="msy" style="font-size:15px">open_in_new</span></div></a>`).join("")}</div>`;
+}
+function renderResources(){
+ const shots=["live-hub-dashboard.png","ai-agents-list.png","ai-agent-editor.png","ai-documents-list.png","ai-document-editor.png","ai-tools-list.png","ai-tool-editor.png","ai-speech-telephony.png","ai-post-call-list.png","ai-post-call-editor.png","routing-rules-list.png","routing-rule-builder.png","routing-rule-numbers.png","routing-rule-services.png","routing-rule-summary.png","call-history-proof.png"];
+ const videos=[
+  ["Live Hub Platform General Review","https://www.youtube.com/watch?v=45XIL7YHhYo"],
+  ["Quick Start Guide for Voice AI Live Hub Setup","https://www.youtube.com/watch?v=Ggv2W6vYtIo"],
+  ["Inbound Calls to a Bot Using a Live Hub Number","https://www.youtube.com/watch?v=S3VdrZ5FadQ"],
+  ["Getting Started with Live Hub","https://www.youtube.com/watch?v=y-YQIf4FiG4"],
+  ["Routing walkthrough","https://www.youtube.com/watch?v=mWC5wFb6hoQ"],
+  ["AudioCodes Live Hub video playlist","https://www.youtube.com/playlist?list=PLWI2eO0GVBO-nwUsm1csXntGlLwj6XxjB"]
+ ];
+ app.innerHTML=`<div class="page"><a class="back-btn" onclick="go('#/')">${msy("arrow_back")} Home</a><span class="kicker">${msy("school")} LEARNING CENTER</span><h1 style="margin:8px 0">Learn it. See it. Build it.</h1><p class="lead" style="font-size:17px">The original Academy media library is back inside the new experience: real Live Hub screens, the original video learning links, official documentation, labs and release material.</p>
+ <div class="community-grid" style="margin-top:24px"><div class="community-card"><small>WHAT LIVE HUB IS</small><h3>The orchestration layer for voice + AI</h3><p>Live Hub connects voice channels, AI agents and bot frameworks, speech services and telephony, then uses routing to move calls between them. Use the Academy missions to build an outcome rather than learning menus in isolation.</p></div><div class="community-card"><small>FULL DOCUMENTATION</small><h3>Live Hub 2.19.2</h3><p>Use the full manual when you need every field, parameter or supported provider.</p><a class="btn btn-dark" href="resources/Live-Hub-2.19.2.pdf" target="_blank">Open manual</a></div><div class="community-card"><small>OPERATIONS LAB</small><h3>Alarm Threshold Setup</h3><p>Hands-on reference for failed calls, poor quality, notification contacts and Alarm History.</p><a class="btn btn-dark" href="resources/Alarm-Threshold-Setup-Guide.pdf" target="_blank">Open guide</a></div></div>
+ <h2 style="margin-top:36px">Watch Live Hub</h2><div class="idea-list">${videos.map(v=>`<a class="idea-row" style="grid-template-columns:50px 1fr;text-decoration:none;color:inherit" href="${v[1]}" target="_blank" rel="noreferrer"><span class="msy" style="font-size:28px;color:#e11">play_circle</span><div><small>VIDEO</small><h3>${v[0]}</h3></div></a>`).join("")}</div>
+ <h2 style="margin-top:36px">Live Hub screen library</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">${shots.map(s=>`<a href="${s}" target="_blank" style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;text-decoration:none;color:inherit"><img src="${s}" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block"><div style="padding:10px 12px;font-weight:800">${s.replace(/[-_]/g," ").replace(/\.png$/,'')}</div></a>`).join("")}</div>
+ <h2 style="margin-top:36px">More source material</h2><div class="community-grid"><div class="community-card"><h3>September 2026 release recap</h3><p>Call Insights, VAD/noise cancellation, STT latency, per-call billing, Build with AI, incomplete turns, dynamic announcements and REST API.</p><a class="btn btn-dark" href="resources/September-2026-Release-Recap.pdf" target="_blank">Open recap</a></div><div class="community-card"><h3>Bright Smile lab files</h3><p>Use the fictional FAQ and availability data in the flagship AI Agent build.</p><a class="btn btn-dark" href="bright-smile-faq.txt" target="_blank">Open FAQ</a></div><div class="community-card"><h3>Official TechDocs</h3><p>Jump to the current AudioCodes Live Hub documentation.</p><a class="btn btn-dark" href="https://techdocs.audiocodes.com/livehub" target="_blank" rel="noreferrer">Open TechDocs</a></div></div></div>`;
+}
+
 </script>
 </body>
 </html>
