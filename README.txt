@@ -1,77 +1,57 @@
-LIVE HUB ACADEMY — ONE GITHUB PAGES PACKAGE
+LIVE HUB ACADEMY - GITHUB PAGES PACKAGE
 
-Upload the contents of this ZIP to the root of your existing repository.
-Keep index.html, images, MP4s and resources together. No install or build step.
-GitHub Pages: Deploy from branch / main / root.
+Upload every file and folder in this package to the root of the
+Tyzworks200/Live-Hub-Academy repository.
 
-WHAT IS WHERE
-Home: what Live Hub does, one first-build action, visible role selector,
-four short silent video previews, community/help and a compact mission finder.
-Live Hub explained: all supplied FAQ subjects, organized into 13 focused
-answers covering the platform, AudioCodes, audiences, use cases, agents,
-channels, speech, routing, numbers, pricing, resources, setup help and support.
-Learning paths: the full role-filtered catalog.
-My progress: saved builds, achievements, recommendations and checkpoints.
-Community & help: official help plus private question/success-story drafts.
+GitHub Pages setting:
+  Source: Deploy from a branch
+  Branch: main
+  Folder: / (root)
 
-THE BEGINNER BUILD
-One fictional clinic receptionist across six missions:
-1. Find your way around the portal.
-2. Create Bright Smile Receptionist.
-3. Ground its opening-hours answers with the included FAQ.
-4. Prove a browser voice call.
-5. Buy and prepare a first US/UK number where available.
-6. Route a real call and inspect the call record.
-No appointment tool, booking system or callback service is implied in this
-first build. Those require a separate advanced implementation.
+The Academy is a static site. Progress, XP, streaks, evidence notes and
+community drafts are stored only in the visitor's browser.
 
-PROGRESS AND CHECKPOINTS
-Progress, evidence notes, XP, badges and drafts live only in this browser.
-A badge records the learner's confirmation, not automatic account validation
-or official AudioCodes certification. The beginner checkpoint is five
-questions; the operations checkpoint has twelve. Replays do not duplicate
-mission/badge XP. Previewing a later mission does not increase progress.
+BEGINNER EXPERIENCE
+The home page explains Live Hub through three interactive call examples:
+native AI receptionist, existing bot with voice, and SIP to contact center.
+Each shows its audience, the origin/route/destination, what Live Hub adds,
+what the user brings, and the relevant first mission. The animation is an
+illustrative demo, not a live call or account connection. Number, cost and
+support questions are secondary. Advanced paths are in an expandable
+role-based catalog. The recommended first deployment has six missions:
+orientation, create agent, ground answers, browser voice, number, routing.
+Tools and post-call analysis are optional builder topics, not prerequisites.
 
-VIDEOS — ALL SILENT
-Four MP4 screenshot walkthroughs, each with a branded opening and ending.
-These are visual guides, not live screen recordings. Written missions provide
-the full instructions. No browser speech, TTS or sound effects are used.
+COMMUNITY STATUS
+There is no shared community backend and no live AI assistant connected.
+The Academy Guide searches existing missions. The Help & Community page
+links to official support resources and prepares private, copyable drafts.
+Nothing is posted or sent automatically. Sample votes have been removed.
 
-To add your own narration:
-1. Edit the MP4 in your video editor and add your voice.
-2. Export H.264 MP4 (AAC audio is recommended).
-3. Replace the file under the EXACT same name in the repository.
-4. Wait for GitHub Pages to deploy, then refresh the Academy page.
-No HTML changes are required; videos are not forced to mute. An already open
-page must be refreshed to load the replacement.
+The home page includes four silent beginner walkthrough videos, each with
+a 3-second branded opening and ending. No audio tracks are included.
+Browser text-to-speech, mission narration buttons, sound effects and embedded
+third-party video players have been removed. Official external video links
+remain references outside the Academy.
 
-Stable replacement filenames:
+ADDING YOUR OWN NARRATION
+1. Open an MP4 below in your video editor and add your narration.
+2. Export as MP4 with H.264 video and AAC audio, keeping the EXACT filename.
+3. Replace that file beside index.html in your GitHub repository.
+4. After GitHub Pages finishes deploying, refresh the Academy page.
+No HTML changes are required. The player is not forced to mute, so your
+new narration will play normally. A per-page media query avoids reusing a
+previous cached video URL. An already open page must be refreshed.
+
+FILES TO REPLACE (case-sensitive)
 beginner-01-live-hub-basics.mp4
 beginner-02-first-ai-agent.mp4
 beginner-03-number-routing-call.mp4
 beginner-04-prove-and-fix.mp4
 
-AI AND COMMUNITY STATUS
-The compact Academy guide searches existing mission content. It is not a
-live AI agent. A Live Hub/Intercom integration and a shared community feed
-still need a real connection. No fake users, posts, votes or live validation
-are presented. Community drafts can be copied and shared through a channel
-of the visitor's choice; nothing is sent automatically.
+Keep the MP4 and poster PNG files beside index.html when uploading the site.
+The posters do not need replacing when you only change the narration.
 
-CONTENT AND VALIDATION
-Beginner phone-number, routing, calls and alarm procedures were checked
-against official TechDocs on 5 October 2026. Each beginner screenshot was
-visually inspected and attached to a matching action. Examples may show a
-different account, agent name or region: use your own values.
-
-JavaScript render/state checks cover all current page and mission templates,
-progress/dependency behavior, quiz scoring, duplicate rewards and media
-selection. Local asset references and MP4 audio absence were checked.
-Full desktop/mobile browser visual testing was not available in this build
-environment. Review the pages in your browser before announcing a launch.
-The existing advanced catalog is retained; this pass focuses on first-time
-orientation and the beginner path, not a full revalidation of all advanced
-product settings.
-
-Official TechDocs: https://techdocs.audiocodes.com/livehub/
-Official Help Center: https://intercom.help/audiocodes-1a6772ae1c8a/en/
+The official Live Hub TechDocs remain the source of truth for detailed
+product parameters. The Academy converts the first-run workflows into
+guided missions and links back to the relevant TechDocs topic.
